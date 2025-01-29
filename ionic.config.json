@@ -1,0 +1,7 @@
+{
+  "name": "HomeCheck",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
