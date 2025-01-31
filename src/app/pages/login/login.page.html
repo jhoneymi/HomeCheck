@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-input [(ngModel)]="credentials.email" type="email" placeholder="Email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="credentials.password" type="password" placeholder="Contraseña"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="full" (click)="login()">Iniciar Sesión</ion-button>
+  <ion-button expand="full" color="light" (click)="goToRegister()">Crear Cuenta</ion-button>
+</ion-content>

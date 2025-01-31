@@ -1,22 +1,18 @@
 const express = require('express');
 const cors = require('cors');
-const connection = require('./db');
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
-app.use(express.json());
-const inquilinosRoutes = require('./routes/inquilinos');
+app.use(bodyParser.json());
 
-// Rutas
-
-app.use('/api', inquilinosRoutes);
-
-app.get('/', (req, res) => {
-    res.send('API funcionando 🚀');
-});
+// Importar rutas de autenticación
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

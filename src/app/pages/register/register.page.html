@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-input [(ngModel)]="userData.nombre_completo" placeholder="Nombre Completo"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="userData.direccion" placeholder="Dirección"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="userData.email" type="email" placeholder="Email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="userData.numero_cedula" placeholder="Número de Cédula"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select [(ngModel)]="userData.tipo_domicilio">
+        <ion-select-option value="Casa">Casa</ion-select-option>
+        <ion-select-option value="Departamento">Departamento</ion-select-option>
+        <ion-select-option value="Residencia">Residencia</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="userData.password" type="password" placeholder="Contraseña"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="userData.telefono" placeholder="Teléfono"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="full" (click)="register()">Registrarse</ion-button>
+  <ion-button expand="full" color="light" (click)="goToLogin()">¿Ya tienes cuenta? Inicia sesión</ion-button>
+</ion-content>
