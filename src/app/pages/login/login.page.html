@@ -1,20 +1,38 @@
 <ion-content>
   <div class="login-container">
+    <h1 class="logo">Homecheck</h1>
     <form (ngSubmit)="login()">
       <h2 class="login-title">Iniciar Sesión</h2>
 
       <ion-item class="input-item">
-        <ion-input [(ngModel)]="credentials.email" type="email" placeholder="Email" required></ion-input>
+        <ion-input
+          [(ngModel)]="credentials.email"
+          type="email"
+          placeholder="Usuario"
+          required
+        ></ion-input>
+        <ion-icon name="person-outline" slot="end"></ion-icon>
       </ion-item>
 
       <ion-item class="input-item">
-        <ion-input [(ngModel)]="credentials.password" type="password" placeholder="Contraseña" required></ion-input>
+        <ion-input
+          [(ngModel)]="credentials.password"
+          type="password"
+          placeholder="Contraseña"
+          required
+        ></ion-input>
+        <ion-icon name="lock-closed-outline" slot="end"></ion-icon>
       </ion-item>
 
-      <ion-button type="submit" expand="full" class="login-btn">Iniciar Sesión</ion-button>
+      <ion-button type="submit" expand="block" class="login-btn">
+        Iniciar Sesión
+      </ion-button>
 
       <div class="register-link">
-        <p>No tienes cuenta? <a (click)="goToRegister()">Crea una aquí</a></p>
+        <p>
+          ¿No tienes cuenta?
+          <a (click)="goToRegister()">Crea una aquí</a>
+        </p>
       </div>
     </form>
   </div>

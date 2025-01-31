@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton ,IonInput, IonItem} from '@ionic/angular/standalone';
+import { IonContent, IonButton ,IonInput, IonItem,IonIcon} from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [
     IonContent, IonInput, IonItem, IonButton,
-    CommonModule, FormsModule
+    CommonModule, FormsModule,IonIcon
   ]
 })
 export class LoginPage {
