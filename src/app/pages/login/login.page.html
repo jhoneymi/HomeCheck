@@ -1,19 +1,21 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <ion-list>
-    <ion-item>
-      <ion-input [(ngModel)]="credentials.email" type="email" placeholder="Email"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-input [(ngModel)]="credentials.password" type="password" placeholder="Contraseña"></ion-input>
-    </ion-item>
-  </ion-list>
+  <div class="login-container">
+    <form (ngSubmit)="login()">
+      <h2 class="login-title">Iniciar Sesión</h2>
 
-  <ion-button expand="full" (click)="login()">Iniciar Sesión</ion-button>
-  <ion-button expand="full" color="light" (click)="goToRegister()">Crear Cuenta</ion-button>
+      <ion-item class="input-item">
+        <ion-input [(ngModel)]="credentials.email" type="email" placeholder="Email" required></ion-input>
+      </ion-item>
+
+      <ion-item class="input-item">
+        <ion-input [(ngModel)]="credentials.password" type="password" placeholder="Contraseña" required></ion-input>
+      </ion-item>
+
+      <ion-button type="submit" expand="full" class="login-btn">Iniciar Sesión</ion-button>
+
+      <div class="register-link">
+        <p>No tienes cuenta? <a (click)="goToRegister()">Crea una aquí</a></p>
+      </div>
+    </form>
+  </div>
 </ion-content>
