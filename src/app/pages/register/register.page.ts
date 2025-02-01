@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonList, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonSelectOption,IonIcon } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -11,8 +11,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./register.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonList, IonSelect, IonSelectOption,
-    CommonModule, FormsModule
+    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem,  IonSelectOption,
+    CommonModule, FormsModule, IonIcon
   ]
 })
 export class RegisterPage {
@@ -27,8 +27,32 @@ export class RegisterPage {
     fecha_registro: ''    // Nuevo campo
   };
 
+  mostrarImagen = false;
+  imagenDomicilio = '';
+
   constructor(public router: Router, private http: HttpClient) {}
 
+  // Método para mostrar la imagen según el tipo de domicilio
+  mostrarImagenDomicilio(event: any) {
+    const tipoDomicilio = event.detail.value;
+    this.mostrarImagen = true;
+
+    switch (tipoDomicilio) {
+      case 'Casa':
+        this.imagenDomicilio = 'assets/icon/casa.jpg'; // Ruta de la imagen de casa
+        break;
+      case 'Departamento':
+        this.imagenDomicilio = 'assets/icon/departamento.jpg'; // Ruta de la imagen de departamento
+        break;
+      case 'Residencia':
+        this.imagenDomicilio = 'assets/icon/residencia.jpg'; // Ruta de la imagen de residencia
+        break;
+      default:
+        this.mostrarImagen = false;
+    }
+  }
+
+  // Método para redirigir al login
   goToLogin() {
     this.router.navigate(['/login']);
   }
