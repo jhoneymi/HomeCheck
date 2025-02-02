@@ -54,7 +54,7 @@ export class RegisterPage {
 
   // Método para redirigir al login
   goToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 
   // Validación antes de hacer el registro

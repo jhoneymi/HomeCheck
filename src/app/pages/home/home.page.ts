@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonSearchbar, IonIcon, IonItem, IonList, IonBadge } from '@ionic/angular/standalone';
+import { IonContent, IonSearchbar, IonIcon, IonItem, IonList, IonBadge } from '@ionic/angular/standalone';
 import Chart from 'chart.js/auto';
 
 @Component({
@@ -10,7 +10,7 @@ import Chart from 'chart.js/auto';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonSearchbar, IonIcon, IonItem, IonList, IonBadge,
+    IonContent, IonSearchbar, IonIcon, IonItem, IonList, IonBadge,
     CommonModule, FormsModule
   ]
 })
