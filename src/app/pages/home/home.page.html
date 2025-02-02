@@ -1,0 +1,69 @@
+<ion-content>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <ion-icon name="logo-angular"></ion-icon>
+      <span>CREATIVE TIM</span>
+    </div>
+    <ion-list>
+      <ion-item button class="active">
+        <ion-icon name="grid-outline"></ion-icon>
+        <span>Dashboard</span>
+      </ion-item>
+      <ion-item button>
+        <ion-icon name="person-outline"></ion-icon>
+        <span>User Profile</span>
+      </ion-item>
+      <ion-item button>
+        <ion-icon name="list-outline"></ion-icon>
+        <span>Table List</span>
+      </ion-item>
+      <ion-item button>
+        <ion-icon name="notifications-outline"></ion-icon>
+        <span>Notifications</span>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="main-content">
+    <!-- Barra de Búsqueda y Notificaciones -->
+    <div class="topbar">
+      <ion-searchbar placeholder="Search..."></ion-searchbar>
+      <div class="icons">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <ion-badge class="notification-badge">5</ion-badge>
+      </div>
+    </div>
+
+    <!-- Tarjetas -->
+    <div class="card-container">
+      <div class="card success">
+        <ion-icon name="storefront-outline"></ion-icon>
+        <h3>Revenue</h3>
+        <p>$34,245</p>
+      </div>
+      <div class="card warning">
+        <ion-icon name="documents-outline"></ion-icon>
+        <h3>Used Space</h3>
+        <p>49/50 GB</p>
+      </div>
+      <div class="card danger">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <h3>Fixed Issues</h3>
+        <p>75</p>
+      </div>
+      <div class="card primary">
+        <ion-icon name="logo-twitter"></ion-icon>
+        <h3>Followers</h3>
+        <p>+245</p>
+      </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="charts-container">
+      <canvas #salesChart></canvas>
+      <canvas #tasksChart></canvas>
+    </div>
+  </div>
+</ion-content>
