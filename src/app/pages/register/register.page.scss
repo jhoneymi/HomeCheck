@@ -1,88 +1,73 @@
+/* Estilos para el encabezado */
+ion-header {
+  background-color: #f4f4f4; /* Fondo verde */
+}
+
+ion-toolbar {
+  --background: #3b805c; /* Fondo verde */
+  --color: white; /* Texto blanco */
+  border-bottom: 5px solid #2d6348; /* Línea verde más oscura y gruesa */
+}
+
 /* Fondo blanco para todo el contenido */
 ion-content {
-    --background: white;
-    font-family: 'Roboto', sans-serif; /* Tipografía moderna */
-  }
-  
-  /* Sección de Formulario */
-  .form-section {
-    margin: 2rem auto;
-    max-width: 500px;
-    padding: 2rem;
-    background-color: #3b805c; /* Fondo verde */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-title {
-    color: #fff;
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .register-form .input-item {
-    background-color: #fff;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .register-form ion-icon {
-    color: #3b805c; /* Color del icono */
-    font-size: 1.2rem; /* Tamaño del icono */
-    margin-right: 0.5rem; /* Espaciado entre el icono y el campo */
-  }
-  
-  /* Cuadro con Imagen Alusiva */
-  .image-section {
-    margin-top: 1.5rem;
-    text-align: center;
-  }
-  
-  .domicilio-image {
-    max-width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Botones */
-  .green-button {
-    --background: #3b805c;
-    --color: white;
-    --border-radius: 5px;
-    --background-hover: #2d6348; /* Efecto hover más oscuro */
-    margin-top: 1rem;
-  }
-  
-  ion-button[color="light"] {
-    --color: #3b805c; /* Texto verde */
-    --background: #f9f9f9; /* Fondo gris claro */
-    --background-hover: #e0e0e0; /* Efecto hover */
-  }
-
-  /* Estilos personalizados para la alerta */
-.custom-alert {
-  --background: #ffffff;
-  --border-radius: 12px;
-  --box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
-  --max-width: 400px;
+  --background: white;
+  font-family: 'Roboto', sans-serif; /* Tipografía moderna */
 }
 
-.custom-alert .alert-title {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #1A2A6C; /* Azul marino */
+/* Sección de Formulario */
+.form-section {
+  margin: 2rem auto;
+  max-width: 500px;
+  padding: 2rem;
+  background-color: #3b805c; /* Fondo verde */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.custom-alert .alert-message {
-  font-size: 1rem;
-  color: #333;
+.form-title {
+  color: #fff;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-.custom-alert .alert-button {
-  background-color: #2ECC71 !important;
-  color: white !important;
-  font-weight: bold;
-  border-radius: 8px;
+.register-form .input-item {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.register-form ion-icon {
+  color: #3b805c; /* Color del icono */
+  font-size: 1.2rem; /* Tamaño del icono */
+  margin-right: 0.5rem; /* Espaciado entre el icono y el campo */
+}
+
+/* Cuadro con Imagen Alusiva */
+.image-section {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.domicilio-image {
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Botones */
+.green-button {
+  --background: #3b805c;
+  --color: white;
+  --border-radius: 5px;
+  --background-hover: #2d6348; /* Efecto hover más oscuro */
+  margin-top: 1rem;
+}
+
+ion-button[color="light"] {
+  --color: #3b805c; /* Texto verde */
+  --background: #f9f9f9; /* Fondo gris claro */
+  --background-hover: #e0e0e0; /* Efecto hover */
 }

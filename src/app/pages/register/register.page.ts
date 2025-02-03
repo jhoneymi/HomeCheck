@@ -45,7 +45,7 @@ export class RegisterPage {
 
     switch (tipoDomicilio) {
       case 'Casa':
-        this.imagenDomicilio = 'assets/icon/casa.jpg';
+        this.imagenDomicilio = 'assets/icon/casaregistro.jpg';
         break;
       case 'Departamento':
         this.imagenDomicilio = 'assets/icon/departamento.jpg';
