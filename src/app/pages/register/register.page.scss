@@ -1,0 +1,76 @@
+/* Paleta de colores */
+$blanco: #ffffff;
+$verde-oscuro: #2e7c66;
+$verde-medio: #3a8b74;
+$verde-claro: #58a690;
+$verde-suave: #86c4ad;
+$verde-muy-claro: #a3d5c5;
+$verde-pastel: #c0e6d6;
+$verde-primario: #4caf50;
+$verde-hover: #388e3c;
+$verde-intenso: #2e7d32;
+$verde-neutro: #66bb6a;
+$verde-destacado: #81c784;
+$verde-translucido: rgba(76, 175, 80, 0.5);
+$gris-muy-claro: #f9f8fa;
+$gris-claro: #f1f2f4;
+$gris-suave: #f2f3f6;
+$gris-oscuro: #444;
+$texto-oscuro: #222;
+$texto-claro: #666;
+
+body{
+    background-color: white;
+}
+
+/* Estilos para el área de registro */
+ion-content {
+  background-color: $gris-muy-claro;
+  padding: 20px;
+}
+
+ion-toolbar {
+  background-color: $verde-oscuro;
+  color: $blanco;
+  ion-title {
+    font-weight: bold;
+  }
+}
+
+ion-list {
+  background: transparent;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+ion-item {
+  background: $blanco;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+ion-input, ion-select {
+  color: $texto-oscuro;
+  font-size: 16px;
+}
+
+ion-button {
+  font-weight: bold;
+  border-radius: 5px;
+  &.button-strong {
+    background-color: $verde-oscuro;
+    color: $blanco;
+  }
+  &.button-light {
+    background-color: $gris-suave;
+    color: $texto-claro;
+  }
+}
+
+/* Efecto hover en desktop */
+@media (hover: hover) {
+  ion-button:hover {
+    filter: brightness(1.1);
+  }
+}
