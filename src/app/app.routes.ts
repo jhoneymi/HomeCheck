@@ -17,6 +17,26 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./pages/home/home.page').then( m => m.HomePage)
+  },  {
+    path: 'contactos',
+    loadComponent: () => import('./pages/contactos/contactos.page').then( m => m.ContactosPage)
   },
+  {
+    path: 'sobre-nosotros',
+    loadComponent: () => import('./pages/sobre-nosotros/sobre-nosotros.page').then( m => m.SobreNosotrosPage)
+  },
+  {
+    path: 'inquilinos',
+    loadComponent: () => import('./pages/inquilinos/inquilinos.page').then( m => m.InquilinosPage)
+  },
+  {
+    path: 'facturas',
+    loadComponent: () => import('./pages/facturas/facturas.page').then( m => m.FacturasPage)
+  },
+  {
+    path: 'viviendas',
+    loadComponent: () => import('./pages/viviendas/viviendas.page').then( m => m.ViviendasPage)
+  },
+
 
 ];
