@@ -1,13 +1,51 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>inquilinos</ion-title>
+<ion-header>
+  <ion-toolbar class="navbar">
+    <ion-title>
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="login-btn">Iniciar sesión</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar class="menu">
+    <ion-buttons>
+      <ion-button>Contáctanos</ion-button>
+      <ion-button>Facturas</ion-button>
+      <ion-button>Ganancias</ion-button>
+      <ion-button class="active">Inquilinos</ion-button>
+      <ion-button>Viviendas</ion-button>
+      <ion-button>Gastos</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">inquilinos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="content">
+  <div class="container">
+    <h2>Lista de Inquilinos</h2>
+
+    <ion-grid class="tabla-inquilinos">
+      <ion-row class="header">
+        <ion-col>Nombre Completo</ion-col>
+        <ion-col>Teléfono</ion-col>
+        <ion-col>Email</ion-col>
+        <ion-col>Referencias</ion-col>
+        <ion-col>Cédula</ion-col>
+        <ion-col>Foto</ion-col>
+      </ion-row>
+
+      <ion-row *ngFor="let inquilino of inquilinos" class="row">
+        <ion-col>{{ inquilino.nombre }}</ion-col>
+        <ion-col>{{ inquilino.telefono }}</ion-col>
+        <ion-col>{{ inquilino.email }}</ion-col>
+        <ion-col>{{ inquilino.referencia }}</ion-col>
+        <ion-col>{{ inquilino.cedula }}</ion-col>
+        <ion-col class="foto">
+          <ion-avatar>
+            <img [src]="inquilino.foto" alt="Foto de {{ inquilino.nombre }}" />
+          </ion-avatar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>
