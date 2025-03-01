@@ -1,0 +1,40 @@
+:host {
+  ion-content {
+    --background: #f0fdf4; // Fondo suave verde claro para la página
+  }
+}
+
+.about-container {
+  padding: 1.2rem; // Espaciado un poco mayor para dar más aire
+
+  ion-card {
+    margin-bottom: 1.5rem; // Más espacio entre las tarjetas
+    border-radius: 12px; // Bordes más redondeados para mayor suavidad
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2); // Sombra con tono verde más oscuro
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; // Animación suave para la interacción
+
+    &:hover {
+      transform: scale(1.02); // Efecto de crecimiento al pasar el ratón
+      box-shadow: 0 6px 12px rgba(39, 174, 96, 0.3); // Sombra más intensa al pasar el ratón
+    }
+
+    ion-card-header {
+      background-color: #27AE60; // Verde más oscuro para el encabezado
+      color: #ffffff; // Texto blanco para buen contraste
+      padding: 1.2rem;
+      font-weight: bold; // Texto más destacado
+      text-transform: uppercase; // Estilo para resaltar los títulos
+      letter-spacing: 1px; // Espaciado entre letras
+    }
+
+    ion-card-content {
+      padding: 1.2rem;
+      font-size: 1rem; // Tamaño de fuente un poco mayor para mejor legibilidad
+      line-height: 1.6;
+      color: #1c1c1c; // Texto en tono gris oscuro
+      background: linear-gradient(135deg, #d4efdf, #a9dfbf); // Fondo degradado suave en tonos verdes
+      border-left: 4px solid #27AE60; // Borde con la misma tonalidad verde oscura
+    }
+  }
+}

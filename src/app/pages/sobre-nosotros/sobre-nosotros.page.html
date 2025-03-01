@@ -1,13 +1,34 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>sobre_nosotros</ion-title>
+  <ion-toolbar color="success">
+    <ion-title>Sobre Nosotros</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <!-- Permite actualizar el contenido con "pull to refresh" -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingText="Desliza para actualizar"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Encabezado secundario que se muestra al hacer scroll (colapsa) -->
   <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">sobre_nosotros</ion-title>
+    <ion-toolbar color="success">
+      <ion-title size="large">Sobre Nosotros</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <div class="about-container">
+    <!-- Se itera sobre un array de elementos para generar dinámicamente cada tarjeta -->
+    <ion-card *ngFor="let item of aboutItems; let i = index" class="animate-card">
+      <ion-card-header>
+        <ion-card-title>{{ item.title }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p [innerHTML]="item.content"></p>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
