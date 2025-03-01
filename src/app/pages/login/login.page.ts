@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { mailOutline, lockClosedOutline } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 import { IonContent, IonButton, IonInput, IonItem, IonSpinner,IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -24,7 +26,7 @@ export class LoginPage {
     private http: HttpClient,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController // Agregamos AlertController para mostrar mensajes con estilo
-  ) {}
+  ) {addIcons({mailOutline,lockClosedOutline})}
 
   goToRegister() {
     this.router.navigate(['/register']);

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { addIcons } from 'ionicons';
+import { businessOutline, callOutline, cardOutline, homeOutline, lockClosedOutline, mailOutline, personOutline} from 'ionicons/icons';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonSelect, IonSelectOption, IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -36,7 +38,7 @@ export class RegisterPage {
     private http: HttpClient,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController // Para mostrar alertas estilizadas
-  ) {}
+  ) {addIcons({personOutline, homeOutline, mailOutline ,cardOutline ,businessOutline ,lockClosedOutline ,callOutline})}
 
   // Mostrar la imagen según el tipo de domicilio
   mostrarImagenDomicilio(event: any) {

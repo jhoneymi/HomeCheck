@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { addIcons } from 'ionicons';
+import { homeOutline, documentTextOutline, peopleOutline, businessOutline, logoAngular, notificationsOutline, storefrontOutline, documentsOutline, alertCircleOutline, logoTwitter } from 'ionicons/icons';
 import { IonContent, IonSearchbar, IonIcon, IonItem, IonList, IonBadge } from '@ionic/angular/standalone';
 import Chart from 'chart.js/auto';
 
@@ -18,7 +20,7 @@ export class HomePage implements OnInit, AfterViewInit {
   @ViewChild('salesChart') salesChart!: ElementRef;
   @ViewChild('tasksChart') tasksChart!: ElementRef;
 
-  constructor() { }
+  constructor() {addIcons({logoAngular,homeOutline,documentTextOutline,peopleOutline,businessOutline,notificationsOutline,storefrontOutline,documentsOutline,alertCircleOutline,logoTwitter});}
 
   ngOnInit() {}
 
