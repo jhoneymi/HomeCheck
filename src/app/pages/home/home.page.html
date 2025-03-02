@@ -1,69 +1,50 @@
 <ion-content>
-  <!-- Sidebar -->
+  <!-- Sidebar Dinámica -->
   <div class="sidebar">
     <div class="logo">
       <ion-icon name="logo-angular"></ion-icon>
       <span>HomeCheck</span>
     </div>
     <ion-list>
-      <ion-item button class="active">
-        <ion-icon name="home-outline"></ion-icon>
-        <span>Home</span>
-      </ion-item>
-      <ion-item button>
-        <ion-icon name="document-text-outline"></ion-icon>
-        <span>Facturas</span>
-      </ion-item>
-      <ion-item button>
-        <ion-icon name="people-outline"></ion-icon>
-        <a href="inquilinos"><span>Inquilinos</span></a>
-      </ion-item>
-      <ion-item button>
-        <ion-icon name="business-outline"></ion-icon>
-        <span>Viviendas</span>
+      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route">
+        <ion-icon [name]="menu.icon"></ion-icon>
+        <span>{{ menu.title }}</span>
       </ion-item>
     </ion-list>
   </div>
 
   <!-- Contenido Principal -->
   <div class="main-content">
-    <!-- Barra de Búsqueda y Notificaciones -->
+    <!-- Barra Superior: Búsqueda y Notificaciones -->
     <div class="topbar">
-      <ion-searchbar placeholder="Search..."></ion-searchbar>
+      <ion-searchbar placeholder="Buscar..." (ionInput)="onSearch($event)"></ion-searchbar>
       <div class="icons">
         <ion-icon name="notifications-outline"></ion-icon>
-        <ion-badge class="notification-badge">5</ion-badge>
+        <ion-badge class="notification-badge">{{ notificationCount }}</ion-badge>
       </div>
     </div>
 
-    <!-- Tarjetas -->
+    <!-- Pull-to-Refresh -->
+    <ion-refresher slot="fixed" (ionRefresh)="refreshContent($event)">
+      <ion-refresher-content
+        pullingText="Desliza para refrescar"
+        refreshingSpinner="circles">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Tarjetas Dinámicas -->
     <div class="card-container">
-      <div class="card success">
-        <ion-icon name="storefront-outline"></ion-icon>
-        <h3>Revenue</h3>
-        <p>$34,245</p>
-      </div>
-      <div class="card warning">
-        <ion-icon name="documents-outline"></ion-icon>
-        <h3>Used Space</h3>
-        <p>49/50 GB</p>
-      </div>
-      <div class="card danger">
-        <ion-icon name="alert-circle-outline"></ion-icon>
-        <h3>Fixed Issues</h3>
-        <p>75</p>
-      </div>
-      <div class="card primary">
-        <ion-icon name="logo-twitter"></ion-icon>
-        <h3>Followers</h3>
-        <p>+245</p>
+      <div class="card" *ngFor="let card of cards" [ngClass]="card.type" (click)="openCard(card)">
+        <ion-icon [name]="card.icon"></ion-icon>
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.value }}</p>
       </div>
     </div>
 
-    <!-- Gráficos -->
+    <!-- Contenedor de Gráficos -->
     <div class="charts-container">
-      <canvas #salesChart></canvas>
-      <canvas #tasksChart></canvas>
+      <canvas #salesChart width="400" height="200"></canvas>
+      <canvas #tasksChart width="400" height="200"></canvas>
     </div>
   </div>
 </ion-content>

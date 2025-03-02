@@ -4,7 +4,7 @@
       <img src="assets/icon/casaa.jpeg" alt="Homecheck Logo" style="width: 30px; height: auto;">
     </div>
     <div class="menu">
-      <ion-button fill="clear" class="black-button">Boton</ion-button>
+      <ion-button fill="clear" class="black-button">Proximamente</ion-button>
       <ion-button fill="clear" class="black-button">Contáctanos</ion-button>
       <ion-button fill="solid" class="green-button">Acerca de Nosotros</ion-button>
     </div>
@@ -21,19 +21,17 @@
     <div class="form-section">
       <h2 class="form-title">Inicia Sesión</h2>
       <div class="login-form">
-
         <!-- Campo de Email con Icono -->
         <ion-item class="input-item">
-          <ion-icon name="mail-outline" slot="start"></ion-icon> <!-- Icono de Email -->
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
           <ion-input [(ngModel)]="credentials.email" type="email" placeholder="Email" required></ion-input>
         </ion-item>
 
         <!-- Campo de Contraseña con Icono -->
         <ion-item class="input-item">
-          <ion-icon name="lock-closed-outline" slot="start"></ion-icon> <!-- Icono de Contraseña -->
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
           <ion-input [(ngModel)]="credentials.password" type="password" placeholder="Contraseña" required></ion-input>
         </ion-item>
-
       </div>
 
       <p class="extra-text">¿No tienes una cuenta? <a href="/register">Regístrate</a></p>

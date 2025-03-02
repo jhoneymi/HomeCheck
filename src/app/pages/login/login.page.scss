@@ -1,7 +1,7 @@
-/* Fondo blanco para todo el contenido */
+/* Fondo con gradiente suave */
 ion-content {
-  --background: white;
-  font-family: 'Roboto', sans-serif; /* Tipografía moderna */
+  --background: linear-gradient(to bottom, #f9f9f9, #ffffff);
+  font-family: 'Roboto', sans-serif;
 }
 
 /* Navbar */
@@ -11,55 +11,58 @@ ion-content {
   align-items: center;
   padding: 1rem 2rem;
   background-color: white;
-  border-bottom: 2px solid black; /* Línea negra */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  border-bottom: 2px solid black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.logo img {
-  width: 30px;
-  height: auto;
-}
-
+/* Botones del menú (texto verde) */
 .menu ion-button {
   margin: 0 0.5rem;
+  --color: #3b805c; /* Cambiado a verde */
+  --background: transparent; /* Fondo transparente por defecto */
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
-/* Estilo para los botones negros */
-.black-button {
-  --color: black;
-  --background-hover: rgba(0, 0, 0, 0.1); /* Efecto hover sutil */
+.menu ion-button:hover {
+  transform: scale(1.05);
+  --color: #ffffff; /* Verde más oscuro al pasar el mouse */
+  --background: #2d6348; /* Fondo gris claro en hover */
 }
 
-/* Estilo para el botón verde */
+/* Botón verde sólido */
 .green-button {
   --background: #3b805c;
   --color: white;
   --border-radius: 5px;
-  --background-hover: #2d6348; /* Efecto hover más oscuro */
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Contenido Principal */
+.green-button:hover {
+  transform: scale(1.05);
+  --background: #2d6348;
+}
+
+/* Contenido principal */
 .main-content {
   text-align: center;
   padding: 2rem;
-  background-color: white;
 }
 
-/* Sección de Título */
+/* Título principal */
 .title-section .main-title {
-  color: #3b805c;
+  color: #3f8440;
   font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: 1rem;
 }
 
+/* Descripción */
 .title-section .description {
   font-size: 1.1rem;
-  color: #333;
+  color: #000000;
   line-height: 1.6;
 }
 
-/* Sección de Formulario */
+/* Sección del formulario */
 .form-section {
   margin-top: 2rem;
   display: inline-block;
@@ -69,27 +72,36 @@ ion-content {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Título del formulario */
 .form-title {
   color: #fff;
   font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
+/* Inputs */
 .login-form .input-item {
   background-color: #fff;
   border-radius: 5px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
 }
 
+.login-form .input-item:focus-within {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Iconos */
 .login-form ion-icon {
-  color: #3b805c; /* Color del icono */
-  font-size: 1.2rem; /* Tamaño del icono */
-  margin-right: 0.5rem; /* Espaciado entre el icono y el campo */
+  color: #3b805c;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
 }
 
+/* Texto adicional debajo del formulario */
 .extra-text {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   color: #fff;
   font-size: 0.9rem;
 }
@@ -98,30 +110,4 @@ ion-content {
   color: #fff;
   text-decoration: underline;
   font-weight: bold;
-}
-
-/* Estilos personalizados para la alerta */
-.custom-alert {
-  --background: #ffffff; /* Fondo blanco */
-  --border-radius: 12px;
-  --box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
-  --max-width: 400px;
-}
-
-.custom-alert .alert-title {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #1A2A6C; /* Azul marino */
-}
-
-.custom-alert .alert-message {
-  font-size: 1rem;
-  color: #333;
-}
-
-.custom-alert .alert-button {
-  background-color: #2ECC71 !important; /* Verde esmeralda */
-  color: white !important;
-  font-weight: bold;
-  border-radius: 8px;
 }
