@@ -34,7 +34,7 @@ ion-content {
     display: flex;
     align-items: center;
     gap: 10px;
-    --color: white;
+    --color: black;
     --background: transparent;
     padding: 10px 0;
   }
@@ -44,6 +44,11 @@ ion-content {
     background: rgba(46, 204, 113, 0.2);
     border-radius: 10px;
     transform: scale(1.02);
+  }
+
+  ion-item span {
+    margin: 7px;
+    margin-bottom: -2px;
   }
   
   /* Contenido Principal */

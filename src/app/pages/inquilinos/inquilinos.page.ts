@@ -1,45 +1,81 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonCol, IonRow, IonGrid, IonButton, IonButtons } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { alertCircleOutline, businessOutline, cashOutline, documentsOutline, documentTextOutline, homeOutline, logoAngular, logoTwitter, notificationsOutline, peopleOutline, storefrontOutline } from 'ionicons/icons';
+import { 
+  IonIcon,
+  IonItem, 
+  IonContent, 
+  IonAvatar, 
+  IonCol, 
+  IonRow, 
+  IonGrid, 
+  IonList} from '@ionic/angular/standalone';
+import { RouterModule } from '@angular/router';
+import { Observable } from 'rxjs';
+import { InquilinosService } from 'src/app/services/inquilinos.service';
 
 @Component({
   selector: 'app-inquilinos',
   templateUrl: './inquilinos.page.html',
   styleUrls: ['./inquilinos.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonAvatar, IonCol, IonToolbar, IonRow, IonButton, IonButtons, CommonModule, IonGrid, FormsModule]
+  imports: [
+    IonContent, 
+    IonIcon,
+    IonItem, 
+    IonAvatar, 
+    IonCol, 
+    IonRow,
+    RouterModule,  
+    CommonModule, 
+    IonGrid, 
+    FormsModule, 
+    IonList,  ]
 })
 export class InquilinosPage implements OnInit {
-  
-  inquilinos = [
-    {
-      nombre: 'Juan Mendoza Parra',
-      telefono: '88290983764',
-      email: 'HolaParrajuan123@gmail.com',
-      referencia: 'Patricia Peres: 8097654321',
-      cedula: '0908-8765432-1',
-      foto: 'assets/foto1.png'
-    },
-    {
-      nombre: 'Pedro González',
-      telefono: '88290321234',
-      email: 'pedro.gonzalez@mail.com',
-      referencia: 'Luis Martinez: 8291234567',
-      cedula: '0808-1234567-2',
-      foto: 'assets/foto2.png'
-    },
-    {
-      nombre: 'Ana López',
-      telefono: '8298765432',
-      email: 'ana.lopez@gmail.com',
-      referencia: 'Carlos Pérez: 8099876543',
-      cedula: '0707-7654321-3',
-      foto: 'assets/foto3.png'
-    }
+
+  // Menú lateral dinámico
+  sidebarMenu = [
+    { title: 'Home', icon: 'home-outline', active: false, route: '/home' },
+    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
+    { title: 'Inquilinos', icon: 'people-outline', active: true, route: '/inquilinos' },
+    { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' }
   ];
+  
+  inquilinos: any[] = []; // Lista de inquilinos vacía inicialmente
 
-  constructor() { }
+  constructor(private inquilinosService: InquilinosService) {    
+    addIcons({
+      cashOutline,
+      logoAngular,
+      homeOutline,
+      documentTextOutline,
+      peopleOutline,
+      businessOutline,
+      notificationsOutline,
+      storefrontOutline,
+      documentsOutline,
+      alertCircleOutline,
+      logoTwitter
+    });}
 
-  ngOnInit() { }
+  ngOnInit() 
+  { 
+    // Obtener los inquilinos al iniciar
+    this.getInquilinos()
+  }
+  
+  getInquilinos() {
+    this.inquilinosService.getInquilinos().subscribe({
+      next: (data) => {
+        this.inquilinos = data;  // Asignar los datos obtenidos a la lista de inquilinos
+      },
+      error: (err) => {
+        console.error('Error al obtener los inquilinos:', err);
+        // Aquí podrías mostrar alguna alerta o mensaje en caso de error
+      }
+    });
+  }
 }

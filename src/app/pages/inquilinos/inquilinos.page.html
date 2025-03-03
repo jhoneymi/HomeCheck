@@ -1,27 +1,18 @@
-<ion-header>
-  <ion-toolbar class="navbar">
-    <ion-title>
-      <img src="assets/logo.png" alt="Logo" class="logo" />
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button class="login-btn">Iniciar sesión</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-
-  <ion-toolbar class="menu">
-    <ion-buttons>
-      <ion-button>Contáctanos</ion-button>
-      <ion-button>Facturas</ion-button>
-      <ion-button>Ganancias</ion-button>
-      <ion-button class="active">Inquilinos</ion-button>
-      <ion-button>Viviendas</ion-button>
-      <ion-button>Gastos</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content class="content">
-  <div class="container">
+  <div class="sidebar">
+    <div class="logo">
+      <ion-icon name="logo-angular"></ion-icon>
+      <span>HomeCheck</span>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route">
+        <ion-icon [name]="menu.icon"></ion-icon>
+        <span>{{ menu.title }}</span>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="main-content">
     <h2>Lista de Inquilinos</h2>
 
     <ion-grid class="tabla-inquilinos">

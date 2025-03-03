@@ -69,4 +69,70 @@ router.post('/login', (req, res) => {
     });
 });
 
+// Obtener todos los inquilinos
+router.get('/inquilinos', (req, res) => {
+    connection.query('SELECT * FROM inquilinos', (error, results) => {
+        if (error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+// Crear un nuevo inquilino
+router.post('/inquilinos', (req, res) => {
+    const { nombre, telefono, email, vivienda_id, metodo_pago } = req.body;
+    connection.query(
+        'INSERT INTO inquilinos (nombre, telefono, email, vivienda_id, metodo_pago) VALUES (?, ?, ?, ?, ?)',
+        [nombre, telefono, email, vivienda_id, metodo_pago],
+        (error, result) => {
+            if (error) {
+                res.status(500).json({ error: error.message });
+            } else {
+                res.json({ message: 'Inquilino agregado', id: result.insertId });
+            }
+        }
+    );
+});
+
+// Actualizar un inquilino
+router.put('/inquilinos/:id', (req, res) => {
+    const { nombre, telefono, email, vivienda_id, metodo_pago } = req.body;
+    const { id } = req.params;
+    
+    connection.query(
+        'UPDATE inquilinos SET nombre = ?, telefono = ?, email = ?, vivienda_id = ?, metodo_pago = ? WHERE id = ?',
+        [nombre, telefono, email, vivienda_id, metodo_pago, id],
+        (error, result) => {
+            if (error) {
+                res.status(500).json({ error: error.message });
+            } else if (result.affectedRows === 0) {
+                res.status(404).json({ message: 'Inquilino no encontrado' });
+            } else {
+                res.json({ message: 'Inquilino actualizado' });
+            }
+        }
+    );
+});
+
+// Eliminar un inquilino
+router.delete('/inquilinos/:id', (req, res) => {
+    const { id } = req.params;
+
+    connection.query(
+        'DELETE FROM inquilinos WHERE id = ?',
+        [id],
+        (error, result) => {
+            if (error) {
+                res.status(500).json({ error: error.message });
+            } else if (result.affectedRows === 0) {
+                res.status(404).json({ message: 'Inquilino no encontrado' });
+            } else {
+                res.json({ message: 'Inquilino eliminado' });
+            }
+        }
+    );
+});
+
 module.exports = router;

@@ -12,7 +12,8 @@ import {
   storefrontOutline, 
   documentsOutline, 
   alertCircleOutline, 
-  logoTwitter 
+  logoTwitter, 
+  cashOutline
 } from 'ionicons/icons';
 import { 
   IonContent, 
@@ -62,14 +63,15 @@ export class HomePage implements OnInit, AfterViewInit {
 
   // Tarjetas dinámicas
   cards = [
-    { title: 'Revenue', icon: 'storefront-outline', value: '$34,245', type: 'success' },
+    { title: 'Ganancias', icon: 'cash-outline', value: '$34,245', type: 'success' },
     { title: 'Used Space', icon: 'documents-outline', value: '49/50 GB', type: 'warning' },
     { title: 'Fixed Issues', icon: 'alert-circle-outline', value: '75', type: 'danger' },
-    { title: 'Followers', icon: 'logo-twitter', value: '+245', type: 'primary' }
+    { title: 'Inquilinos', icon: 'people-outline', value: '+245', type: 'primary' }
   ];
 
   constructor() {
     addIcons({
+      cashOutline,
       logoAngular,
       homeOutline,
       documentTextOutline,
