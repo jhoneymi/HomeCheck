@@ -10,18 +10,18 @@ const JWT_SECRET = 'home'; // Usa una clave secreta segura
 
 // Registro de usuario
 router.post('/register', (req, res) => {
-    const { nombre_completo, direccion, email, numero_cedula, tipo_domicilio, password, telefono } = req.body;
+    const { nombre_completo, direccion, email, numero_cedula, tipo_domicilio, password, telefono, role_id } = req.body;
 
-    if (!nombre_completo || !direccion || !email || !numero_cedula || !tipo_domicilio || !password || !telefono) {
+    if (!nombre_completo || !direccion || !email || !numero_cedula || !tipo_domicilio || !password || !telefono || !role_id) {
         return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    const sql = `INSERT INTO usuarios (nombre_completo, direccion, email, numero_cedula, tipo_domicilio, password, telefono) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO usuarios (nombre_completo, direccion, email, numero_cedula, tipo_domicilio, password, telefono, role_id) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-    const values = [nombre_completo, direccion, email, numero_cedula, tipo_domicilio, hashedPassword, telefono];
+    const values = [nombre_completo, direccion, email, numero_cedula, tipo_domicilio, hashedPassword, telefono, role_id];
 
     connection.query(sql, values, (error, results) => {
         if (error) {

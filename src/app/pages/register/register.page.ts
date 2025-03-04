@@ -26,7 +26,8 @@ export class RegisterPage {
     tipo_domicilio: 'Casa',
     password: '',
     telefono: '',
-    fecha_registro: ''
+    fecha_registro: '',
+    role_id: ''
   };
 
   isLoading = false;
