@@ -41,7 +41,8 @@ export class InquilinosPage implements OnInit {
     { title: 'Home', icon: 'home-outline', active: false, route: '/home' },
     { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
     { title: 'Inquilinos', icon: 'people-outline', active: true, route: '/inquilinos' },
-    { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' }
+    { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' },
+    { title: 'Salida', icon: '', active: false, route: '' }
   ];
   
   inquilinos: any[] = []; // Lista de inquilinos vacía inicialmente
