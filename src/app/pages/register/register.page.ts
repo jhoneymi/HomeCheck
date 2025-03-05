@@ -27,7 +27,6 @@ export class RegisterPage {
     password: '',
     telefono: '',
     fecha_registro: '',
-    role_id: ''
   };
 
   isLoading = false;
