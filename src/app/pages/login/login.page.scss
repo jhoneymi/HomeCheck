@@ -1,3 +1,32 @@
+<<<<<<< HEAD
+@use 'sass:color';
+
+<<<<<<< Updated upstream
+ion-content {
+  --background: #f5f5f5; /* Fondo claro */
+=======
+/* Colores personalizados */
+$azul-marino: #1A2A6C;
+$verde-esmeralda: #2ECC71;
+$gris-claro: #f2f2f2;
+$oscuro: #333;
+$azul-claro: #5A7D9E;
+
+/* Colores personalizados */
+$blanco: #ffffff;
+$verde-oscuro: #2e7c66;
+$gris-muy-claro: #f9f8fa;
+$gris-claro: #f1f2f4;
+$gris-suave: #f2f3f6;
+
+
+
+/* Fondo de página */
+body {
+  background-color: #f1f2f4;
+  height: 100vh;
+>>>>>>> Stashed changes
+=======
 /* Fondo con gradiente suave */
 ion-content {
   --background: linear-gradient(to bottom, #f9f9f9, #ffffff);
@@ -6,6 +35,7 @@ ion-content {
 
 /* Navbar */
 .navbar {
+>>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,12 +45,31 @@ ion-content {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+<<<<<<< HEAD
+.login-container {
+  width: 100%;
+<<<<<<< Updated upstream
+  max-width: 360px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+=======
+  max-width: 450px;
+  background-color: $verde-esmeralda;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+>>>>>>> Stashed changes
+  text-align: center;
+=======
 /* Botones del menú (texto verde) */
 .menu ion-button {
   margin: 0 0.5rem;
   --color: #3b805c; /* Cambiado a verde */
   --background: transparent; /* Fondo transparente por defecto */
   transition: transform 0.3s ease, color 0.3s ease;
+>>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
 }
 
 .menu ion-button:hover {
@@ -33,6 +82,25 @@ ion-content {
 .green-button {
   --background: #3b805c;
   --color: white;
+<<<<<<< HEAD
+  font-size: 1rem;
+<<<<<<< Updated upstream
+  font-weight: bold;
+  margin-top: 16px;
+=======
+  color: $verde-oscuro;
+
+  a {
+    color: $verde-esmeralda;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      color: color.adjust($verde-esmeralda, $lightness: -10%);
+    }
+  }
+>>>>>>> Stashed changes
+=======
   --border-radius: 5px;
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
@@ -53,6 +121,7 @@ ion-content {
   color: #3f8440;
   font-size: 2.5rem;
   font-weight: bold;
+>>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
 }
 
 /* Descripción */
