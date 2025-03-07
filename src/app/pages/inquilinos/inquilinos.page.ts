@@ -1,20 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { IonicModule } from '@ionic/angular'; // Solo este para componentes Ionic
 import { addIcons } from 'ionicons';
-import { alertCircleOutline, businessOutline, cashOutline, documentsOutline, documentTextOutline, homeOutline, logoAngular, logoTwitter, notificationsOutline, peopleOutline, storefrontOutline } from 'ionicons/icons';
 import { 
-  IonIcon,
-  IonItem, 
-  IonContent, 
-  IonAvatar, 
-  IonCol, 
-  IonRow, 
-  IonGrid, 
-  IonList} from '@ionic/angular/standalone';
+  addOutline, 
+  alertCircleOutline, 
+  businessOutline, 
+  cashOutline, 
+  documentsOutline, 
+  documentTextOutline, 
+  homeOutline, 
+  logoAngular, 
+  logoTwitter, 
+  notificationsOutline, 
+  peopleOutline, 
+  storefrontOutline 
+} from 'ionicons/icons';
 import { RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
 import { InquilinosService } from 'src/app/services/inquilinos.service';
+import { ModalAgregarInquilinoComponent } from 'src/app/modal-agregar-inquilino/modal-agregar-inquilino.component';
 
 @Component({
   selector: 'app-inquilinos',
@@ -22,21 +28,15 @@ import { InquilinosService } from 'src/app/services/inquilinos.service';
   styleUrls: ['./inquilinos.page.scss'],
   standalone: true,
   imports: [
-    IonContent, 
-    IonIcon,
-    IonItem, 
-    IonAvatar, 
-    IonCol, 
-    IonRow,
-    RouterModule,  
-    CommonModule, 
-    IonGrid, 
-    FormsModule, 
-    IonList,  ]
+    IonicModule,          // Provee todos los componentes Ionic
+    CommonModule,
+    FormsModule,
+    HttpClientModule,     // Para InquilinosService
+    RouterModule,
+    ModalAgregarInquilinoComponent
+  ]
 })
 export class InquilinosPage implements OnInit {
-
-  // Menú lateral dinámico
   sidebarMenu = [
     { title: 'Home', icon: 'home-outline', active: false, route: '/home' },
     { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
@@ -44,8 +44,9 @@ export class InquilinosPage implements OnInit {
     { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' },
     { title: 'Salida', icon: '', active: false, route: '' }
   ];
-  
-  inquilinos: any[] = []; // Lista de inquilinos vacía inicialmente
+
+  inquilinos: any[] = [];
+  isModalOpen = false;
 
   constructor(private inquilinosService: InquilinosService) {    
     addIcons({
@@ -59,24 +60,35 @@ export class InquilinosPage implements OnInit {
       storefrontOutline,
       documentsOutline,
       alertCircleOutline,
-      logoTwitter
-    });}
-
-  ngOnInit() 
-  { 
-    // Obtener los inquilinos al iniciar
-    this.getInquilinos()
+      logoTwitter,
+      addOutline
+    });
   }
-  
+
+  ngOnInit() {
+    console.log('ngOnInit ejecutado');
+    this.getInquilinos();
+  }
+
   getInquilinos() {
+    console.log('Obteniendo inquilinos desde:', this.inquilinosService['apiUrl']);
     this.inquilinosService.getInquilinos().subscribe({
       next: (data) => {
-        this.inquilinos = data;  // Asignar los datos obtenidos a la lista de inquilinos
+        console.log('Inquilinos recibidos:', data);
+        this.inquilinos = data;
       },
       error: (err) => {
         console.error('Error al obtener los inquilinos:', err);
-        // Aquí podrías mostrar alguna alerta o mensaje en caso de error
       }
     });
+  }
+
+  abrirModal() {
+    this.isModalOpen = true;
+  }
+
+  cerrarModal(event?: any) {
+    console.log('Cerrando modal, evento:', event);
+    this.isModalOpen = false;
   }
 }

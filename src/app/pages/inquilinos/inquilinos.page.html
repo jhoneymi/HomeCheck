@@ -39,4 +39,18 @@
       </ion-row>
     </ion-grid>
   </div>
+
+<!-- Botón flotante en la esquina inferior derecha -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="custom-fab" (click)="abrirModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+<!-- Modal -->
+  <ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="cerrarModal($event)">
+    <ng-template>
+      <app-modal-agregar-inquilino></app-modal-agregar-inquilino>
+    </ng-template>
+  </ion-modal>
 </ion-content>

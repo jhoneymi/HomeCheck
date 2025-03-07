@@ -1,13 +1,41 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Viviendas</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="content">
+  <!-- Barra lateral -->
+  <div class="sidebar">
+    <div class="logo">
+      <ion-icon name="logo-angular"></ion-icon>
+      <span>HomeCheck</span>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route">
+        <ion-icon [name]="menu.icon"></ion-icon>
+        <span>{{ menu.title }}</span>
+      </ion-item>
+    </ion-list>
+  </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Viviendas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="vivienda-card">
+      <img *ngIf="vivienda?.imagenUrl" [src]="vivienda.imagenUrl" class="vivienda-imagen" />
+
+      <div class="vivienda-info">
+        <h3>Casa Azul</h3>
+        <p>Calle 123, Ciudad</p>
+        <p class="estado disponible">Disponible</p>
+
+        <div class="botones">
+          <ion-button color="primary">Editar</ion-button>
+          <ion-button color="danger">Eliminar</ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card -->
+    <div class="vivienda-card">
+      <!-- Botón circular -->
+      <div class="add-button">
+        <ion-icon name="add-outline"></ion-icon>
+      </div>
+    </div>
+  </div>
 </ion-content>

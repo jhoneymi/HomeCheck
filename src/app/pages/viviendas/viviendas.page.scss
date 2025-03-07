@@ -1,0 +1,117 @@
+// 🌟 Estilos Generales
+ion-content {
+    --background: #f4f4f4;
+    --color: #000000;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+  }
+  
+  
+/* Sidebar */
+    .sidebar {
+      position: fixed;
+      width: 250px;
+      height: 100vh;
+      background: #1e8449;
+      color: white;
+      padding: 20px;
+      z-index: 2;
+    }
+    
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    ion-list {
+      margin-top: 20px;
+    }
+    
+    ion-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      --color: white;
+      --background: transparent;
+      padding: 10px 0;
+    }
+    
+    ion-item:hover,
+    .active {
+      background: rgba(46, 204, 113, 0.2);
+      border-radius: 10px;
+      transform: scale(1.02);
+    }
+  
+    ion-item span {
+      margin: 7px;
+      margin-bottom: -2px;
+    }
+    
+/* Contenido Principal */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      margin-left: 250px;
+      background: #ffffff;
+      color: #000000;
+    }
+  
+    h2 {
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      justify-items: center;
+    }
+
+/* Tarjeta de vivienda */
+.vivienda-card {
+    width: 350px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    background: white;
+    text-align: center;
+}
+  
+.vivienda-imagen {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+  
+.vivienda-info {
+    padding: 15px;
+}
+  
+.estado {
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+  
+.estado.disponible {
+    color: white;
+    background: green;
+}
+  
+.estado.ocupada {
+    color: white;
+    background: red;
+}
+  
+.estado.mantenimiento {
+    color: white;
+    background: orange;
+}
+  
+.botones {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+}
