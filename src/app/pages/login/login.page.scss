@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @use 'sass:color';
 
 <<<<<<< Updated upstream
@@ -25,13 +26,26 @@ body {
   background-color: #f1f2f4;
   height: 100vh;
 >>>>>>> Stashed changes
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 20px;
+=======
+/* Fondo con gradiente suave */
+ion-content {
+  --background: linear-gradient(to bottom, #f9f9f9, #ffffff);
+  font-family: 'Roboto', sans-serif;
 }
 
+/* Navbar */
+.navbar {
+>>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-bottom: 2px solid black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+<<<<<<< HEAD
 .login-container {
   width: 100%;
 <<<<<<< Updated upstream
@@ -48,39 +62,27 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 >>>>>>> Stashed changes
   text-align: center;
+=======
+/* Botones del menú (texto verde) */
+.menu ion-button {
+  margin: 0 0.5rem;
+  --color: #3b805c; /* Cambiado a verde */
+  --background: transparent; /* Fondo transparente por defecto */
+  transition: transform 0.3s ease, color 0.3s ease;
+>>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
 }
 
-.logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #4caf50; /* Verde primario */
-  margin-bottom: 16px;
+.menu ion-button:hover {
+  transform: scale(1.05);
+  --color: #ffffff; /* Verde más oscuro al pasar el mouse */
+  --background: #2d6348; /* Fondo gris claro en hover */
 }
 
-.login-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333333;
-  margin-bottom: 24px;
-}
-
-.input-item {
-  --background: #e8f5e9; /* Fondo verde claro */
-  --border-color: #4caf50; /* Verde primario */
-  --placeholder-color: #757575;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  padding: 0 8px;
-}
-
-ion-icon {
-  color: #4caf50;
-}
-
-.login-btn {
-  --background: #4caf50; /* Verde primario */
-  --background-hover: #388e3c; /* Verde más oscuro */
+/* Botón verde sólido */
+.green-button {
+  --background: #3b805c;
   --color: white;
+<<<<<<< HEAD
   font-size: 1rem;
 <<<<<<< Updated upstream
   font-weight: bold;
@@ -98,19 +100,83 @@ ion-icon {
     }
   }
 >>>>>>> Stashed changes
+=======
+  --border-radius: 5px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.register-link {
-  margin-top: 16px;
+.green-button:hover {
+  transform: scale(1.05);
+  --background: #2d6348;
+}
+
+/* Contenido principal */
+.main-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Título principal */
+.title-section .main-title {
+  color: #3f8440;
+  font-size: 2.5rem;
+  font-weight: bold;
+>>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
+}
+
+/* Descripción */
+.title-section .description {
+  font-size: 1.1rem;
+  color: #000000;
+  line-height: 1.6;
+}
+
+/* Sección del formulario */
+.form-section {
+  margin-top: 2rem;
+  display: inline-block;
+  background-color: #3b805c;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título del formulario */
+.form-title {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Inputs */
+.login-form .input-item {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.login-form .input-item:focus-within {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Iconos */
+.login-form ion-icon {
+  color: #3b805c;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+/* Texto adicional debajo del formulario */
+.extra-text {
+  margin-top: 1rem;
+  color: #fff;
   font-size: 0.9rem;
-  color: #757575;
 }
 
-.register-link a {
-  color: #4caf50;
-  text-decoration: none;
-}
-
-.register-link a:hover {
+.extra-text a {
+  color: #fff;
   text-decoration: underline;
+  font-weight: bold;
 }

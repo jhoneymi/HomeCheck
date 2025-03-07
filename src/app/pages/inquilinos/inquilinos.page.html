@@ -1,0 +1,42 @@
+<ion-content class="content">
+  <div class="sidebar">
+    <div class="logo">
+      <ion-icon name="logo-angular"></ion-icon>
+      <span>HomeCheck</span>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route">
+        <ion-icon [name]="menu.icon"></ion-icon>
+        <span>{{ menu.title }}</span>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="main-content">
+    <h2>Lista de Inquilinos</h2>
+
+    <ion-grid class="tabla-inquilinos">
+      <ion-row class="header">
+        <ion-col>Nombre Completo</ion-col>
+        <ion-col>Teléfono</ion-col>
+        <ion-col>Email</ion-col>
+        <ion-col>Referencias</ion-col>
+        <ion-col>Cédula</ion-col>
+        <ion-col>Foto</ion-col>
+      </ion-row>
+
+      <ion-row *ngFor="let inquilino of inquilinos" class="row">
+        <ion-col>{{ inquilino.nombre }}</ion-col>
+        <ion-col>{{ inquilino.telefono }}</ion-col>
+        <ion-col>{{ inquilino.email }}</ion-col>
+        <ion-col>{{ inquilino.referencia }}</ion-col>
+        <ion-col>{{ inquilino.cedula }}</ion-col>
+        <ion-col class="foto">
+          <ion-avatar>
+            <img [src]="inquilino.foto" alt="Foto de {{ inquilino.nombre }}" />
+          </ion-avatar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

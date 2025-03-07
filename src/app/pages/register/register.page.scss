@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Paleta de colores */
 $blanco: #ffffff;
 $verde-oscuro: #2e7c66;
@@ -74,3 +75,78 @@ ion-button {
     filter: brightness(1.1);
   }
 }
+=======
+/* Estilos para el encabezado */
+ion-header {
+  background-color: #f4f4f4; /* Fondo verde */
+}
+
+ion-toolbar {
+  --background: #3b805c; /* Fondo verde */
+  --color: white; /* Texto blanco */
+  border-bottom: 5px solid #2d6348; /* Línea verde más oscura y gruesa */
+}
+
+/* Fondo blanco para todo el contenido */
+ion-content {
+  --background: white;
+  font-family: 'Roboto', sans-serif; /* Tipografía moderna */
+}
+
+/* Sección de Formulario */
+.form-section {
+  margin: 2rem auto;
+  max-width: 500px;
+  padding: 2rem;
+  background-color: #3b805c; /* Fondo verde */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  color: #fff;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.register-form .input-item {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.register-form ion-icon {
+  color: #3b805c; /* Color del icono */
+  font-size: 1.2rem; /* Tamaño del icono */
+  margin-right: 0.5rem; /* Espaciado entre el icono y el campo */
+}
+
+/* Cuadro con Imagen Alusiva */
+.image-section {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.domicilio-image {
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Botones */
+.green-button {
+  --background: #3b805c;
+  --color: white;
+  --border-radius: 5px;
+  --background-hover: #2d6348; /* Efecto hover más oscuro */
+  margin-top: 1rem;
+}
+
+ion-button[color="light"] {
+  --color: #3b805c; /* Texto verde */
+  --background: #f9f9f9; /* Fondo gris claro */
+  --background-hover: #e0e0e0; /* Efecto hover */
+}
+>>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b

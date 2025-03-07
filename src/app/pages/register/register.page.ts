@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonList, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { businessOutline, callOutline, cardOutline, homeOutline, lockClosedOutline, mailOutline, personOutline} from 'ionicons/icons';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonSelect, IonSelectOption, IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -11,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./register.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonList, IonSelect, IonSelectOption,
+    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonSelect, IonSelectOption, IonIcon,
     CommonModule, FormsModule
   ]
 })
@@ -23,49 +25,102 @@ export class RegisterPage {
     numero_cedula: '',
     tipo_domicilio: 'Casa',
     password: '',
-    telefono: '',         // Nuevo campo
-    fecha_registro: ''    // Nuevo campo
+    telefono: '',
+    fecha_registro: '',
   };
 
-  constructor(public router: Router, private http: HttpClient) {}
+  isLoading = false;
+  mostrarImagen = false;
+  imagenDomicilio = '';
 
+  constructor(
+    public router: Router,
+    private http: HttpClient,
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController // Para mostrar alertas estilizadas
+  ) {addIcons({personOutline, homeOutline, mailOutline ,cardOutline ,businessOutline ,lockClosedOutline ,callOutline})}
+
+  // Mostrar la imagen según el tipo de domicilio
+  mostrarImagenDomicilio(event: any) {
+    const tipoDomicilio = event.detail.value;
+    this.mostrarImagen = true;
+
+    switch (tipoDomicilio) {
+      case 'Casa':
+        this.imagenDomicilio = 'assets/icon/casaregistro.jpg';
+        break;
+      case 'Departamento':
+        this.imagenDomicilio = 'assets/icon/departamento.jpg';
+        break;
+      case 'Residencia':
+        this.imagenDomicilio = 'assets/icon/residencia.jpg';
+        break;
+      default:
+        this.mostrarImagen = false;
+    }
+  }
+
+  // Método para mostrar una alerta personalizada
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertCtrl.create({
+      header,
+      message,
+      buttons: ['OK'],
+      cssClass: 'custom-alert'
+    });
+    await alert.present();
+  }
+
+  // Redirigir al login
   goToLogin() {
     this.router.navigate(['/login']);
   }
 
   // Validación antes de hacer el registro
-  register() {
-    // Verificar si todos los campos obligatorios están completos
+  async register() {
     if (!this.userData.nombre_completo || !this.userData.email || !this.userData.password || !this.userData.telefono) {
-      alert('Todos los campos son obligatorios');
+      this.showAlert('⚠️ Campos obligatorios', 'Por favor, completa todos los campos.');
       return;
     }
 
-    // Verificar si el formato de email es correcto
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(this.userData.email)) {
-      alert('Por favor, ingrese un email válido');
+      this.showAlert('⚠️ Email inválido', 'Por favor, ingrese un email válido.');
       return;
     }
 
-    // Asignar la fecha actual a fecha_registro
     this.userData.fecha_registro = new Date().toISOString();
+
+    // Mostrar indicador de carga
+    this.isLoading = true;
+    const loading = await this.loadingCtrl.create({
+      message: 'Registrando usuario...',
+      spinner: 'crescent'
+    });
+    await loading.present();
 
     // Enviar los datos al backend
     this.http.post('http://localhost:3000/api/auth/register', this.userData).subscribe({
-      next: (response) => {
-        alert('Registro exitoso');
-        this.router.navigate(['/login']);
+      next: async () => {
+        await loading.dismiss(); // Ocultar la carga
+        this.router.navigate(['/login']); // Redirigir sin mostrar alerta
       },
-      error: (err) => {
-        alert('Error en el registro');
-        console.error('Detalles del error:', err);
+      error: async (err) => {
+        await loading.dismiss(); // Ocultar la carga
+        console.error('❌ Error en el registro:', err);
 
-        // Manejar errores específicos, si se desean detalles adicionales
-        if (err.status === 400) {
-          alert('Hay un problema con los datos enviados. Verifica la información.');
-        } else if (err.status === 500) {
-          alert('Error en el servidor. Intenta nuevamente más tarde.');
+        switch (err.status) {
+          case 400:
+            this.showAlert('❌ Error en los datos', 'Hay un problema con los datos ingresados.');
+            break;
+          case 500:
+            this.showAlert('⚠️ Error del servidor', 'Intenta nuevamente más tarde.');
+            break;
+          case 0:
+            this.showAlert('🌐 Problema de conexión', 'No se pudo conectar con el servidor. Verifica tu internet.');
+            break;
+          default:
+            this.showAlert('⚠️ Error inesperado', 'Algo salió mal. Intenta nuevamente.');
         }
       }
     });
