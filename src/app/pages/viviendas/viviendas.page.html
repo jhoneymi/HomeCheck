@@ -30,11 +30,11 @@
       <div class="vivienda-info">
         <h3>{{ vivienda.nombre }}</h3>
         <p>{{ vivienda.direccion }}</p>
-        <p class="estado {{ vivienda.estado | lowercase }}">{{ vivienda.estado }}</p>
+        <p class="estado {{ getEstadoClass(vivienda.estado) }}">{{ vivienda.estado }}</p>
 
         <div class="botones">
-          <ion-button color="primary">Editar</ion-button>
-          <ion-button color="danger">Eliminar</ion-button>
+          <ion-button color="primary" (click)="abrirModalEditar(vivienda)">Editar</ion-button>
+          <ion-button color="danger" (click)="deleteVivienda(vivienda.id)">Eliminar</ion-button>
         </div>
       </div>
     </div>

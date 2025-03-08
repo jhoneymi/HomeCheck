@@ -15,6 +15,7 @@ ion-content {
   color: white;
   padding: 20px;
   z-index: 2;
+  transition: transform 0.3s ease; /* Animación para colapsar en pantallas pequeñas */
 }
 
 .logo {
@@ -37,12 +38,13 @@ ion-item {
   --color: white;
   --background: transparent;
   padding: 10px 0;
+  border-radius: 10px;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 ion-item:hover,
 .active {
   background: rgba(46, 204, 113, 0.2);
-  border-radius: 10px;
   transform: scale(1.02);
 }
 
@@ -61,6 +63,12 @@ ion-item span {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  min-height: 100vh;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    padding: 10px;
+  }
 }
 
 /* Tarjeta de vivienda */
@@ -74,8 +82,14 @@ ion-item span {
   height: 350px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animación suave */
+}
+
+.vivienda-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Estilos para el card de agregar vivienda */
@@ -86,23 +100,23 @@ ion-item span {
   justify-content: center;
   align-items: center;
   height: 350px;
-  cursor: pointer; /* Indica que es clickable */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animación suave */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .add-card:hover {
-  transform: scale(1.05); /* Efecto de escala al pasar el mouse */
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+  transform: scale(1.05);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .add-button {
   font-size: 40px;
   color: #1e8449;
-  transition: transform 0.3s ease; /* Animación para el icono */
+  transition: transform 0.3s ease;
 }
 
 .add-card:hover .add-button {
-  transform: rotate(90deg); /* Rotación del icono al pasar el mouse */
+  transform: rotate(90deg);
 }
 
 .add-card p {
@@ -124,17 +138,19 @@ ion-item span {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  flex-grow: 1;
 }
 
 .vivienda-info h3 {
   margin: 0;
   font-size: 20px;
+  color: #2c3e50;
 }
 
 .vivienda-info p {
   margin: 5px 0;
   font-size: 16px;
+  color: #7f8c8d;
 }
 
 .estado {
@@ -143,21 +159,22 @@ ion-item span {
   border-radius: 5px;
   display: inline-block;
   margin-top: 10px;
+  text-transform: uppercase;
 }
 
 .estado.disponible {
   color: white;
-  background: green;
+  background: #27ae60; /* Verde más oscuro */
 }
 
 .estado.ocupada {
   color: white;
-  background: red;
+  background: #e74c3c; /* Rojo más vibrante */
 }
 
 .estado.mantenimiento {
   color: white;
-  background: orange;
+  background: #f39c12; /* Naranja más vivo */
 }
 
 .botones {
@@ -165,4 +182,110 @@ ion-item span {
   display: flex;
   justify-content: space-around;
   gap: 10px;
+}
+
+.botones ion-button {
+  --background: #1e8449;
+  --color: white;
+  --border-radius: 5px;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  transition: background 0.3s ease;
+
+  &:hover {
+    --background: #27ae60;
+  }
+
+  &[color="danger"] {
+    --background: #e74c3c;
+
+    &:hover {
+      --background: #c0392b;
+    }
+  }
+}
+
+/* Estilos personalizados para las alertas */
+.custom-alert {
+  --background: #ffffff;
+  --color: #333333;
+  --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  .alert-wrapper {
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  .alert-head {
+    text-align: center;
+    color: #1e8449;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .alert-message {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .alert-button-group {
+    justify-content: center;
+
+    .alert-button {
+      --background: #1e8449;
+      --color: #ffffff;
+      --border-radius: 8px;
+      --padding-start: 15px;
+      --padding-end: 15px;
+      --padding-top: 8px;
+      --padding-bottom: 8px;
+      margin: 0 5px;
+      transition: background 0.3s ease, transform 0.3s ease;
+
+      &:hover {
+        --background: #27ae60;
+        transform: scale(1.05);
+      }
+
+      &.alert-button-role-cancel {
+        --background: #e74c3c;
+
+        &:hover {
+          --background: #c0392b;
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-250px);
+    transition: transform 0.3s ease;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .vivienda-card {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+
+  .add-card {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+  }
 }

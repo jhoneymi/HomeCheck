@@ -24,11 +24,13 @@ import {
   IonContent, 
   IonList,
   IonModal,
-  ModalController
+  ModalController,
+  AlertController
 } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
-import { ViviendasService, Vivienda } from 'src/app/services/viviendas.service';
+import { ViviendasService, Vivienda, ViviendaEdit } from 'src/app/services/viviendas.service';
 import { ModalAgregarViviendaComponent } from 'src/app/modal-agregar-vivienda/modal-agregar-vivienda.component';
+import { ModalEditarViviendaComponent } from 'src/app/modal-editar-vivienda/modal-editar-vivienda.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -48,7 +50,8 @@ import { environment } from 'src/environments/environment';
     CommonModule, 
     FormsModule,
     HttpClientModule,
-    ModalAgregarViviendaComponent
+    ModalAgregarViviendaComponent,
+    ModalEditarViviendaComponent
   ]
 })
 export class ViviendasPage implements OnInit {
@@ -65,7 +68,8 @@ export class ViviendasPage implements OnInit {
   constructor(
     private viviendasService: ViviendasService,
     private modalController: ModalController,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertController: AlertController
   ) {    
     addIcons({
       cashOutline,
@@ -94,8 +98,7 @@ export class ViviendasPage implements OnInit {
         console.log('Viviendas cargadas desde la API:', viviendas);
       },
       error: (err) => {
-        console.error('Error al obtener las viviendas:', err);
-        alert('Error al cargar las viviendas: ' + (err.error?.error || 'Error desconocido'));
+        this.presentAlert('Error', 'Error al cargar las viviendas: ' + (err.error?.error || 'Error desconocido'));
       }
     });
   }
@@ -111,14 +114,53 @@ export class ViviendasPage implements OnInit {
       this.viviendasService.addVivienda(data).subscribe({
         next: (response) => {
           console.log('Vivienda agregada:', response);
-          alert('Vivienda agregada correctamente');
-          this.getViviendas(); // Actualizar la lista de viviendas
+          this.presentAlert('Éxito', 'Vivienda agregada correctamente', [
+            {
+              text: 'Aceptar',
+              handler: () => {
+                this.getViviendas();
+              }
+            }
+          ]);
         },
         error: (err) => {
           console.error('Error al agregar vivienda:', err);
-          alert('Error al agregar vivienda: ' + (err.error?.error || 'Error desconocido'));
+          this.presentAlert('Error', 'Error al agregar vivienda: ' + (err.error?.error || 'Error desconocido'));
         }
       });
+    }
+  }
+
+  async abrirModalEditar(vivienda: Vivienda) {
+    console.log('Abriendo modal para editar vivienda:', vivienda);
+    const modal = await this.modalController.create({
+      component: ModalEditarViviendaComponent,
+      componentProps: { vivienda }
+    });
+    modal.present();
+
+    const { data, role } = await modal.onDidDismiss();
+    console.log('Modal cerrado con role:', role, 'y data:', data);
+    if (role === 'confirm' && data) {
+      this.viviendasService.updateVivienda(vivienda.id, data as ViviendaEdit).subscribe({
+        next: (response) => {
+          console.log('Vivienda actualizada:', response);
+          this.presentAlert('Éxito', 'Vivienda actualizada correctamente', [
+            {
+              text: 'Aceptar',
+              handler: () => {
+                this.getViviendas(); // Refrescar la lista para asegurar que img sea string
+              }
+            }
+          ]);
+        },
+        error: (err) => {
+          console.error('Error al actualizar vivienda:', err);
+          this.presentAlert('Error', 'Error al actualizar vivienda: ' + (err.error?.error || 'Error desconocido'));
+        }
+      });
+    } else if (role === 'cancel') {
+      console.log('Edición cancelada');
     }
   }
 
@@ -137,5 +179,66 @@ export class ViviendasPage implements OnInit {
 
   getImageUrl(imagePath: string): string {
     return `${environment.apiUrl.replace('/api/auth', '')}/${imagePath}`;
+  }
+
+  async deleteVivienda(id: number) {
+    const confirmed = await this.presentConfirmAlert();
+    if (confirmed) {
+      this.viviendasService.deleteVivienda(id).subscribe({
+        next: (response) => {
+          console.log('Vivienda eliminada:', response);
+          this.presentAlert('Éxito', 'Vivienda eliminada correctamente', [
+            {
+              text: 'Aceptar',
+              handler: () => {
+                this.getViviendas();
+              }
+            }
+          ]);
+        },
+        error: (err) => {
+          console.error('Error al eliminar vivienda:', err);
+          this.presentAlert('Error', 'Error al eliminar vivienda: ' + (err.error?.error || 'Error desconocido'));
+        }
+      });
+    }
+  }
+
+  async presentConfirmAlert(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      const alert = await this.alertController.create({
+        header: 'Confirmación',
+        message: '<ion-icon name="alert-circle-outline" style="color: #f39c12; font-size: 24px; margin-right: 10px;"></ion-icon>¿Estás seguro de eliminar esta vivienda?',
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => {
+              resolve(false);
+            }
+          },
+          {
+            text: 'Sí',
+            handler: () => {
+              resolve(true);
+            }
+          }
+        ],
+        cssClass: 'custom-alert'
+      });
+
+      await alert.present();
+    });
+  }
+
+  async presentAlert(header: string, message: string, buttons: any[] = [{ text: 'Aceptar', role: 'cancel' }]) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons,
+      cssClass: 'custom-alert'
+    });
+
+    await alert.present();
   }
 }

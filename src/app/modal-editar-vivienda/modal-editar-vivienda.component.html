@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar Vivienda</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <form>
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input [(ngModel)]="editedVivienda.nombre" name="nombre" type="text" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Dirección</ion-label>
+      <ion-input [(ngModel)]="editedVivienda.direccion" name="direccion" type="text" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Estado</ion-label>
+      <ion-select [(ngModel)]="editedVivienda.estado" name="estado" required>
+        <ion-select-option value="No Alquilada">No Alquilada</ion-select-option>
+        <ion-select-option value="Alquilada">Alquilada</ion-select-option>
+        <ion-select-option value="En Remodelacion...">En Remodelacion...</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Imagen</ion-label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+    </ion-item>
+
+    <div class="modal-buttons">
+      <ion-button color="danger" (click)="cancel()">Cancelar</ion-button>
+      <ion-button color="success" (click)="closeModal()" [disabled]="!editedVivienda.nombre || !editedVivienda.direccion || !editedVivienda.estado">
+        Guardar
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

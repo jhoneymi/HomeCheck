@@ -109,10 +109,11 @@ router.post('/login', (req, res) => {
   });
 });
 
-// Obtener todas las viviendas (protegido)
+// Obtener todas las viviendas del usuario autenticado (protegido)
 router.get('/viviendas', authenticateToken, (req, res) => {
-  const query = 'SELECT * FROM viviendas';
-  connection.query(query, (error, results) => {
+  const userId = req.user.userId; // Obtener el ID del usuario autenticado desde el token
+  const query = 'SELECT * FROM viviendas WHERE id_adm = ?';
+  connection.query(query, [userId], (error, results) => {
     if (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -149,68 +150,68 @@ router.post('/viviendas', authenticateToken, upload.single('img'), (req, res) =>
 
 // Obtener todos los inquilinos
 router.get('/inquilinos', (req, res) => {
-    connection.query('SELECT * FROM inquilinos', (error, results) => {
-        if (error) {
-            res.status(500).json({ error: error.message });
-        } else {
-            res.json(results);
-        }
-    });
+  connection.query('SELECT * FROM inquilinos', (error, results) => {
+    if (error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.json(results);
+    }
+  });
 });
 
 // Crear un nuevo inquilino
 router.post('/inquilinos', (req, res) => {
-    const { nombre, telefono, email, vivienda_id, metodo_pago } = req.body;
-    connection.query(
-        'INSERT INTO inquilinos (nombre, telefono, email, vivienda_id, metodo_pago) VALUES (?, ?, ?, ?, ?)',
-        [nombre, telefono, email, vivienda_id, metodo_pago],
-        (error, result) => {
-            if (error) {
-                res.status(500).json({ error: error.message });
-            } else {
-                res.json({ message: 'Inquilino agregado', id: result.insertId });
-            }
-        }
-    );
+  const { nombre, telefono, email, vivienda_id, metodo_pago } = req.body;
+  connection.query(
+    'INSERT INTO inquilinos (nombre, telefono, email, vivienda_id, metodo_pago) VALUES (?, ?, ?, ?, ?)',
+    [nombre, telefono, email, vivienda_id, metodo_pago],
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.json({ message: 'Inquilino agregado', id: result.insertId });
+      }
+    }
+  );
 });
 
 // Actualizar un inquilino
 router.put('/inquilinos/:id', (req, res) => {
-    const { nombre, telefono, email, vivienda_id, metodo_pago } = req.body;
-    const { id } = req.params;
-    
-    connection.query(
-        'UPDATE inquilinos SET nombre = ?, telefono = ?, email = ?, vivienda_id = ?, metodo_pago = ? WHERE id = ?',
-        [nombre, telefono, email, vivienda_id, metodo_pago, id],
-        (error, result) => {
-            if (error) {
-                res.status(500).json({ error: error.message });
-            } else if (result.affectedRows === 0) {
-                res.status(404).json({ message: 'Inquilino no encontrado' });
-            } else {
-                res.json({ message: 'Inquilino actualizado' });
-            }
-        }
-    );
+  const { nombre, telefono, email, vivienda_id, metodo_pago } = req.body;
+  const { id } = req.params;
+  
+  connection.query(
+    'UPDATE inquilinos SET nombre = ?, telefono = ?, email = ?, vivienda_id = ?, metodo_pago = ? WHERE id = ?',
+    [nombre, telefono, email, vivienda_id, metodo_pago, id],
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else if (result.affectedRows === 0) {
+        res.status(404).json({ message: 'Inquilino no encontrado' });
+      } else {
+        res.json({ message: 'Inquilino actualizado' });
+      }
+    }
+  );
 });
 
 // Eliminar un inquilino
 router.delete('/inquilinos/:id', (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    connection.query(
-        'DELETE FROM inquilinos WHERE id = ?',
-        [id],
-        (error, result) => {
-            if (error) {
-                res.status(500).json({ error: error.message });
-            } else if (result.affectedRows === 0) {
-                res.status(404).json({ message: 'Inquilino no encontrado' });
-            } else {
-                res.json({ message: 'Inquilino eliminado' });
-            }
-        }
-    );
+  connection.query(
+    'DELETE FROM inquilinos WHERE id = ?',
+    [id],
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else if (result.affectedRows === 0) {
+        res.status(404).json({ message: 'Inquilino no encontrado' });
+      } else {
+        res.json({ message: 'Inquilino eliminado' });
+      }
+    }
+  );
 });
 
 //! CRUD para Viviendas
@@ -220,53 +221,78 @@ router.get('/viviendas/:id', (req, res) => {
     const { id } = req.params;
     const query = 'SELECT * FROM viviendas WHERE id = ?';
     connection.query(query, [id], (error, results) => {
-        if (error) {
-            return res.status(500).json({ error: error.message });
-        }
-        if (results.length === 0) {
-            return res.status(404).json({ error: 'Vivienda no encontrada' });
-        }
-        res.json(results[0]);
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'Vivienda no encontrada' });
+      }
+      res.json(results[0]);
     });
-});
-
-// UPDATE: Actualizar una vivienda
-router.put('/viviendas/:id', (req, res) => {
+  });
+  
+  // UPDATE: Actualizar una vivienda
+  router.put('/viviendas/:id', authenticateToken, upload.single('img'), (req, res) => {
     const { id } = req.params;
-    const { nombre, direccion, estado, img, id_adm } = req.body;
-
-    if (!nombre || !direccion || !estado || !img || !id_adm) {
-        return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    const { nombre, direccion, estado, id_adm } = req.body;
+    const img = req.file ? req.file.path : req.body.img; // Usar la nueva imagen o la existente
+  
+    if (!nombre || !direccion || !estado || !id_adm) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
-
-    const query = 'UPDATE viviendas SET nombre = ?, direccion = ?, estado = ?, img = ?, id_adm = ? WHERE id = ?';
-    const values = [nombre, direccion, estado, img, id_adm, id];
-
-    connection.query(query, values, (error, result) => {
+  
+    // Verificar que la vivienda pertenece al usuario
+    connection.query('SELECT id_adm FROM viviendas WHERE id = ?', [id], (error, results) => {
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'Vivienda no encontrada' });
+      }
+      if (parseInt(results[0].id_adm) !== req.user.userId) {
+        return res.status(403).json({ error: 'No tienes permiso para actualizar esta vivienda.' });
+      }
+  
+      // Actualizar la vivienda
+      const query = 'UPDATE viviendas SET nombre = ?, direccion = ?, estado = ?, img = ?, id_adm = ? WHERE id = ?';
+      const values = [nombre, direccion, estado, img, id_adm, id];
+  
+      connection.query(query, values, (error, result) => {
         if (error) {
-            return res.status(500).json({ error: error.message });
+          return res.status(500).json({ error: error.message });
         }
         if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Vivienda no encontrada' });
+          return res.status(404).json({ error: 'Vivienda no encontrada' });
         }
         res.json({ message: 'Vivienda actualizada' });
+      });
     });
-});
-
-// DELETE: Eliminar una vivienda
-router.delete('/viviendas/:id', (req, res) => {
+  });
+  
+  // DELETE: Eliminar una vivienda
+  router.delete('/viviendas/:id', authenticateToken, (req, res) => {
     const { id } = req.params;
-
-    const query = 'DELETE FROM viviendas WHERE id = ?';
-    connection.query(query, [id], (error, result) => {
+    const userId = req.user.userId;
+  
+    connection.query('SELECT id_adm FROM viviendas WHERE id = ?', [id], (error, results) => {
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'Vivienda no encontrada' });
+      }
+      if (results[0].id_adm !== userId) {
+        return res.status(403).json({ error: 'No tienes permiso para eliminar esta vivienda.' });
+      }
+  
+      const query = 'DELETE FROM viviendas WHERE id = ?';
+      connection.query(query, [id], (error, result) => {
         if (error) {
-            return res.status(500).json({ error: error.message });
-        }
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Vivienda no encontrada' });
+          return res.status(500).json({ error: error.message });
         }
         res.json({ message: 'Vivienda eliminada' });
+      });
     });
-});
+  });
 
 module.exports = router;
