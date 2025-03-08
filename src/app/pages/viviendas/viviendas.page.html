@@ -15,26 +15,27 @@
 
   <!-- Contenido principal -->
   <div class="main-content">
-    <div class="vivienda-card">
-      <img *ngIf="vivienda?.imagenUrl" [src]="vivienda.imagenUrl" class="vivienda-imagen" />
+    <!-- Primer card para agregar vivienda -->
+    <div class="vivienda-card add-card" (click)="abrirModalAgregar()">
+      <div class="add-button">
+        <ion-icon name="add-outline"></ion-icon>
+      </div>
+      <p>Agregar una vivienda</p>
+    </div>
+
+    <!-- Cards dinámicos para las viviendas -->
+    <div class="vivienda-card" *ngFor="let vivienda of viviendas">
+      <img *ngIf="vivienda?.img" [src]="getImageUrl(vivienda.img)" alt="{{ vivienda.nombre }}" class="vivienda-imagen" />
 
       <div class="vivienda-info">
-        <h3>Casa Azul</h3>
-        <p>Calle 123, Ciudad</p>
-        <p class="estado disponible">Disponible</p>
+        <h3>{{ vivienda.nombre }}</h3>
+        <p>{{ vivienda.direccion }}</p>
+        <p class="estado {{ vivienda.estado | lowercase }}">{{ vivienda.estado }}</p>
 
         <div class="botones">
           <ion-button color="primary">Editar</ion-button>
           <ion-button color="danger">Eliminar</ion-button>
         </div>
-      </div>
-    </div>
-
-    <!-- Card -->
-    <div class="vivienda-card">
-      <!-- Botón circular -->
-      <div class="add-button">
-        <ion-icon name="add-outline"></ion-icon>
       </div>
     </div>
   </div>

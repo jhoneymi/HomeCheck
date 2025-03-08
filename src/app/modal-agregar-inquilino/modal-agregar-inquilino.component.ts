@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-modal-agregar-inquilino',
@@ -19,16 +20,14 @@ export class ModalAgregarInquilinoComponent {
     fotoUrl: ''
   };
 
-  constructor() {}
+  constructor(private modalController: ModalController) {}
 
-  guardar() {
+  async guardar() {
     console.log('Datos del inquilino:', this.inquilino);
-    const modal = document.querySelector('ion-modal');
-    if (modal) modal.dismiss();
+    await this.modalController.dismiss(this.inquilino, 'confirm');
   }
 
-  cancelar() {
-    const modal = document.querySelector('ion-modal');
-    if (modal) modal.dismiss();
+  async cancelar() {
+    await this.modalController.dismiss(null, 'cancel');
   }
 }

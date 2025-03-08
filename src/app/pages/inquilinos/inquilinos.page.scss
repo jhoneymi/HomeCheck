@@ -7,42 +7,60 @@ ion-content {
 }
 
 // Modal
-  ion-modal {
-    --width: 90%;
-    --max-width: 500px;
-    --height: auto; // Altura automática según contenido
-    --max-height: 90vh; // Máximo 90% de la pantalla
-    --border-radius: 12px;
-    --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    --background: #ffffff; // Fondo blanco para el modal
+ion-modal {
+  --width: 90%;
+  --max-width: 500px;
+  --height: auto;
+  --max-height: 90vh;
+  --border-radius: 12px;
+  --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  --background: #ffffff;
+
+  ion-content {
+    --background: #ffffff;
+    --padding: 0;
   }
 
-  app-modal-agregar-inquilino {
-    --height: 100%;
-    --width: 100%;
-  }
+  ion-header {
+    ion-toolbar {
+      --background: #1e8449; // Usamos el verde de tu sidebar para consistencia
+      --color: #ffffff;
+      --border-width: 0;
 
-  /* Boton Flotante */
-  .custom-fab {
-    --background: #1e8449 !important;
-    --color: white !important;
+      ion-title {
+        font-size: 20px;
+        font-weight: 600;
+        text-align: center;
+      }
+    }
   }
+}
 
-  .custom-fab:hover {
-    --background: #136636 !important;
-    --color: white !important;
-  }
+/* Botón Flotante */
+.custom-fab {
+  --background: #1e8449 !important;
+  --color: white !important;
+  --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin: 16px;
+}
 
-  /* Sidebar */
-  .sidebar {
-    position: fixed;
-    width: 250px;
-    height: 100vh;
-    background: #1e8449;
-    color: white;
-    padding: 20px;
-    z-index: 2;
-  }
+.custom-fab:hover {
+  --background: #136636 !important;
+  --color: white !important;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  width: 250px;
+  height: 100vh;
+  background: #1e8449;
+  color: white;
+  padding: 20px;
+  z-index: 2;
+}
+
+/* Resto de los estilos (sidebar, main-content, tabla-inquilinos) permanecen igual */
   
   .logo {
     font-size: 20px;

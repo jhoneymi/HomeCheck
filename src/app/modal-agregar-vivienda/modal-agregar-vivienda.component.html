@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Agregar Vivienda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="modal-content">
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input [(ngModel)]="nuevaVivienda.nombre" placeholder="Ingrese el nombre"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Dirección</ion-label>
+      <ion-input [(ngModel)]="nuevaVivienda.direccion" placeholder="Ingrese la dirección"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Estado</ion-label>
+      <ion-select [(ngModel)]="nuevaVivienda.estado" placeholder="Seleccione el estado">
+        <ion-select-option value="No Alquilada">No Alquilada</ion-select-option>
+        <ion-select-option value="Alquilada">Alquilada</ion-select-option>
+        <ion-select-option value="En Remodelacion...">En Remodelacion...</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Imagen</ion-label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+    </ion-item>
+    <div class="modal-buttons">
+      <ion-button color="success" (click)="guardar()">Guardar</ion-button>
+      <ion-button color="danger" (click)="cancelar()">Cancelar</ion-button>
+    </div>
+  </div>
+</ion-content>

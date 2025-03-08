@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { IonicModule } from '@ionic/angular'; // Solo este para componentes Ionic
+import { IonicModule, ModalController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { 
   addOutline, 
@@ -28,10 +28,10 @@ import { ModalAgregarInquilinoComponent } from 'src/app/modal-agregar-inquilino/
   styleUrls: ['./inquilinos.page.scss'],
   standalone: true,
   imports: [
-    IonicModule,          // Provee todos los componentes Ionic
+    IonicModule,
     CommonModule,
     FormsModule,
-    HttpClientModule,     // Para InquilinosService
+    HttpClientModule,
     RouterModule,
     ModalAgregarInquilinoComponent
   ]
@@ -48,7 +48,10 @@ export class InquilinosPage implements OnInit {
   inquilinos: any[] = [];
   isModalOpen = false;
 
-  constructor(private inquilinosService: InquilinosService) {    
+  constructor(
+    private inquilinosService: InquilinosService,
+    private modalController: ModalController
+  ) {    
     addIcons({
       cashOutline,
       logoAngular,
@@ -66,29 +69,32 @@ export class InquilinosPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ngOnInit ejecutado');
     this.getInquilinos();
   }
 
   getInquilinos() {
-    console.log('Obteniendo inquilinos desde:', this.inquilinosService['apiUrl']);
     this.inquilinosService.getInquilinos().subscribe({
-      next: (data) => {
-        console.log('Inquilinos recibidos:', data);
-        this.inquilinos = data;
-      },
-      error: (err) => {
-        console.error('Error al obtener los inquilinos:', err);
-      }
+      next: (data) => this.inquilinos = data,
+      error: (err) => console.error('Error al obtener los inquilinos:', err)
     });
   }
 
-  abrirModal() {
-    this.isModalOpen = true;
+  async abrirModal() {
+    const modal = await this.modalController.create({
+      component: ModalAgregarInquilinoComponent,
+      cssClass: 'custom-modal'
+    });
+    modal.present();
+
+    const { data, role } = await modal.onDidDismiss();
+    if (role === 'confirm') {
+      console.log('Datos guardados:', data);
+      this.getInquilinos(); // Refresca la lista si se guarda
+    }
   }
 
   cerrarModal(event?: any) {
     console.log('Cerrando modal, evento:', event);
-    this.isModalOpen = false;
+    this.modalController.dismiss();
   }
 }

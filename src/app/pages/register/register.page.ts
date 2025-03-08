@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { businessOutline, callOutline, cardOutline, homeOutline, lockClosedOutline, mailOutline, personOutline} from 'ionicons/icons';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonSelect, IonSelectOption, IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonButton, IonInput, IonItem, IonSelect, IonSelectOption, IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./register.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonSelect, IonSelectOption, IonIcon,
+    IonContent, IonHeader, IonToolbar, IonButton, IonInput, IonItem, IonSelect, IonSelectOption, IonIcon,
     CommonModule, FormsModule
   ]
 })

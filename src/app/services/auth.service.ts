@@ -2,14 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
+  private userId: number | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Verificar si hay un token almacenado al iniciar el servicio
+    const token = this.getToken();
+    if (token) {
+      this.setUserFromToken(token);
+    }
+  }
 
   // Registro de usuario
   register(userData: any): Observable<any> {
@@ -21,9 +29,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
 
-  // Guardar token en LocalStorage
+  // Guardar token en LocalStorage y decodificarlo
   saveToken(token: string) {
     localStorage.setItem('authToken', token);
+    this.setUserFromToken(token);
   }
 
   // Obtener token del LocalStorage
@@ -31,8 +40,25 @@ export class AuthService {
     return localStorage.getItem('authToken');
   }
 
-  // Cerrar sesión (eliminar token)
+  // Extraer el userId del token
+  private setUserFromToken(token: string) {
+    try {
+      const decodedToken: any = jwtDecode(token); // Llamada directa a la función
+      this.userId = decodedToken.userId;
+    } catch (error) {
+      console.error('Error decodificando el token:', error);
+      this.userId = null;
+    }
+  }
+
+  // Obtener el userId
+  getUserId(): number | null {
+    return this.userId;
+  }
+
+  // Cerrar sesión (eliminar token y userId)
   logout() {
+    this.userId = null;
     localStorage.removeItem('authToken');
   }
 }

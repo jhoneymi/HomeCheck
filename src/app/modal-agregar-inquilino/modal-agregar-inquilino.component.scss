@@ -1,110 +1,93 @@
 // Fondo del contenido del modal
 ion-content {
-    --background: #ffffff;
-    --padding-start: 0; // Elimina padding predeterminado
-    --padding-end: 0;
-    --padding-top: 0;
-    --padding-bottom: 0;
-    height: 100%; // Asegura que ocupe toda la altura disponible
-  }
-  
-  // Encabezado del modal
-  ion-header {
-    ion-toolbar {
-      --background: #f8f9fa;
-      --border-width: 0 0 1px 0;
-      --border-style: solid;
-      --border-color: #e9ecef;
-  
-      ion-title {
-        font-size: 20px;
-        font-weight: 600;
-        color: #333;
-        padding: 10px;
-      }
-    }
-  }
-  
-  // Contenido del formulario
-  .modal-content {
-    padding: 20px;
-    height: 100%; // Ocupa toda la altura del ion-content
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; // Distribuye el espacio entre formulario y botones
-    box-sizing: border-box;
-  
-    // Contenedor de los ítems del formulario
-    .form-items {
-      flex-grow: 1; // Permite que los ítems crezcan para llenar el espacio
-    }
-  
-    ion-item {
-      --background: #ffffff;
-      --border-radius: 8px;
-      --padding-start: 0;
-      --padding-end: 0;
-      margin-bottom: 15px;
-      border: 1px solid #e9ecef;
-  
-      ion-label {
-        font-size: 14px;
-        font-weight: 500;
-        color: #555;
-        margin-bottom: 5px;
-      }
-  
-      ion-input {
-        --padding-start: 10px;
-        --padding-end: 10px;
-        font-size: 16px;
-        color: #333;
-        border-radius: 4px;
-        
-        &::placeholder {
-          color: #999;
-          font-style: italic;
-        }
-      }
-    }
-  }
-  
-  // Botones
-  .modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  
-    ion-button {
-      --border-radius: 8px;
-      --padding-start: 20px;
-      --padding-end: 20px;
-      text-transform: uppercase;
+  --background: #ffffff;
+  --padding: 20px;
+  height: 100%;
+}
+
+// Encabezado del modal
+ion-header {
+  ion-toolbar {
+    --background: #1e8449; // Consistente con la página
+    --color: #ffffff;
+
+    ion-title {
+      font-size: 20px;
       font-weight: 600;
-      letter-spacing: 0.5px;
-      width: 48%;
-      height: 45px;
-  
-      &[color="success"] {
-        --background: #28a745;
-        --background-activated: #218838;
-      }
-  
-      &[color="danger"] {
-        --background: #dc3545;
-        --background-activated: #c82333;
+      padding: 10px;
+    }
+  }
+}
+
+// Contenido del formulario
+.modal-content {
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  ion-item {
+    --background: #ffffff;
+    --border-radius: 8px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #e9ecef;
+
+    ion-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    ion-input {
+      font-size: 16px;
+      color: #333;
+
+      &::placeholder {
+        color: #999;
+        font-style: italic;
       }
     }
   }
-  
-  // Responsividad
-  @media (max-width: 576px) {
-    .modal-buttons {
-      flex-direction: column;
-      gap: 10px;
-  
-      ion-button {
-        width: 100%;
-      }
+}
+
+// Botones
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+
+  ion-button {
+    --border-radius: 8px;
+    --padding-start: 20px;
+    --padding-end: 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    width: 48%;
+    height: 45px;
+
+    &[color="success"] {
+      --background: #28a745;
+      --background-activated: #218838;
+    }
+
+    &[color="danger"] {
+      --background: #dc3545;
+      --background-activated: #c82333;
     }
   }
+}
+
+// Responsividad
+@media (max-width: 576px) {
+  .modal-buttons {
+    flex-direction: column;
+    gap: 10px;
+
+    ion-button {
+      width: 100%;
+    }
+  }
+}

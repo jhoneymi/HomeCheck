@@ -1,113 +1,81 @@
-<<<<<<< HEAD
 @use 'sass:color';
 
-<<<<<<< Updated upstream
-ion-content {
-  --background: #f5f5f5; /* Fondo claro */
-=======
 /* Colores personalizados */
-$azul-marino: #1A2A6C;
-$verde-esmeralda: #2ECC71;
-$gris-claro: #f2f2f2;
-$oscuro: #333;
-$azul-claro: #5A7D9E;
-
-/* Colores personalizados */
-$blanco: #ffffff;
-$verde-oscuro: #2e7c66;
-$gris-muy-claro: #f9f8fa;
-$gris-claro: #f1f2f4;
-$gris-suave: #f2f3f6;
-
-
+:root {
+  --blanco: #ffffff;
+  --verde-oscuro: #2e7c66;
+  --verde-esmeralda: #2ECC71;
+  --gris-muy-claro: #f9f8fa;
+  --gris-claro: #f2f2f2;
+  --gris-suave: #f2f3f6;
+  --azul-marino: #1A2A6C;
+  --azul-claro: #5A7D9E;
+  --oscuro: #333;
+}
 
 /* Fondo de página */
 body {
-  background-color: #f1f2f4;
+  background-color: #fff;
   height: 100vh;
->>>>>>> Stashed changes
-=======
+}
+
 /* Fondo con gradiente suave */
 ion-content {
-  --background: linear-gradient(to bottom, #f9f9f9, #ffffff);
+  --background: linear-gradient(to bottom, #f9f9f9, #fff);
   font-family: 'Roboto', sans-serif;
 }
 
 /* Navbar */
 .navbar {
->>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: white;
-  border-bottom: 2px solid black;
+  background-color: var(--blanco);
+  border-bottom: 2px solid #333;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-<<<<<<< HEAD
-.login-container {
-  width: 100%;
-<<<<<<< Updated upstream
-  max-width: 360px;
-  background: #ffffff;
-  padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-=======
-  max-width: 450px;
-  background-color: $verde-esmeralda;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
->>>>>>> Stashed changes
-  text-align: center;
-=======
-/* Botones del menú (texto verde) */
+/* Botones del menú */
 .menu ion-button {
   margin: 0 0.5rem;
-  --color: #3b805c; /* Cambiado a verde */
-  --background: transparent; /* Fondo transparente por defecto */
+  --color: #3b805c;
+  --background: transparent;
   transition: transform 0.3s ease, color 0.3s ease;
->>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
 }
 
 .menu ion-button:hover {
   transform: scale(1.05);
-  --color: #ffffff; /* Verde más oscuro al pasar el mouse */
-  --background: #2d6348; /* Fondo gris claro en hover */
+  --color: var(--blanco);
+  --background: #2d6348;
 }
 
 /* Botón verde sólido */
 .green-button {
   --background: #3b805c;
-  --color: white;
-<<<<<<< HEAD
-  font-size: 1rem;
-<<<<<<< Updated upstream
-  font-weight: bold;
-  margin-top: 16px;
-=======
-  color: $verde-oscuro;
-
-  a {
-    color: $verde-esmeralda;
-    text-decoration: none;
-    font-weight: bold;
-
-    &:hover {
-      color: color.adjust($verde-esmeralda, $lightness: -10%);
-    }
-  }
->>>>>>> Stashed changes
-=======
+  --color: var(--blanco);
   --border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 1rem;
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .green-button:hover {
   transform: scale(1.05);
   --background: #2d6348;
+}
+
+/* Contenedor de login */
+.login-container {
+  width: 100%;
+  max-width: 450px;
+  background-color: var(--verde-esmeralda);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 2rem auto;
 }
 
 /* Contenido principal */
@@ -117,18 +85,18 @@ ion-content {
 }
 
 /* Título principal */
-.title-section .main-title {
-  color: #3f8440;
-  font-size: 2.5rem;
-  font-weight: bold;
->>>>>>> 110a4af1d3bb8a27f7006b4cf15174219bb4225b
-}
+.title-section {
+  .main-title {
+    color: #3f8440;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
 
-/* Descripción */
-.title-section .description {
-  font-size: 1.1rem;
-  color: #000000;
-  line-height: 1.6;
+  .description {
+    font-size: 1.1rem;
+    color: var(--oscuro);
+    line-height: 1.6;
+  }
 }
 
 /* Sección del formulario */
@@ -143,40 +111,45 @@ ion-content {
 
 /* Título del formulario */
 .form-title {
-  color: #fff;
+  color: var(--blanco);
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
 /* Inputs */
-.login-form .input-item {
-  background-color: #fff;
-  border-radius: 5px;
-  margin-bottom: 1.2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+.login-form {
+  .input-item {
+    background-color: var(--blanco);
+    border-radius: 5px;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    
+    &:focus-within {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  ion-icon {
+    color: #3b805c;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
 }
 
-.login-form .input-item:focus-within {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Iconos */
-.login-form ion-icon {
-  color: #3b805c;
-  font-size: 1.2rem;
-  margin-right: 0.5rem;
-}
-
-/* Texto adicional debajo del formulario */
+/* Texto adicional */
 .extra-text {
   margin-top: 1rem;
-  color: #fff;
+  color: var(--blanco);
   font-size: 0.9rem;
-}
-
-.extra-text a {
-  color: #fff;
-  text-decoration: underline;
-  font-weight: bold;
+  
+  a {
+    color: var(--blanco);
+    text-decoration: underline;
+    font-weight: bold;
+    
+    &:hover {
+      color: color.adjust(#ffffff, $lightness: -10%);
+    }
+  }
 }
