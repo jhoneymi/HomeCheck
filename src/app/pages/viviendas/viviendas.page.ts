@@ -208,7 +208,7 @@ export class ViviendasPage implements OnInit {
     return new Promise(async (resolve) => {
       const alert = await this.alertController.create({
         header: 'Confirmación',
-        message: '<ion-icon name="alert-circle-outline" style="color: #f39c12; font-size: 24px; margin-right: 10px;"></ion-icon>¿Estás seguro de eliminar esta vivienda?',
+        message: '¿Estás seguro de eliminar esta vivienda?',
         buttons: [
           {
             text: 'No',
