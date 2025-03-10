@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ViviendasService, Vivienda } from './viviendas.service';
+import { ViviendasService, Vivienda, ViviendaEdit } from './viviendas.service';
 import { AuthService } from './auth.service';
 
 describe('ViviendasService', () => {
@@ -44,7 +44,9 @@ describe('ViviendasService', () => {
         estado: 'No Alquilada',
         img: 'assets/img/milton.jpg',
         id_adm: 1,
-        fecha_registro: '2023-10-01T12:00:00.000Z'
+        fecha_registro: '2023-10-01T12:00:00.000Z',
+        precio_alquiler: 600.50,
+        notas: 'Disponible desde noviembre'
       }
     ];
 
@@ -66,7 +68,9 @@ describe('ViviendasService', () => {
       direccion: 'Avenida 456',
       estado: 'Alquilada',
       img: new File([''], 'casa.jpg', { type: 'image/jpeg' }),
-      id_adm: 1
+      id_adm: 1,
+      precio_alquiler: 700.25,
+      notas: 'Necesita mantenimiento'
     };
 
     const mockResponse = { message: 'Vivienda agregada', id: 2 };
@@ -83,6 +87,8 @@ describe('ViviendasService', () => {
     expect(req.request.body.get('estado')).toBe('Alquilada');
     expect(req.request.body.get('id_adm')).toBe('1');
     expect(req.request.body.get('img')).toBeTruthy();
+    expect(req.request.body.get('precio_alquiler')).toBe('700.25');
+    expect(req.request.body.get('notas')).toBe('Necesita mantenimiento');
     req.flush(mockResponse);
   });
 
@@ -95,9 +101,56 @@ describe('ViviendasService', () => {
       direccion: 'Avenida 456',
       estado: 'Alquilada',
       img: new File([''], 'casa.jpg', { type: 'image/jpeg' }),
-      id_adm: 1
+      id_adm: 1,
+      precio_alquiler: 700.25,
+      notas: 'Necesita mantenimiento'
     };
 
     expect(() => service.addVivienda(dummyVivienda)).toThrowError('No se encontró un token de autenticación. Por favor, inicia sesión.');
+  });
+
+  // Prueba para updateVivienda
+  it('should update a vivienda via PUT with token', () => {
+    const id = 1;
+    const updatedVivienda: ViviendaEdit = {
+      id: 1,
+      nombre: 'Casa Actualizada',
+      estado: 'Alquilada',
+      img: new File([''], 'casa_actualizada.jpg', { type: 'image/jpeg' }),
+      precio_alquiler: 750.75,
+      notas: 'Actualizado el 15/11/2023'
+    };
+
+    const mockResponse = { message: 'Vivienda actualizada con éxito', data: updatedVivienda };
+
+    service.updateVivienda(id, updatedVivienda).subscribe(response => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('http://localhost:3000/api/auth/viviendas/1');
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token');
+    expect(req.request.body.get('id')).toBe('1');
+    expect(req.request.body.get('nombre')).toBe('Casa Actualizada');
+    expect(req.request.body.get('estado')).toBe('Alquilada');
+    expect(req.request.body.get('img')).toBeTruthy();
+    expect(req.request.body.get('precio_alquiler')).toBe('750.75');
+    expect(req.request.body.get('notas')).toBe('Actualizado el 15/11/2023');
+    req.flush(mockResponse);
+  });
+
+  // Prueba para deleteVivienda
+  it('should delete a vivienda via DELETE with token', () => {
+    const id = 1;
+    const mockResponse = { message: 'Vivienda eliminada' };
+
+    service.deleteVivienda(id).subscribe(response => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('http://localhost:3000/api/auth/viviendas/1');
+    expect(req.request.method).toBe('DELETE');
+    expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token');
+    req.flush(mockResponse);
   });
 });

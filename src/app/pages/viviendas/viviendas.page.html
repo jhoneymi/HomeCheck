@@ -25,11 +25,18 @@
 
     <!-- Cards dinámicos para las viviendas -->
     <div class="vivienda-card" *ngFor="let vivienda of viviendas">
-      <img *ngIf="vivienda?.img" [src]="getImageUrl(vivienda.img)" alt="{{ vivienda.nombre }}" class="vivienda-imagen" />
+      <div class="card-header">
+        <img *ngIf="vivienda?.img" [src]="getImageUrl(vivienda.img)" alt="{{ vivienda.nombre }}" class="vivienda-imagen" />
+        <!-- Ícono de notas en la esquina superior derecha -->
+        <div class="notas-icon" *ngIf="vivienda.notas" (click)="mostrarNotas(vivienda.notas)">
+          <ion-icon name="document-text-outline"></ion-icon>
+        </div>
+      </div>
 
       <div class="vivienda-info">
         <h3>{{ vivienda.nombre }}</h3>
         <p>{{ vivienda.direccion }}</p>
+        <p class="precio">Precio de Alquiler: ${{ vivienda.precio_alquiler | number: '1.2-2' }}</p>
         <p class="estado {{ getEstadoClass(vivienda.estado) }}">{{ vivienda.estado }}</p>
 
         <div class="botones">

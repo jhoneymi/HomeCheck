@@ -17,7 +17,9 @@ export class ModalAgregarViviendaComponent {
     direccion: '',
     estado: '',
     img: null,
-    id_adm: null
+    id_adm: null,
+    precio_alquiler: null, // Nuevo campo
+    notas: '' // Nuevo campo
   };
 
   constructor(
@@ -42,10 +44,19 @@ export class ModalAgregarViviendaComponent {
   }
 
   async guardar() {
-    if (this.nuevaVivienda.nombre && this.nuevaVivienda.direccion && this.nuevaVivienda.estado && this.nuevaVivienda.img) {
+    if (this.nuevaVivienda.nombre && this.nuevaVivienda.direccion && this.nuevaVivienda.estado && this.nuevaVivienda.img && this.nuevaVivienda.precio_alquiler !== null) {
+      // Convertimos precio_alquiler a número para asegurar compatibilidad con el backend
+      this.nuevaVivienda.precio_alquiler = Number(this.nuevaVivienda.precio_alquiler);
       await this.modalController.dismiss(this.nuevaVivienda, 'confirm');
     } else {
-      alert('Por favor, completa todos los campos.');
+      alert('Por favor, completa todos los campos obligatorios (nombre, dirección, estado, imagen y precio de alquiler).');
+    }
+  }
+
+  validarPrecio() {
+    if (this.nuevaVivienda.precio_alquiler !== null && this.nuevaVivienda.precio_alquiler <= 0) {
+      this.nuevaVivienda.precio_alquiler = null;
+      alert('El precio de alquiler debe ser mayor a 0.');
     }
   }
 

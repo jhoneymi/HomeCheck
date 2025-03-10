@@ -138,9 +138,12 @@ export class ViviendasPage implements OnInit {
       componentProps: { vivienda }
     });
     modal.present();
-
+  
     const { data, role } = await modal.onDidDismiss();
     console.log('Modal cerrado con role:', role, 'y data:', data);
+    if (data) {
+      console.log('Datos devueltos por el modal (detallado):', JSON.stringify(data, null, 2));
+    }
     if (role === 'confirm' && data) {
       this.viviendasService.updateVivienda(vivienda.id, data as ViviendaEdit).subscribe({
         next: (response) => {
@@ -149,14 +152,15 @@ export class ViviendasPage implements OnInit {
             {
               text: 'Aceptar',
               handler: () => {
-                this.getViviendas(); // Refrescar la lista para asegurar que img sea string
+                this.getViviendas();
               }
             }
           ]);
         },
         error: (err) => {
           console.error('Error al actualizar vivienda:', err);
-          this.presentAlert('Error', 'Error al actualizar vivienda: ' + (err.error?.error || 'Error desconocido'));
+          const errorMessage = err.error?.error || err.error?.message || 'Error desconocido al actualizar la vivienda';
+          this.presentAlert('Error', errorMessage);
         }
       });
     } else if (role === 'cancel') {
@@ -202,6 +206,22 @@ export class ViviendasPage implements OnInit {
         }
       });
     }
+  }
+
+  async mostrarNotas(notas: string) {
+    const alert = await this.alertController.create({
+      header: 'Notas de la Vivienda',
+      message: notas || 'No hay notas disponibles.',
+      buttons: [
+        {
+          text: 'Cerrar',
+          role: 'cancel'
+        }
+      ],
+      cssClass: 'custom-alert'
+    });
+
+    await alert.present();
   }
 
   async presentConfirmAlert(): Promise<boolean> {

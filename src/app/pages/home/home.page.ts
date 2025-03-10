@@ -58,7 +58,9 @@ export class HomePage implements OnInit, AfterViewInit {
     { title: 'Home', icon: 'home-outline', active: true, route: '/home' },
     { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
     { title: 'Inquilinos', icon: 'people-outline', active: false, route: '/inquilinos' },
-    { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' }
+    { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' },
+    { title: 'Ganancias', icon: 'business-outline', active: false, route: '/ganancias' },
+    { title: 'Salir', icon: 'business-outline', active: false, route: '/Salir' }
   ];
 
   // Tarjetas dinámicas

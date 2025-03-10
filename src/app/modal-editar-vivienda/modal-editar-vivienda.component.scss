@@ -47,7 +47,8 @@ ion-content {
       }
   
       ion-input,
-      ion-select {
+      ion-select,
+      ion-textarea {
         font-size: 16px;
         color: #333;
   
@@ -55,6 +56,10 @@ ion-content {
           color: #999;
           font-style: italic;
         }
+      }
+  
+      ion-textarea {
+        height: 100px; /* Altura ajustada para el textarea */
       }
     }
   

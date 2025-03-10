@@ -31,13 +31,23 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked">Imagen</ion-label>
-      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+      <ion-label position="stacked">Precio de Alquiler</ion-label>
+      <ion-input [(ngModel)]="editedVivienda.precio_alquiler" name="precio_alquiler" type="number" step="0.01" required></ion-input>
     </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Notas</ion-label>
+      <ion-textarea [(ngModel)]="editedVivienda.notas" name="notas" placeholder="Ingrese notas (opcional)"></ion-textarea>
+    </ion-item>
+
+    <div class="file-input-container">
+      <ion-label>Imagen</ion-label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+    </div>
 
     <div class="modal-buttons">
       <ion-button color="danger" (click)="cancel()">Cancelar</ion-button>
-      <ion-button color="success" (click)="closeModal()" [disabled]="!editedVivienda.nombre || !editedVivienda.direccion || !editedVivienda.estado">
+      <ion-button color="success" (click)="closeModal()" [disabled]="!editedVivienda.nombre || !editedVivienda.direccion || !editedVivienda.estado || !editedVivienda.precio_alquiler">
         Guardar
       </ion-button>
     </div>

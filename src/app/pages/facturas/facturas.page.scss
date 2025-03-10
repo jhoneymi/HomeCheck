@@ -1,0 +1,62 @@
+/* Estilos generales */
+ion-content {
+    --background: #f4f4f4;
+    --color: #000000;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100vh;
+    background: #1e8449;
+    color: white;
+    padding: 20px;
+    z-index: 10; /* Aumentado para evitar superposiciones */
+  }
+  
+  .logo {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  ion-list {
+    margin-top: 20px;
+  }
+  
+  ion-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    --color: white;
+    --background: transparent;
+    padding: 10px 0;
+    transition: all 0.3s ease; /* Transición suave para hover y active */
+  }
+  
+  ion-item:hover,
+  .active {
+    background: rgba(46, 204, 113, 0.2);
+    border-radius: 10px;
+    transform: scale(1.02);
+  }
+  
+  ion-item span {
+    margin: 7px;
+    margin-bottom: -2px;
+  }
+  
+  /* Contenido Principal */
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 250px;
+    background: #ffffff;
+    color: #000000;
+  }
