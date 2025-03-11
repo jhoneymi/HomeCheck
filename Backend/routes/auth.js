@@ -73,37 +73,38 @@ router.post('/register', (req, res) => {
 
 // Login de usuario
 router.post('/login', (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Por favor, ingresa tu email y contraseña' });
-  }
-
-  const sql = `SELECT * FROM usuarios WHERE email = ?`;
-  connection.query(sql, [email], (error, results) => {
-    if (error) {
-      console.error('❌ Error en MySQL:', error.sqlMessage || error);
-      return res.status(500).json({ error: 'Error en el servidor' });
+    const { email, password } = req.body;
+  
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Por favor, ingresa tu email y contraseña' });
     }
-
-    if (results.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    const user = results[0];
-
-    if (!bcrypt.compareSync(password, user.password)) {
-      return res.status(401).json({ error: 'Contraseña incorrecta' });
-    }
-
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    res.status(200).json({ message: 'Login exitoso', token });
-  });
+  
+    const sql = `SELECT * FROM usuarios WHERE email = ?`;
+    connection.query(sql, [email], (error, results) => {
+      if (error) {
+        console.error('❌ Error en MySQL:', error.sqlMessage || error);
+        return res.status(500).json({ error: 'Error en el servidor' });
+      }
+  
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+  
+      const user = results[0];
+  
+      if (!bcrypt.compareSync(password, user.password)) {
+        return res.status(401).json({ error: 'Contraseña incorrecta' });
+      }
+  
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+  
+      // Incluir userId en la respuesta
+      res.status(200).json({ message: 'Login exitoso', token, userId: user.id });
+    });
 });
 
 // Obtener todas las viviendas del usuario autenticado (protegido)
@@ -143,75 +144,164 @@ router.post('/viviendas', authenticateToken, upload.single('img'), (req, res) =>
   });
 });
 
-// CRUD para Inquilinos
+//? CRUD para Inquilinos
 
-// Obtener todos los inquilinos
-router.get('/inquilinos', (req, res) => {
-  connection.query('SELECT * FROM inquilinos', (error, results) => {
-    if (error) {
-      res.status(500).json({ error: error.message });
-    } else {
+// Obtener inquilinos
+router.get('/inquilinos', authenticateToken, (req, res) => {
+    const userId = req.user.userId;
+    const query = `
+      SELECT i.*, v.nombre AS vivienda_nombre, v.precio_alquiler
+      FROM inquilinos i
+      LEFT JOIN viviendas v ON i.vivienda_id = v.id
+      WHERE i.admin_id = ?
+    `;
+    connection.query(query, [userId], (error, results) => {
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
       res.json(results);
-    }
-  });
+    });
 });
 
 // Crear un nuevo inquilino
-router.post('/inquilinos', (req, res) => {
-  const { nombre, telefono, email, vivienda_id, metodo_pago } = req.body;
-  connection.query(
-    'INSERT INTO inquilinos (nombre, telefono, email, vivienda_id, metodo_pago) VALUES (?, ?, ?, ?, ?)',
-    [nombre, telefono, email, vivienda_id, metodo_pago],
-    (error, result) => {
-      if (error) {
-        res.status(500).json({ error: error.message });
-      } else {
-        res.json({ message: 'Inquilino agregado', id: result.insertId });
-      }
+router.post('/inquilinos', authenticateToken, (req, res) => {
+    const { nombre, telefono, email, vivienda_id, fecha_ingreso, estado, metodo_pago, documento, notas, referencias, admin_id } = req.body;
+    console.log('Datos recibidos para crear inquilino:', req.body);
+  
+    // Validar campos requeridos
+    if (!nombre || !telefono || !documento || !vivienda_id || !estado || !metodo_pago || !admin_id) {
+      return res.status(400).json({ error: 'Faltan campos requeridos' });
     }
-  );
+  
+    // Insertar el inquilino
+    const insertInquilinoQuery = 'INSERT INTO inquilinos (nombre, telefono, email, vivienda_id, fecha_ingreso, estado, metodo_pago, documento, notas, referencias, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    connection.query(insertInquilinoQuery, [nombre, telefono, email, vivienda_id, fecha_ingreso, estado, metodo_pago, documento, notas, referencias, admin_id], (error, results) => {
+      if (error) {
+        console.error('Error al crear inquilino:', error);
+        return res.status(500).json({ error: error.message });
+      }
+  
+      // Actualizar el estado de la vivienda a "Alquilada"
+      const updateViviendaQuery = "UPDATE viviendas SET estado = 'Alquilada' WHERE id = ?";
+      connection.query(updateViviendaQuery, [vivienda_id], (updateError) => {
+        if (updateError) {
+          console.error('Error al actualizar el estado de la vivienda:', updateError);
+          return res.status(500).json({ error: 'Inquilino creado, pero no se pudo actualizar el estado de la vivienda: ' + updateError.message });
+        }
+  
+        res.status(201).json({ message: 'Inquilino creado exitosamente y vivienda actualizada a Alquilada', id: results.insertId });
+      });
+    });
 });
 
 // Actualizar un inquilino
-router.put('/inquilinos/:id', (req, res) => {
-  const { nombre, telefono, email, vivienda_id, metodo_pago } = req.body;
-  const { id } = req.params;
+router.put('/inquilinos/:id', authenticateToken, (req, res) => {
+    const inquilinoId = req.params.id;
+    const { nombre, telefono, email, vivienda_id, fecha_ingreso, estado, metodo_pago, documento, notas, referencias, admin_id } = req.body;
+    console.log('Datos recibidos para actualizar inquilino:', req.body);
   
-  connection.query(
-    'UPDATE inquilinos SET nombre = ?, telefono = ?, email = ?, vivienda_id = ?, metodo_pago = ? WHERE id = ?',
-    [nombre, telefono, email, vivienda_id, metodo_pago, id],
-    (error, result) => {
-      if (error) {
-        res.status(500).json({ error: error.message });
-      } else if (result.affectedRows === 0) {
-        res.status(404).json({ message: 'Inquilino no encontrado' });
-      } else {
-        res.json({ message: 'Inquilino actualizado' });
-      }
+    // Validar campos requeridos
+    if (!nombre || !telefono || !documento || !vivienda_id || !estado || !metodo_pago || !admin_id) {
+      return res.status(400).json({ error: 'Faltan campos requeridos' });
     }
-  );
+  
+    // Obtener la vivienda actual del inquilino (para liberar la vivienda anterior si cambió)
+    const getCurrentViviendaQuery = 'SELECT vivienda_id FROM inquilinos WHERE id = ?';
+    connection.query(getCurrentViviendaQuery, [inquilinoId], (error, results) => {
+      if (error) {
+        console.error('Error al obtener la vivienda actual del inquilino:', error);
+        return res.status(500).json({ error: error.message });
+      }
+  
+      const previousViviendaId = results[0]?.vivienda_id;
+  
+      // Actualizar el inquilino
+      const updateInquilinoQuery = 'UPDATE inquilinos SET nombre = ?, telefono = ?, email = ?, vivienda_id = ?, fecha_ingreso = ?, estado = ?, metodo_pago = ?, documento = ?, notas = ?, referencias = ?, admin_id = ? WHERE id = ?';
+      connection.query(updateInquilinoQuery, [nombre, telefono, email, vivienda_id, fecha_ingreso, estado, metodo_pago, documento, notas, referencias, admin_id, inquilinoId], (updateError) => {
+        if (updateError) {
+          console.error('Error al actualizar inquilino:', updateError);
+          return res.status(500).json({ error: updateError.message });
+        }
+  
+        // Actualizar el estado de la nueva vivienda a "Alquilada"
+        const updateNewViviendaQuery = "UPDATE viviendas SET estado = 'Alquilada' WHERE id = ?";
+        connection.query(updateNewViviendaQuery, [vivienda_id], (updateNewError) => {
+          if (updateNewError) {
+            console.error('Error al actualizar el estado de la nueva vivienda:', updateNewError);
+            return res.status(500).json({ error: 'Inquilino actualizado, pero no se pudo actualizar el estado de la nueva vivienda: ' + updateNewError.message });
+          }
+  
+          // Si la vivienda cambió, liberar la vivienda anterior (cambiar su estado a "No Alquilada")
+          if (previousViviendaId && previousViviendaId !== vivienda_id) {
+            const updatePreviousViviendaQuery = "UPDATE viviendas SET estado = 'No Alquilada' WHERE id = ?";
+            connection.query(updatePreviousViviendaQuery, [previousViviendaId], (updatePreviousError) => {
+              if (updatePreviousError) {
+                console.error('Error al liberar la vivienda anterior:', updatePreviousError);
+                return res.status(500).json({ error: 'Inquilino y nueva vivienda actualizados, pero no se pudo liberar la vivienda anterior: ' + updatePreviousError.message });
+              }
+  
+              res.status(200).json({ message: 'Inquilino actualizado exitosamente, vivienda actualizada a Alquilada y vivienda anterior liberada' });
+            });
+          } else {
+            res.status(200).json({ message: 'Inquilino actualizado exitosamente, vivienda actualizada a Alquilada' });
+          }
+        });
+      });
+    });
 });
 
 // Eliminar un inquilino
-router.delete('/inquilinos/:id', (req, res) => {
-  const { id } = req.params;
-
-  connection.query(
-    'DELETE FROM inquilinos WHERE id = ?',
-    [id],
-    (error, result) => {
-      if (error) {
-        res.status(500).json({ error: error.message });
-      } else if (result.affectedRows === 0) {
-        res.status(404).json({ message: 'Inquilino no encontrado' });
-      } else {
-        res.json({ message: 'Inquilino eliminado' });
-      }
-    }
-  );
+router.delete('/inquilinos/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    const admin_id = req.user.userId;
+  
+    // Obtener el inquilino para conocer la vivienda asignada
+    const getInquilinoQuery = "SELECT vivienda_id FROM inquilinos WHERE id = ? AND admin_id = ?";
+    connection.query(getInquilinoQuery, [id, admin_id], (error, results) => {
+      if (error) return res.status(500).json({ error: error.message });
+      if (results.length === 0) return res.status(404).json({ error: 'Inquilino no encontrado o no tienes permiso' });
+  
+      const vivienda_id = results[0].vivienda_id;
+  
+      // Eliminar el inquilino
+      const deleteQuery = "DELETE FROM inquilinos WHERE id = ? AND admin_id = ?";
+      connection.query(deleteQuery, [id, admin_id], (error, result) => {
+        if (error) return res.status(500).json({ error: error.message });
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'Inquilino no encontrado' });
+  
+        // Si tenía una vivienda asignada, actualizar su estado a 'No Alquilada'
+        if (vivienda_id) {
+          const updateViviendaQuery = "UPDATE viviendas SET estado = 'No Alquilada' WHERE id = ?";
+          connection.query(updateViviendaQuery, [vivienda_id], (error) => {
+            if (error) return res.status(500).json({ error: error.message });
+            res.json({ message: 'Inquilino eliminado' });
+          });
+        } else {
+          res.json({ message: 'Inquilino eliminado' });
+        }
+      });
+    });
 });
 
-// CRUD para Viviendas
+// Obtener viviendas disponibles
+router.get('/viviendas/disponibles', authenticateToken, (req, res) => {
+    const userId = req.user.userId;
+    console.log('UserID extraído del token:', userId);
+    const query = "SELECT * FROM viviendas WHERE estado = 'No Alquilada' AND id_adm = ?";
+    connection.query(query, [userId], (error, results) => {
+      if (error) {
+        console.error('Error en la consulta:', error);
+        return res.status(500).json({ error: error.message });
+      }
+      console.log('Viviendas disponibles encontradas:', results);
+      if (results.length === 0) {
+        return res.status(200).json({ message: 'No se encontraron viviendas disponibles', data: [] });
+      }
+      res.json({ data: results }); // Devolver un objeto con propiedad data
+    });
+});
+
+//! CRUD para Viviendas
 
 // READ: Obtener una vivienda por ID
 router.get('/viviendas/:id', (req, res) => {

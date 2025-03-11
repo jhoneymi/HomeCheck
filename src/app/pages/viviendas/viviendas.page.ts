@@ -131,42 +131,42 @@ export class ViviendasPage implements OnInit {
     }
   }
 
-  async abrirModalEditar(vivienda: Vivienda) {
-    console.log('Abriendo modal para editar vivienda:', vivienda);
-    const modal = await this.modalController.create({
-      component: ModalEditarViviendaComponent,
-      componentProps: { vivienda }
-    });
-    modal.present();
-  
-    const { data, role } = await modal.onDidDismiss();
-    console.log('Modal cerrado con role:', role, 'y data:', data);
-    if (data) {
-      console.log('Datos devueltos por el modal (detallado):', JSON.stringify(data, null, 2));
-    }
-    if (role === 'confirm' && data) {
-      this.viviendasService.updateVivienda(vivienda.id, data as ViviendaEdit).subscribe({
-        next: (response) => {
-          console.log('Vivienda actualizada:', response);
-          this.presentAlert('Éxito', 'Vivienda actualizada correctamente', [
-            {
-              text: 'Aceptar',
-              handler: () => {
-                this.getViviendas();
-              }
-            }
-          ]);
-        },
-        error: (err) => {
-          console.error('Error al actualizar vivienda:', err);
-          const errorMessage = err.error?.error || err.error?.message || 'Error desconocido al actualizar la vivienda';
-          this.presentAlert('Error', errorMessage);
-        }
-      });
-    } else if (role === 'cancel') {
-      console.log('Edición cancelada');
-    }
+async abrirModalEditar(vivienda: Vivienda) {
+  console.log('Abriendo modal para editar vivienda:', vivienda);
+  const modal = await this.modalController.create({
+    component: ModalEditarViviendaComponent,
+    componentProps: { vivienda }
+  });
+  modal.present();
+
+  const { data, role } = await modal.onDidDismiss();
+  console.log('Modal cerrado con role:', role, 'y data:', data);
+  if (data) {
+    console.log('Datos devueltos por el modal (detallado):', JSON.stringify(data, null, 2));
   }
+  if (role === 'confirm' && data) {
+    this.viviendasService.updateVivienda(vivienda.id, data as ViviendaEdit).subscribe({
+      next: (response) => {
+        console.log('Vivienda actualizada:', response);
+        this.presentAlert('Éxito', 'Vivienda actualizada correctamente', [
+          {
+            text: 'Aceptar',
+            handler: () => {
+              this.getViviendas();
+            }
+          }
+        ]);
+      },
+      error: (err) => {
+        console.error('Error al actualizar vivienda:', err);
+        const errorMessage = err.error?.error || err.error?.message || 'Error desconocido al actualizar la vivienda';
+        this.presentAlert('Error', errorMessage);
+      }
+    });
+  } else if (role === 'cancel') {
+    console.log('Edición cancelada');
+  }
+}
 
   getEstadoClass(estado: string): string {
     switch (estado) {

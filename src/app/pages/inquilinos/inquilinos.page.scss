@@ -152,6 +152,12 @@ ion-modal {
         font-size: 14px;
         color: #333;
       }
+
+      ion-button {
+        margin: 0 5px;
+        --padding-start: 5px;
+        --padding-end: 5px;
+      }
   
       .foto {
         display: flex;

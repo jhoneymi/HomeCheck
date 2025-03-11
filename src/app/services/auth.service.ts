@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators'; // Importar tap para manejar la respuesta
 import { environment } from 'src/environments/environment';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,13 @@ export class AuthService {
 
   // Inicio de sesión
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+      tap((response: any) => {
+        if (response.token) {
+          this.saveToken(response.token); // Guardar y decodificar el token
+        }
+      })
+    );
   }
 
   // Guardar token en LocalStorage y decodificarlo
@@ -43,7 +50,7 @@ export class AuthService {
   // Extraer el userId del token
   private setUserFromToken(token: string) {
     try {
-      const decodedToken: any = jwtDecode(token); // Llamada directa a la función
+      const decodedToken: any = jwtDecode(token);
       this.userId = decodedToken.userId;
     } catch (error) {
       console.error('Error decodificando el token:', error);

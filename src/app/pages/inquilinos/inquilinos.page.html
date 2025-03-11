@@ -17,40 +17,48 @@
 
     <ion-grid class="tabla-inquilinos">
       <ion-row class="header">
-        <ion-col>Nombre Completo</ion-col>
+        <ion-col>Nombre</ion-col>
         <ion-col>Teléfono</ion-col>
         <ion-col>Email</ion-col>
+        <ion-col>Vivienda</ion-col>
+        <ion-col>Fecha Ingreso</ion-col>
+        <ion-col>Estado</ion-col>
+        <ion-col>Método Pago</ion-col>
+        <ion-col>Últ. Pago</ion-col>
+        <ion-col>Monto Pendiente</ion-col>
+        <ion-col>Documento</ion-col>
         <ion-col>Referencias</ion-col>
-        <ion-col>Cédula</ion-col>
-        <ion-col>Foto</ion-col>
+        <ion-col>Acciones</ion-col>
       </ion-row>
 
       <ion-row *ngFor="let inquilino of inquilinos" class="row">
         <ion-col>{{ inquilino.nombre }}</ion-col>
         <ion-col>{{ inquilino.telefono }}</ion-col>
-        <ion-col>{{ inquilino.email }}</ion-col>
-        <ion-col>{{ inquilino.referencia }}</ion-col>
-        <ion-col>{{ inquilino.cedula }}</ion-col>
-        <ion-col class="foto">
-          <ion-avatar>
-            <img [src]="inquilino.foto" alt="Foto de {{ inquilino.nombre }}" />
-          </ion-avatar>
+        <ion-col>{{ inquilino.email || 'N/A' }}</ion-col>
+        <ion-col>{{ getViviendaNombre(inquilino.vivienda_id) || 'Sin asignar' }}</ion-col>
+        <ion-col>{{ inquilino.fecha_ingreso | date:'shortDate' }}</ion-col>
+        <ion-col>{{ inquilino.estado }}</ion-col>
+        <ion-col>{{ inquilino.metodo_pago }}</ion-col>
+        <ion-col>{{ getUltimoPagoFecha(inquilino.ultimo_pago_fecha) }}</ion-col>
+        <ion-col>{{ getMontoPendiente(inquilino.monto_pendiente) }}</ion-col>
+        <ion-col>{{ inquilino.documento }}</ion-col>
+        <ion-col>{{ inquilino.referencias || 'N/A' }}</ion-col>
+        <ion-col>
+          <ion-button size="small" color="primary" (click)="abrirModalEditar(inquilino)">
+            <ion-icon name="pencil-outline"></ion-icon>
+          </ion-button>
+          <ion-button size="small" color="danger" (click)="eliminarInquilino(inquilino.id)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>
   </div>
 
-<!-- Botón flotante en la esquina inferior derecha -->
+  <!-- Botón flotante en la esquina inferior derecha -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button class="custom-fab" (click)="abrirModal()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
-<!-- Modal -->
-<!-- Botón flotante en la esquina inferior derecha -->
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button class="custom-fab" (click)="abrirModal()">
-    <ion-icon name="add-outline"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
+</ion-content>

@@ -1,20 +1,54 @@
+// Importar una fuente moderna (opcional, si tienes una fuente en tu proyecto)
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 // Fondo del contenido del modal
 ion-content {
-  --background: #ffffff;
-  --padding: 20px;
+  --background: #f9fafb; // Fondo gris claro para un look limpio
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
   height: 100%;
+  overflow-y: auto;
+  font-family: 'Roboto', sans-serif; // Fuente moderna
 }
 
 // Encabezado del modal
 ion-header {
   ion-toolbar {
-    --background: #1e8449; // Consistente con la página
+    --background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); // Gradiente verde
     --color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
     ion-title {
-      font-size: 20px;
-      font-weight: 600;
-      padding: 10px;
+      font-size: 22px;
+      font-weight: 700;
+      padding: 12px;
+      text-align: center;
+    }
+
+    ion-buttons {
+      margin-right: 10px;
+
+      ion-button {
+        --background: transparent;
+        --color: #ffffff;
+        --border-radius: 50%;
+        --padding-start: 8px;
+        --padding-end: 8px;
+
+        ion-icon {
+          font-size: 26px;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover {
+          --background: rgba(255, 255, 255, 0.1);
+          ion-icon {
+            transform: scale(1.1);
+          }
+        }
+      }
     }
   }
 }
@@ -27,28 +61,93 @@ ion-header {
   flex-direction: column;
   justify-content: space-between;
 
-  ion-item {
-    --background: #ffffff;
-    --border-radius: 8px;
-    --padding-start: 10px;
-    --padding-end: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #e9ecef;
+  ion-list {
+    margin-bottom: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 10px;
 
-    ion-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #555;
+    ion-list-header {
+      --background: transparent;
+      --color: #2c3e50;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 15px 10px;
+      border-bottom: 1px solid #e9ecef;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      ion-icon {
+        font-size: 20px;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: #f1f3f5;
+      }
     }
 
-    ion-input {
-      font-size: 16px;
-      color: #333;
+    ion-item {
+      --background: transparent;
+      --border-radius: 8px;
+      --padding-start: 10px;
+      --padding-end: 10px;
+      margin: 10px 0;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      transition: box-shadow 0.3s ease;
 
-      &::placeholder {
-        color: #999;
-        font-style: italic;
+      &:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
+
+      ion-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #34495e;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      ion-input,
+      ion-textarea,
+      ion-select,
+      ion-datetime {
+        font-size: 16px;
+        color: #2c3e50;
+        padding: 8px 0;
+        border-radius: 6px;
+        background: #f8f9fa;
+        transition: background 0.3s ease;
+
+        &::placeholder {
+          color: #95a5a6;
+          font-style: italic;
+        }
+
+        &:focus {
+          background: #e8ecef;
+        }
+      }
+
+      ion-textarea {
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        --padding-start: 10px;
+        --padding-end: 10px;
+      }
+
+      ion-select {
+        --padding-start: 10px;
+        --padding-end: 10px;
+      }
+    }
+
+    // Animación para la sección colapsable
+    div {
+      animation: slideDown 0.3s ease-in-out;
     }
   }
 }
@@ -57,37 +156,90 @@ ion-header {
 .modal-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 30px;
+  padding-bottom: 30px;
 
   ion-button {
-    --border-radius: 8px;
-    --padding-start: 20px;
-    --padding-end: 20px;
+    --border-radius: 10px;
+    --padding-start: 24px;
+    --padding-end: 24px;
     text-transform: uppercase;
     font-weight: 600;
     width: 48%;
-    height: 45px;
+    height: 50px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
 
     &[color="success"] {
-      --background: #28a745;
-      --background-activated: #218838;
+      --background: #27ae60;
+      --background-activated: #219653;
+      --color: #ffffff;
     }
 
     &[color="danger"] {
-      --background: #dc3545;
-      --background-activated: #c82333;
+      --background: #e74c3c;
+      --background-activated: #c0392b;
+      --color: #ffffff;
     }
+
+    &[disabled] {
+      --background: #b0b0b0;
+      --color: #666666;
+      box-shadow: none;
+    }
+
+    &:hover:not([disabled]) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+// Animación para la sección colapsable
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 // Responsividad
 @media (max-width: 576px) {
+  ion-content {
+    --padding-start: 16px;
+    --padding-end: 16px;
+  }
+
+  ion-list {
+    ion-list-header {
+      font-size: 16px;
+    }
+
+    ion-item {
+      ion-label {
+        font-size: 13px;
+      }
+
+      ion-input,
+      ion-textarea,
+      ion-select,
+      ion-datetime {
+        font-size: 14px;
+      }
+    }
+  }
+
   .modal-buttons {
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 
     ion-button {
       width: 100%;
+      height: 45px;
     }
   }
 }

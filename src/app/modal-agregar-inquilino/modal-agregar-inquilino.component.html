@@ -1,44 +1,112 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Agregar Inquilino</ion-title>
+    <ion-title>{{ editMode ? 'Editar Inquilino' : 'Agregar Inquilino' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancelar()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <div class="modal-content">
-    <ion-item>
-      <ion-label position="stacked">Nombre Completo</ion-label>
-      <ion-input [(ngModel)]="inquilino.nombreCompleto" placeholder="Ingrese nombre"></ion-input>
-    </ion-item>
+    <!-- Sección 1: Información Personal -->
+    <ion-list lines="none">
+      <ion-list-header>
+        <ion-label>Información Personal</ion-label>
+      </ion-list-header>
 
-    <ion-item>
-      <ion-label position="stacked">Teléfono</ion-label>
-      <ion-input [(ngModel)]="inquilino.telefono" type="tel" placeholder="Ingrese teléfono"></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input [(ngModel)]="inquilino.nombre" placeholder="Ingrese nombre" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Email</ion-label>
-      <ion-input [(ngModel)]="inquilino.email" type="email" placeholder="Ingrese email"></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Teléfono</ion-label>
+        <ion-input [(ngModel)]="inquilino.telefono" type="tel" placeholder="Ingrese teléfono" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Referencias</ion-label>
-      <ion-input [(ngModel)]="inquilino.referencias" placeholder="Ingrese referencias"></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input [(ngModel)]="inquilino.email" type="email" placeholder="Ingrese email"></ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Cédula</ion-label>
-      <ion-input [(ngModel)]="inquilino.cedula" placeholder="Ingrese cédula"></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Documento</ion-label>
+        <ion-input [(ngModel)]="inquilino.documento" placeholder="Ingrese documento" required></ion-input>
+      </ion-item>
+    </ion-list>
 
-    <ion-item>
-      <ion-label position="stacked">Foto (URL)</ion-label>
-      <ion-input [(ngModel)]="inquilino.fotoUrl" type="url" placeholder="Ingrese URL de la foto"></ion-input>
-    </ion-item>
+    <!-- Sección 2: Detalles de Alquiler -->
+    <ion-list lines="none">
+      <ion-list-header>
+        <ion-label>Detalles de Alquiler</ion-label>
+      </ion-list-header>
 
+      <ion-item>
+        <ion-label position="stacked">Vivienda</ion-label>
+        <ion-select [(ngModel)]="inquilino.vivienda_id" placeholder="Seleccione vivienda" [disabled]="!viviendas.length">
+          <ion-select-option *ngFor="let vivienda of viviendas" [value]="vivienda.id">
+            {{ vivienda.nombre }}
+          </ion-select-option>
+        </ion-select>
+        <ion-text color="danger" *ngIf="!viviendas.length">
+          No hay viviendas disponibles para asignar.
+        </ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Fecha de Ingreso</ion-label>
+        <ion-datetime [(ngModel)]="inquilino.fecha_ingreso" displayFormat="DD/MM/YYYY" placeholder="Seleccione fecha" required></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Estado</ion-label>
+        <ion-select [(ngModel)]="inquilino.estado" placeholder="Seleccione estado" required>
+          <ion-select-option value="Activo">Activo</ion-select-option>
+          <ion-select-option value="Inactivo">Inactivo</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Método de Pago</ion-label>
+        <ion-select [(ngModel)]="inquilino.metodo_pago" placeholder="Seleccione método" required>
+          <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+          <ion-select-option value="Tarjeta">Tarjeta</ion-select-option>
+          <ion-select-option value="Otro">Otro</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+
+    <!-- Sección 3: Notas y Referencias (colapsable) -->
+    <ion-list lines="none">
+      <ion-list-header (click)="toggleNotasReferencias()">
+        <ion-label>Notas y Referencias</ion-label>
+        <ion-icon [name]="showNotasReferencias ? 'chevron-down-outline' : 'chevron-forward-outline'" slot="end"></ion-icon>
+      </ion-list-header>
+
+      <div *ngIf="showNotasReferencias">
+        <ion-item>
+          <ion-label position="stacked">Notas</ion-label>
+          <ion-textarea [(ngModel)]="inquilino.notas" placeholder="Ingrese notas" rows="3"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Referencias</ion-label>
+          <ion-textarea [(ngModel)]="inquilino.referencias" placeholder="Ingrese referencias" rows="3"></ion-textarea>
+        </ion-item>
+      </div>
+    </ion-list>
+
+    <!-- Botones -->
     <div class="modal-buttons">
-      <ion-button color="success" (click)="guardar()">Guardar</ion-button>
-      <ion-button color="danger" (click)="cancelar()">Cancelar</ion-button>
+      <ion-button [disabled]="!isFormValid()" (click)="guardar()" expand="block">
+        Guardar
+      </ion-button>
+      <ion-button (click)="cancelar()" expand="block" color="medium">
+        Cancelar
+      </ion-button>
     </div>
   </div>
 </ion-content>
