@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { mailOutline, lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { IonContent, IonButton, IonInput, IonItem, IonSpinner,IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonInput, IonItem, IonSpinner, IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonInput, IonItem, IonButton, IonSpinner,IonIcon,
+    IonContent, IonInput, IonItem, IonButton, IonSpinner, IonIcon,
     CommonModule, FormsModule
   ]
 })
@@ -25,21 +25,29 @@ export class LoginPage {
     public router: Router,
     private http: HttpClient,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController // Agregamos AlertController para mostrar mensajes con estilo
-  ) {addIcons({mailOutline,lockClosedOutline})}
+    private alertCtrl: AlertController
+  ) {
+    addIcons({ mailOutline, lockClosedOutline });
+  }
 
   goToRegister() {
     this.router.navigate(['/register']);
   }
 
-  // Método para mostrar una alerta estilizada
+  // Método para mostrar una alerta estilizada con recarga al cerrar
   async showAlert(header: string, message: string) {
     const alert = await this.alertCtrl.create({
       header,
       message,
       buttons: ['OK'],
-      cssClass: 'custom-alert' // Clase CSS personalizada para darle estilo
+      cssClass: 'custom-alert',
     });
+
+    alert.onDidDismiss().then(() => {
+      // Recargar la página después de cerrar la alerta
+      location.reload();
+    });
+
     await alert.present();
   }
 

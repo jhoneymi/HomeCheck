@@ -6,7 +6,7 @@
       <span>HomeCheck</span>
     </div>
     <ion-list>
-      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route">
+      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route" (click)="handleMenuClick(menu)">
         <ion-icon [name]="menu.icon"></ion-icon>
         <span>{{ menu.title }}</span>
       </ion-item>

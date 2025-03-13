@@ -16,7 +16,8 @@ import {
   logoTwitter, 
   notificationsOutline, 
   peopleOutline, 
-  storefrontOutline, 
+  storefrontOutline,
+  exitOutline, 
   pencilOutline,
   trashOutline
 } from 'ionicons/icons';
@@ -51,7 +52,8 @@ export class InquilinosPage implements OnInit {
     { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
     { title: 'Inquilinos', icon: 'people-outline', active: true, route: '/inquilinos' },
     { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' },
-    { title: 'Salida', icon: '', active: false, route: '' }
+    { title: 'Ganancias', icon: 'cash-outline', active: false, route: '#'},
+    { title: 'Salida', icon: 'exit-outline', active: false, route: '' }
   ];
 
   inquilinos: any[] = [];
@@ -72,6 +74,7 @@ export class InquilinosPage implements OnInit {
       notificationsOutline,
       storefrontOutline,
       documentsOutline,
+      exitOutline,
       alertCircleOutline,
       logoTwitter,
       addOutline,

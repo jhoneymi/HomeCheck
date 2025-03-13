@@ -14,7 +14,8 @@ import {
   logoAngular, 
   logoTwitter, 
   notificationsOutline, 
-  peopleOutline, 
+  peopleOutline,
+  exitOutline,
   storefrontOutline 
 } from 'ionicons/icons';
 import { 
@@ -33,6 +34,7 @@ import { ModalAgregarViviendaComponent } from 'src/app/modal-agregar-vivienda/mo
 import { ModalEditarViviendaComponent } from 'src/app/modal-editar-vivienda/modal-editar-vivienda.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router'; // Importar Router
 
 @Component({
   selector: 'app-viviendas',
@@ -60,7 +62,8 @@ export class ViviendasPage implements OnInit {
     { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
     { title: 'Inquilinos', icon: 'people-outline', active: false, route: '/inquilinos' },
     { title: 'Viviendas', icon: 'business-outline', active: true, route: '/viviendas' },
-    { title: 'Salida', icon: '', active: false, route: '' }
+    { title: 'Ganancias', icon: 'cash-outline', active: false, route: '#' },
+    { title: 'Salida', icon: 'exit-outline', active: false, action: 'logout' } // Cambiamos route por action
   ];
 
   viviendas: Vivienda[] = [];
@@ -69,7 +72,8 @@ export class ViviendasPage implements OnInit {
     private viviendasService: ViviendasService,
     private modalController: ModalController,
     private authService: AuthService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private router: Router // Inyectar Router
   ) {    
     addIcons({
       cashOutline,
@@ -82,6 +86,7 @@ export class ViviendasPage implements OnInit {
       storefrontOutline,
       documentsOutline,
       alertCircleOutline,
+      exitOutline,
       logoTwitter,
       addOutline
     });
@@ -131,42 +136,42 @@ export class ViviendasPage implements OnInit {
     }
   }
 
-async abrirModalEditar(vivienda: Vivienda) {
-  console.log('Abriendo modal para editar vivienda:', vivienda);
-  const modal = await this.modalController.create({
-    component: ModalEditarViviendaComponent,
-    componentProps: { vivienda }
-  });
-  modal.present();
-
-  const { data, role } = await modal.onDidDismiss();
-  console.log('Modal cerrado con role:', role, 'y data:', data);
-  if (data) {
-    console.log('Datos devueltos por el modal (detallado):', JSON.stringify(data, null, 2));
-  }
-  if (role === 'confirm' && data) {
-    this.viviendasService.updateVivienda(vivienda.id, data as ViviendaEdit).subscribe({
-      next: (response) => {
-        console.log('Vivienda actualizada:', response);
-        this.presentAlert('Éxito', 'Vivienda actualizada correctamente', [
-          {
-            text: 'Aceptar',
-            handler: () => {
-              this.getViviendas();
-            }
-          }
-        ]);
-      },
-      error: (err) => {
-        console.error('Error al actualizar vivienda:', err);
-        const errorMessage = err.error?.error || err.error?.message || 'Error desconocido al actualizar la vivienda';
-        this.presentAlert('Error', errorMessage);
-      }
+  async abrirModalEditar(vivienda: Vivienda) {
+    console.log('Abriendo modal para editar vivienda:', vivienda);
+    const modal = await this.modalController.create({
+      component: ModalEditarViviendaComponent,
+      componentProps: { vivienda }
     });
-  } else if (role === 'cancel') {
-    console.log('Edición cancelada');
+    modal.present();
+
+    const { data, role } = await modal.onDidDismiss();
+    console.log('Modal cerrado con role:', role, 'y data:', data);
+    if (data) {
+      console.log('Datos devueltos por el modal (detallado):', JSON.stringify(data, null, 2));
+    }
+    if (role === 'confirm' && data) {
+      this.viviendasService.updateVivienda(vivienda.id, data as ViviendaEdit).subscribe({
+        next: (response) => {
+          console.log('Vivienda actualizada:', response);
+          this.presentAlert('Éxito', 'Vivienda actualizada correctamente', [
+            {
+              text: 'Aceptar',
+              handler: () => {
+                this.getViviendas();
+              }
+            }
+          ]);
+        },
+        error: (err) => {
+          console.error('Error al actualizar vivienda:', err);
+          const errorMessage = err.error?.error || err.error?.message || 'Error desconocido al actualizar la vivienda';
+          this.presentAlert('Error', errorMessage);
+        }
+      });
+    } else if (role === 'cancel') {
+      console.log('Edición cancelada');
+    }
   }
-}
 
   getEstadoClass(estado: string): string {
     switch (estado) {
@@ -260,5 +265,28 @@ async abrirModalEditar(vivienda: Vivienda) {
     });
 
     await alert.present();
+  }
+
+  handleMenuClick(menu: any): void {
+    if (menu.action) {
+      // Ejecutar acción según el valor de 'action'
+      switch (menu.action) {
+        case 'logout':
+          this.logout();
+          break;
+        // Agregar más acciones si las necesitas en el futuro
+        default:
+          break;
+      }
+    }
+    // Si no hay acción, dejar que [routerLink] maneje la navegación
+  }
+
+  logout(): void {
+    console.log('Cerrando sesión...');
+    this.authService.logout(); // Limpia token y userId
+    console.log('Token y UserId eliminados del localStorage');
+    this.router.navigate(['/login']); // Redirige al login
+    console.log('Redirigido a /login');
   }
 }
