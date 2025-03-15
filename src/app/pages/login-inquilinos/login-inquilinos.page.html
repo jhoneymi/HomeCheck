@@ -1,0 +1,41 @@
+<ion-content>
+  <div class="navbar">
+    <div class="logo">
+      <img src="assets/icon/casaa.jpeg" alt="Homecheck Logo" style="width: 30px; height: auto;">
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="title-section">
+      <h1 class="main-title">Bienvenido, Inquilino!</h1>
+      <p class="description">
+        Inicia sesión con tu nombre y documento de identidad para acceder a tus datos.
+      </p>
+    </div>
+
+    <div class="form-section">
+      <h2 class="form-title">Iniciar Sesión (Inquilinos)</h2>
+      <div class="login-form">
+        <!-- Campo de Nombre con Icono -->
+        <ion-item class="input-item">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="credentials.nombre" type="text" placeholder="Nombre" required></ion-input>
+        </ion-item>
+
+        <!-- Campo de Documento con Icono -->
+        <ion-item class="input-item">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="credentials.documento" type="text" placeholder="Documento (ej. 402-1234567-8)" required></ion-input>
+        </ion-item>
+      </div>
+
+      <p class="extra-text">¿No estás registrado? <a href="/register-inquilinos">Regístrate</a></p>
+
+      <!-- Botón de Login con indicador de carga -->
+      <ion-button expand="block" class="green-button" (click)="login()" [disabled]="isLoading">
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

@@ -301,6 +301,43 @@ router.get('/viviendas/disponibles', authenticateToken, (req, res) => {
     });
 });
 
+//? Login Inquilino and HomePage
+
+// Login de inquilinos
+router.post('/inquilinos/login', (req, res) => {
+  const { nombre, documento } = req.body;
+
+  if (!nombre || !documento) {
+    return res.status(400).json({ error: 'Por favor, ingresa tu nombre y documento' });
+  }
+
+  // Limpiar el documento eliminando guiones
+  const documentoLimpio = documento.replace(/-/g, '');
+  console.log('Documento recibido:', documento, 'Documento limpio:', documentoLimpio);
+
+  // Consulta ajustada para buscar el documento limpio en la base de datos
+  const sql = `SELECT * FROM inquilinos WHERE nombre = ? AND REPLACE(documento, '-', '') = ?`;
+  connection.query(sql, [nombre, documentoLimpio], (error, results) => {
+    if (error) {
+      console.error('❌ Error en MySQL:', error.sqlMessage || error);
+      return res.status(500).json({ error: 'Error en el servidor' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Inquilino no encontrado' });
+    }
+
+    const inquilino = results[0];
+    const token = jwt.sign(
+      { inquilinoId: inquilino.id, nombre: inquilino.nombre },
+      JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({ message: 'Login exitoso', token });
+  });
+});
+
 //! CRUD para Viviendas
 
 // READ: Obtener una vivienda por ID

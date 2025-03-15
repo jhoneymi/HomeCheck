@@ -1,0 +1,155 @@
+@use 'sass:color';
+
+/* Colores personalizados */
+:root {
+  --blanco: #ffffff;
+  --verde-oscuro: #2e7c66;
+  --verde-esmeralda: #2ECC71;
+  --gris-muy-claro: #f9f8fa;
+  --gris-claro: #f2f2f2;
+  --gris-suave: #f2f3f6;
+  --azul-marino: #1A2A6C;
+  --azul-claro: #5A7D9E;
+  --oscuro: #333;
+}
+
+/* Fondo de página */
+body {
+  background-color: #fff;
+  height: 100vh;
+}
+
+/* Fondo con gradiente suave */
+ion-content {
+  --background: linear-gradient(to bottom, #f9f9f9, #fff);
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--blanco);
+  border-bottom: 2px solid #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Botones del menú */
+.menu ion-button {
+  margin: 0 0.5rem;
+  --color: #3b805c;
+  --background: transparent;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.menu ion-button:hover {
+  transform: scale(1.05);
+  --color: var(--blanco);
+  --background: #2d6348;
+}
+
+/* Botón verde sólido */
+.green-button {
+  --background: #3b805c;
+  --color: var(--blanco);
+  --border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.green-button:hover {
+  transform: scale(1.05);
+  --background: #2d6348;
+}
+
+/* Contenedor de login */
+.login-container {
+  width: 100%;
+  max-width: 450px;
+  background-color: var(--verde-esmeralda);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 2rem auto;
+}
+
+/* Contenido principal */
+.main-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Título principal */
+.title-section {
+  .main-title {
+    color: #3f8440;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .description {
+    font-size: 1.1rem;
+    color: var(--oscuro);
+    line-height: 1.6;
+  }
+}
+
+/* Sección del formulario */
+.form-section {
+  margin-top: 2rem;
+  display: inline-block;
+  background-color: #3b805c;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título del formulario */
+.form-title {
+  color: var(--blanco);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Inputs */
+.login-form {
+  .input-item {
+    background-color: var(--blanco);
+    border-radius: 5px;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    
+    &:focus-within {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  ion-icon {
+    color: #3b805c;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+}
+
+/* Texto adicional */
+.extra-text {
+  margin-top: 1rem;
+  color: var(--blanco);
+  font-size: 0.9rem;
+  
+  a {
+    color: var(--blanco);
+    text-decoration: underline;
+    font-weight: bold;
+    
+    &:hover {
+      color: color.adjust(#ffffff, $lightness: -10%);
+    }
+  }
+}

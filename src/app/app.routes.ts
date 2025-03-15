@@ -17,7 +17,8 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./pages/home/home.page').then( m => m.HomePage)
-  },  {
+  },
+  {
     path: 'contactos',
     loadComponent: () => import('./pages/contactos/contactos.page').then( m => m.ContactosPage)
   },
@@ -38,5 +39,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/viviendas/viviendas.page').then( m => m.ViviendasPage)
   },
 
-
+  {
+    path: 'login-inquilinos',
+    loadComponent: () => import('./pages/login-inquilinos/login-inquilinos.page').then( m => m.LoginInquilinosPage)
+  },
+  {
+    path: 'homepage-inquilinos',
+    loadComponent: () => import('./pages/homepage-inquilinos/homepage-inquilinos.page').then( m => m.HomepageInquilinosPage)
+  },
 ];
