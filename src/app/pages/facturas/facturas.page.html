@@ -15,5 +15,30 @@
 
   <!-- Contenido Principal -->
   <div class="main-content">
+    <!-- Pull-to-Refresh -->
+    <ion-refresher slot="fixed" (ionRefresh)="refreshContent($event)">
+      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Cards dinámicos para las facturas -->
+    <div class="factura-card" *ngFor="let factura of facturas">
+      <div class="factura-info">
+        <h3>Factura #{{ factura.id }}</h3>
+        <p class="monto">Monto: RD$ {{ factura.monto | number }}</p>
+        <p>Emisión: {{ factura.fecha_emision }}</p>
+        <p>Vencimiento: {{ factura.fecha_vencimiento }}</p>
+        <p class="estado {{ factura.estado.toLowerCase() }}">{{ factura.estado }}</p>
+        <p *ngIf="factura.estado === 'Pagada' && factura.pagos.length > 0">
+          Pagado el: {{ factura.pagos[0].fecha_pago }} ({{ factura.pagos[0].metodo_pago }})
+        </p>
+      </div>
+    </div>
+
+    <!-- Loading section -->
+    <div *ngIf="isLoading" class="loading-section">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando facturas...</p>
+    </div>
   </div>
 </ion-content>

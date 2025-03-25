@@ -1,13 +1,62 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>homepage-inquilinos</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <!-- Sidebar Dinámica -->
+  <div class="sidebar">
+    <div class="logo">
+      <ion-icon name="logo-angular"></ion-icon>
+      <span>HomeCheck</span>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route" (click)="handleMenuClick(menu)">
+        <ion-icon [name]="menu.icon"></ion-icon>
+        <span>{{ menu.title }}</span>
+      </ion-item>
+    </ion-list>
+  </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">homepage-inquilinos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Contenido Principal -->
+  <div class="main-content">
+    <!-- Barra Superior: Búsqueda y Notificaciones -->
+    <div class="topbar">
+      <ion-searchbar placeholder="Buscar..." (ionInput)="onSearch($event)"></ion-searchbar>
+      <div class="icons">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <ion-badge class="notification-badge">{{ notificationCount }}</ion-badge>
+      </div>
+    </div>
+
+    <!-- Pull-to-Refresh -->
+    <ion-refresher slot="fixed" (ionRefresh)="refreshContent($event)">
+      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Tarjetas Dinámicas -->
+    <div class="card-container">
+      <div class="card" *ngFor="let card of cards" [ngClass]="card.type" (click)="openCard(card)">
+        <ion-icon [name]="card.icon"></ion-icon>
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.value }}</p>
+      </div>
+
+      <!-- Opciones de pago -->
+      <div class="card success">
+        <h3>Registrar Pago</h3>
+        <p>Monto: RD$ {{ vivienda.precio_alquiler | number }}</p>
+        <ion-button expand="block" class="green-button" (click)="registerPayment('Efectivo')">
+          <ion-icon name="cash-outline" slot="start"></ion-icon>
+          Pago en Efectivo
+        </ion-button>
+        <ion-button expand="block" class="green-button" (click)="registerPayment('Tarjeta/Transferencia')">
+          <ion-icon name="card-outline" slot="start"></ion-icon>
+          Pago por Tarjeta/Transferencia
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Contenedor de Gráficos -->
+    <div class="charts-container">
+      <canvas #paymentsChart width="400" height="200"></canvas>
+      <canvas #pendingChart width="400" height="200"></canvas>
+    </div>
+  </div>
 </ion-content>

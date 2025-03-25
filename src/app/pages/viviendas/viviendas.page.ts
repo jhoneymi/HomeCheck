@@ -59,7 +59,7 @@ import { Router } from '@angular/router'; // Importar Router
 export class ViviendasPage implements OnInit {
   sidebarMenu = [
     { title: 'Home', icon: 'home-outline', active: false, route: '/home' },
-    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
+    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '#' },
     { title: 'Inquilinos', icon: 'people-outline', active: false, route: '/inquilinos' },
     { title: 'Viviendas', icon: 'business-outline', active: true, route: '/viviendas' },
     { title: 'Ganancias', icon: 'cash-outline', active: false, route: '#' },

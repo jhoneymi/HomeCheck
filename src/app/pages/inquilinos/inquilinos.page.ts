@@ -49,7 +49,7 @@ interface ViviendasResponse {
 export class InquilinosPage implements OnInit {
   sidebarMenu = [
     { title: 'Home', icon: 'home-outline', active: false, route: '/home' },
-    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
+    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '#' },
     { title: 'Inquilinos', icon: 'people-outline', active: true, route: '/inquilinos' },
     { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' },
     { title: 'Ganancias', icon: 'cash-outline', active: false, route: '#'},

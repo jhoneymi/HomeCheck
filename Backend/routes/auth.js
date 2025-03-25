@@ -338,6 +338,63 @@ router.post('/inquilinos/login', (req, res) => {
   });
 });
 
+//* Inquilinos Facturas
+
+// Obtener datos del inquilino autenticado
+router.get('/inquilinos/me', authenticateToken, (req, res) => {
+  const inquilinoId = req.user.inquilinoId; // Obtener el ID del inquilino desde el token
+  console.log('InquilinoId del token:', inquilinoId);
+
+  const inquilinoQuery = 'SELECT * FROM inquilinos WHERE id = ?';
+  connection.query(inquilinoQuery, [inquilinoId], (error, inquilinoResults) => {
+    if (error) {
+      console.error('❌ Error al obtener inquilino:', error);
+      return res.status(500).json({ error: 'Error al obtener datos del inquilino' });
+    }
+    if (inquilinoResults.length === 0) {
+      return res.status(404).json({ error: 'Inquilino no encontrado' });
+    }
+
+    const inquilino = inquilinoResults[0];
+    const viviendaQuery = 'SELECT * FROM viviendas WHERE id = ?';
+    connection.query(viviendaQuery, [inquilino.vivienda_id], (error, viviendaResults) => {
+      if (error) {
+        console.error('❌ Error al obtener vivienda:', error);
+        return res.status(500).json({ error: 'Error al obtener datos de la vivienda' });
+      }
+
+      res.status(200).json({
+        inquilino,
+        vivienda: viviendaResults[0] || null
+      });
+    });
+  });
+});
+
+// Registrar un pago (protegido para inquilinos)
+router.post('/pagos', authenticateToken, (req, res) => {
+  const { inquilino_id, vivienda_id, monto, metodo_pago, fecha_pago, estado } = req.body;
+  const inquilinoId = req.user.inquilinoId;
+
+  if (!inquilino_id || !vivienda_id || !monto || !metodo_pago || !fecha_pago || !estado) {
+    return res.status(400).json({ error: 'Faltan campos requeridos' });
+  }
+
+  if (parseInt(inquilino_id) !== inquilinoId) {
+    return res.status(403).json({ error: 'No tienes permiso para registrar un pago para otro inquilino' });
+  }
+
+  const query = 'INSERT INTO pagos (inquilino_id, vivienda_id, monto, metodo_pago, fecha_pago, estado) VALUES (?, ?, ?, ?, ?, ?)';
+  connection.query(query, [inquilino_id, vivienda_id, monto, metodo_pago, fecha_pago, estado], (error, results) => {
+    if (error) {
+      console.error('❌ Error al registrar pago:', error);
+      return res.status(500).json({ error: 'Error al registrar el pago' });
+    }
+
+    res.status(201).json({ message: 'Pago registrado exitosamente', id: results.insertId });
+  });
+});
+
 //! CRUD para Viviendas
 
 // READ: Obtener una vivienda por ID

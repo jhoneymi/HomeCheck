@@ -1,25 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { IonContent, IonList, IonItem, IonIcon } from '@ionic/angular/standalone'; // Agrega IonIcon
 import { 
+  logoAngular, 
   homeOutline, 
   documentTextOutline, 
-  peopleOutline, 
-  businessOutline, 
-  logoAngular, 
-  notificationsOutline, 
-  storefrontOutline, 
-  documentsOutline, 
-  alertCircleOutline, 
-  logoTwitter,
-  exitOutline,
-  cashOutline
+  chatbubbleOutline, 
+  exitOutline, 
+  notificationsOutline 
 } from 'ionicons/icons';
-import { RouterLink } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service'; // Importar AuthService
-import { Router } from '@angular/router'; // Importar Router
+import { 
+  IonContent, 
+  IonIcon, 
+  IonItem, 
+  IonList, 
+  IonBadge, 
+  IonRefresher, 
+  IonRefresherContent,
+  IonLabel,
+  IonSpinner,
+  AlertController,
+  LoadingController
+} from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import { FacturasService } from 'src/app/services/facturas.service';
 
 @Component({
   selector: 'app-facturas',
@@ -31,64 +37,105 @@ import { Router } from '@angular/router'; // Importar Router
     CommonModule,
     IonList,
     IonItem,
-    RouterLink,
+    RouterModule,
     IonIcon,
-    FormsModule
+    FormsModule,
+    IonBadge,
+    IonRefresher,
+    IonRefresherContent,
+    IonLabel,
+    IonSpinner
   ]
 })
 export class FacturasPage implements OnInit {
-  // Menú lateral dinámico
+  facturas: any[] = [];
+  notificationCount: number = 0;
+  isLoading = true;
+
+  // Menú lateral dinámico (ajustado con rutas de HomepageInquilinosPage)
   sidebarMenu = [
-    { title: 'Home', icon: 'home-outline', active: false, route: '/home' },
+    { title: 'Home', icon: 'home-outline', active: false, route: '/homepage-inquilinos' },
     { title: 'Facturas', icon: 'document-text-outline', active: true, route: '/facturas' },
-    { title: 'Inquilinos', icon: 'people-outline', active: false, route: '/inquilinos' },
-    { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' },
-    { title: 'Ganancias', icon: 'cash-outline', active: false, route: '#' },
-    { title: 'Salir', icon: 'exit-outline', active: false, action: 'logout' } // Cambiamos route por action
+    { title: 'Contáctanos', icon: 'chatbubble-outline', active: false, route: '/contactar-admin' },
+    { title: 'Cerrar Sesión', icon: 'exit-outline', active: false, action: 'logout' }
   ];
 
   constructor(
-    private authService: AuthService, // Inyectar AuthService
-    private router: Router // Inyectar Router
+    private router: Router,
+    private facturasService: FacturasService,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
   ) { 
     addIcons({
-      cashOutline,
       logoAngular,
       homeOutline,
       documentTextOutline,
-      peopleOutline,
-      businessOutline,
-      notificationsOutline,
-      storefrontOutline,
-      documentsOutline,
-      alertCircleOutline,
+      chatbubbleOutline,
       exitOutline,
-      logoTwitter
+      notificationsOutline
+    });
+  }
+
+  ngOnInit() {
+    this.loadFacturas();
+  }
+
+  async loadFacturas(event?: any) {
+    const token = localStorage.getItem('inquilinoToken');
+    if (!token) {
+      this.router.navigate(['/login-inquilinos']);
+      return;
+    }
+
+    this.isLoading = true;
+    this.facturasService.getFacturasInquilino().subscribe({
+      next: (res) => {
+        this.facturas = res.map((factura: any) => {
+          const pagos: any[] = factura.pagos || [];
+          const totalPagado = pagos.reduce((sum: number, pago: any) => sum + (pago.monto || 0), 0);
+          factura.estado = totalPagado >= (factura.monto || 0) ? 'Pagada' : 'Pendiente';
+          if (factura.estado === 'Pendiente' && new Date() > new Date(factura.fecha_vencimiento)) {
+            factura.estado = 'Atrasada';
+          }
+          return factura;
+        });
+        this.notificationCount = this.facturas.filter((f: any) => f.estado === 'Pendiente' || f.estado === 'Atrasada').length;
+        this.isLoading = false;
+        if (event) event.target.complete();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('❌ Error al cargar facturas:', err);
+        if (err.status === 401 || err.status === 403) {
+          localStorage.removeItem('inquilinoToken');
+          this.router.navigate(['/login-inquilinos']);
+        }
+        if (event) event.target.complete();
+      }
     });
   }
 
   handleMenuClick(menu: any): void {
     if (menu.action) {
-      // Ejecutar acción según el valor de 'action'
       switch (menu.action) {
         case 'logout':
           this.logout();
           break;
-        // Agregar más acciones si las necesitas en el futuro
-        default:
-          break;
       }
+    } else {
+      this.router.navigate([menu.route]);
     }
-    // Si no hay acción, dejar que [routerLink] maneje la navegación
   }
 
   logout(): void {
     console.log('Cerrando sesión...');
-    this.authService.logout(); // Limpia token y userId
-    console.log('Token y UserId eliminados del localStorage');
-    this.router.navigate(['/login']); // Redirige al login
-    console.log('Redirigido a /login');
+    localStorage.removeItem('inquilinoToken');
+    console.log('Token eliminado del localStorage');
+    this.router.navigate(['/login-inquilinos']);
+    console.log('Redirigido a /login-inquilinos');
   }
 
-  ngOnInit() {}
+  refreshContent(event: any) {
+    this.loadFacturas(event);
+  }
 }
