@@ -16,10 +16,8 @@ import {
   IonIcon, 
   IonItem, 
   IonList, 
-  IonBadge, 
   IonRefresher, 
   IonRefresherContent,
-  IonLabel,
   IonSpinner,
   AlertController,
   LoadingController
@@ -40,10 +38,8 @@ import { FacturasService } from 'src/app/services/facturas.service';
     RouterModule,
     IonIcon,
     FormsModule,
-    IonBadge,
     IonRefresher,
     IonRefresherContent,
-    IonLabel,
     IonSpinner
   ]
 })

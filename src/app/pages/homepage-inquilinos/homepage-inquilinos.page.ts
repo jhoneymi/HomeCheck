@@ -33,6 +33,23 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import Chart from 'chart.js/auto';
 
+// Definir interfaces para tipado
+interface Pago {
+  monto: number;
+  fecha_pago: string;
+  metodo_pago: string;
+}
+
+interface Factura {
+  id: number;
+  inquilino_id: number;
+  monto: number;
+  fecha_emision: string;
+  fecha_vencimiento: string;
+  estado: string;
+  pagos: Pago[];
+}
+
 @Component({
   selector: 'app-homepage-inquilinos',
   templateUrl: './homepage-inquilinos.page.html',
@@ -62,10 +79,9 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
   notificationCount: number = 0;
   isLoading = true;
   nextPaymentDate: string | null = null;
-  paymentHistory: any[] = [];
-  charts: any[] = []; // Para almacenar las instancias de Chart y destruirlas
+  paymentHistory: Pago[] = [];
+  charts: any[] = [];
 
-  // Menú lateral dinámico
   sidebarMenu = [
     { title: 'Home', icon: 'home-outline', active: true, route: '/homepage-inquilinos' },
     { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas' },
@@ -73,7 +89,6 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
     { title: 'Cerrar Sesión', icon: 'exit-outline', active: false, action: 'logout' }
   ];
 
-  // Tarjetas dinámicas
   cards: any[] = [];
 
   constructor(
@@ -105,7 +120,6 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy() {
-    // Destruir las instancias de Chart al salir para evitar memory leaks
     this.charts.forEach(chart => chart.destroy());
   }
 
@@ -123,29 +137,26 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
     this.isLoading = true;
     this.http.get<any>(`${environment.apiUrl}/inquilinos/me`, { headers }).subscribe({
       next: (res) => {
-        console.log('Datos recibidos del backend:', res); // Depuración
+        console.log('Datos recibidos del backend:', res);
         this.inquilino = res.inquilino || {};
         this.vivienda = res.vivienda || {};
         this.notificationCount = this.calculatePendingNotifications();
 
-        // Calcular el próximo pago y estado
         this.calculateNextPayment();
 
-        // Actualizar tarjetas dinámicas
         this.cards = [
           { title: 'Precio de Alquiler', icon: 'cash-outline', value: `RD$ ${this.vivienda.precio_alquiler || 0}`, type: 'primary' },
           { title: 'Monto Pendiente', icon: 'wallet-outline', value: `RD$ ${this.calculatePendingAmount()}`, type: this.calculatePendingAmount() > 0 ? 'danger' : 'success' },
           { title: 'Próximo Pago', icon: 'calendar-outline', value: this.nextPaymentDate || 'No registrado', type: this.calculatePendingAmount() > 0 ? 'danger' : 'warning' }
         ];
 
-        // Cargar historial de pagos para los gráficos
         this.loadPaymentHistory(headers);
 
         this.isLoading = false;
         if (event) event.target.complete();
       },
       error: (err) => {
-        console.error('❌ Error al cargar datos del inquilino:', err); // Depuración
+        console.error('❌ Error al cargar datos del inquilino:', err);
         this.isLoading = false;
         if (err.status === 401 || err.status === 403) {
           localStorage.removeItem('inquilinoToken');
@@ -161,14 +172,14 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
       console.warn('No se puede cargar el historial de pagos: inquilino.id no está definido');
       return;
     }
-    this.http.get<any[]>(`${environment.apiUrl}/facturas/inquilino`, { headers }).subscribe({
+    this.http.get<Factura[]>(`${environment.apiUrl}/facturas/inquilino`, { headers }).subscribe({
       next: (facturas) => {
-        console.log('Historial de pagos recibido:', facturas); // Depuración
-        this.paymentHistory = facturas.flatMap(factura => factura.pagos || []);
+        console.log('Historial de pagos recibido:', facturas);
+        this.paymentHistory = facturas.flatMap((factura: Factura) => factura.pagos || []);
         this.updateCharts();
       },
       error: (err) => {
-        console.error('❌ Error al cargar historial de pagos:', err); // Depuración
+        console.error('❌ Error al cargar historial de pagos:', err);
       }
     });
   }
@@ -245,7 +256,7 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
       next: async (res) => {
         await loading.dismiss();
         this.showAlert('✅ Pago registrado', 'Tu pago ha sido registrado exitosamente.');
-        this.loadInquilinoData(); // Recargar datos para actualizar el estado
+        this.loadInquilinoData();
       },
       error: async (err) => {
         await loading.dismiss();
@@ -291,7 +302,7 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
         }
       }
     });
-    this.charts.push(chart); // Guardar la instancia para destruirla después
+    this.charts.push(chart);
   }
 
   updateCharts() {
@@ -304,7 +315,6 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
   }
 
   calculatePendingAmount(): number {
-    // Simulación de monto pendiente (puedes ajustarlo según los datos del backend)
     const lastPayment = this.paymentHistory.length > 0 ? this.paymentHistory[this.paymentHistory.length - 1].monto || 0 : 0;
     const alquiler = this.vivienda.precio_alquiler || 0;
     return alquiler - lastPayment > 0 ? alquiler - lastPayment : 0;
