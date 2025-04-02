@@ -178,6 +178,11 @@ ion-content {
     transform: scale(1.05);
     --background: #2ecc71;
   }
+
+  .green-button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   
   /* Sección de carga */
   .loading-section {

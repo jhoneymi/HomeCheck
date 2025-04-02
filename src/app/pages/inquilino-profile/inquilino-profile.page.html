@@ -1,0 +1,67 @@
+<ion-content class="content">
+  <!-- Contenido Principal -->
+  <div class="main-content">
+    <!-- Encabezado -->
+    <div class="header-section">
+      <h2>Perfil del Inquilino</h2>
+      <ion-button fill="clear" class="back-button" routerLink="/inquilinos">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Detalles del Inquilino -->
+    <ion-card *ngIf="inquilino" class="inquilino-card">
+      <ion-card-header>
+        <ion-card-title>{{ inquilino.nombre }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Email:</strong> {{ inquilino.email || 'N/A' }}</p>
+        <p><strong>Teléfono:</strong> {{ inquilino.telefono || 'N/A' }}</p>
+        <p><strong>Vivienda:</strong> {{ inquilino.vivienda_nombre || 'N/A' }}</p>
+        <p><strong>Precio Alquiler:</strong> {{ inquilino.precio_alquiler | currency:'MXN' }}</p>
+        <div class="action-buttons">
+          <ion-button color="primary" (click)="abrirModalEnviarMensaje()">
+            <ion-icon name="mail-outline"></ion-icon> Enviar Mensaje
+          </ion-button>
+          <ion-button color="secondary" (click)="abrirModalRegistrarPago()">
+            <ion-icon name="cash-outline"></ion-icon> Registrar Pago
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Lista de Mensajes -->
+    <ion-grid class="tabla-mensajes">
+      <ion-row class="header">
+        <ion-col>Mensaje</ion-col>
+        <ion-col>Fecha</ion-col>
+        <ion-col>Leído</ion-col>
+      </ion-row>
+      <ion-row *ngFor="let mensaje of mensajes" class="row">
+        <ion-col>{{ mensaje.contenido }}</ion-col>
+        <ion-col>{{ mensaje.fecha | date: 'medium' }}</ion-col>
+        <ion-col>{{ mensaje.leido ? 'Sí' : 'No' }}</ion-col>
+      </ion-row>
+      <div *ngIf="mensajes.length === 0" class="no-data">
+        <p>No hay mensajes para este inquilino.</p>
+      </div>
+    </ion-grid>
+
+    <!-- Lista de Pagos -->
+    <ion-grid class="tabla-pagos">
+      <ion-row class="header">
+        <ion-col>Monto</ion-col>
+        <ion-col>Fecha</ion-col>
+        <ion-col>Estado</ion-col>
+      </ion-row>
+      <ion-row *ngFor="let pago of pagos" class="row">
+        <ion-col>{{ pago.monto | currency:'MXN' }}</ion-col>
+        <ion-col>{{ pago.fecha_pago | date: 'medium' }}</ion-col>
+        <ion-col>{{ pago.estado }}</ion-col>
+      </ion-row>
+      <div *ngIf="pagos.length === 0" class="no-data">
+        <p>No hay pagos registrados para este inquilino.</p>
+      </div>
+    </ion-grid>
+  </div>
+</ion-content>

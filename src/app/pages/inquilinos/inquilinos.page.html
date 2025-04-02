@@ -13,36 +13,29 @@
   </div>
 
   <div class="main-content">
-    <h2>Lista de Inquilinos</h2>
+    <!-- Encabezado con título y búsqueda -->
+    <div class="header-section">
+      <h2>Lista de Inquilinos</h2>
+      <ion-searchbar placeholder="Buscar inquilino..." (ionInput)="onSearch($event)" class="custom-searchbar"></ion-searchbar>
+    </div>
 
+    <!-- Tabla de inquilinos -->
     <ion-grid class="tabla-inquilinos">
       <ion-row class="header">
         <ion-col>Nombre</ion-col>
         <ion-col>Teléfono</ion-col>
         <ion-col>Email</ion-col>
-        <ion-col>Vivienda</ion-col>
-        <ion-col>Fecha Ingreso</ion-col>
-        <ion-col>Estado</ion-col>
-        <ion-col>Método Pago</ion-col>
-        <ion-col>Últ. Pago</ion-col>
-        <ion-col>Monto Pendiente</ion-col>
-        <ion-col>Documento</ion-col>
-        <ion-col>Referencias</ion-col>
+        <ion-col>Dirección</ion-col> <!-- Cambiamos "Referencias" por "Dirección" -->
         <ion-col>Acciones</ion-col>
       </ion-row>
 
-      <ion-row *ngFor="let inquilino of inquilinos" class="row">
-        <ion-col>{{ inquilino.nombre }}</ion-col>
+      <ion-row *ngFor="let inquilino of filteredInquilinos" class="row">
+        <ion-col>
+          <a (click)="viewProfile(inquilino.id)" class="inquilino-link">{{ inquilino.nombre }} {{ inquilino.apellido }}</a>
+        </ion-col>
         <ion-col>{{ inquilino.telefono }}</ion-col>
         <ion-col>{{ inquilino.email || 'N/A' }}</ion-col>
-        <ion-col>{{ getViviendaNombre(inquilino.vivienda_id) || 'Sin asignar' }}</ion-col>
-        <ion-col>{{ inquilino.fecha_ingreso | date:'shortDate' }}</ion-col>
-        <ion-col>{{ inquilino.estado }}</ion-col>
-        <ion-col>{{ inquilino.metodo_pago }}</ion-col>
-        <ion-col>{{ getUltimoPagoFecha(inquilino.ultimo_pago_fecha) }}</ion-col>
-        <ion-col>{{ getMontoPendiente(inquilino.monto_pendiente) }}</ion-col>
-        <ion-col>{{ inquilino.documento }}</ion-col>
-        <ion-col>{{ inquilino.referencias || 'N/A' }}</ion-col>
+        <ion-col>{{ inquilino.direccion || 'N/A' }}</ion-col> <!-- Cambiamos "referencias" por "direccion" -->
         <ion-col>
           <ion-button size="small" color="primary" (click)="abrirModalEditar(inquilino)">
             <ion-icon name="pencil-outline"></ion-icon>
@@ -53,6 +46,10 @@
         </ion-col>
       </ion-row>
     </ion-grid>
+
+    <div *ngIf="filteredInquilinos.length === 0" class="no-data">
+      <p>No hay inquilinos registrados.</p>
+    </div>
   </div>
 
   <!-- Botón flotante en la esquina inferior derecha -->

@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registrar Pago</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancelar()" [disabled]="isLoading">Cancelar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Monto</ion-label>
+    <ion-input type="number" [(ngModel)]="pago.monto" placeholder="Monto del pago"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Estado</ion-label>
+    <ion-select [(ngModel)]="pago.estado">
+      <ion-select-option value="Pendiente">Pendiente</ion-select-option>
+      <ion-select-option value="Pagado">Pagado</ion-select-option>
+      <ion-select-option value="Atrasado">Atrasado</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Método de Pago</ion-label>
+    <ion-select [(ngModel)]="pago.metodo_pago">
+      <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Fecha de Pago</ion-label>
+    <ion-datetime
+      [(ngModel)]="pago.fecha_pago"
+      displayFormat="YYYY-MM-DD"
+      placeholder="Seleccione la fecha"
+    ></ion-datetime>
+  </ion-item>
+
+  <ion-button
+    expand="block"
+    color="primary"
+    (click)="registrarPago()"
+    [disabled]="isLoading"
+  >
+    {{ isLoading ? 'Registrando...' : 'Registrar' }}
+  </ion-button>
+</ion-content>

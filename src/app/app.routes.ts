@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -47,4 +48,10 @@ export const routes: Routes = [
     path: 'homepage-inquilinos',
     loadComponent: () => import('./pages/homepage-inquilinos/homepage-inquilinos.page').then( m => m.HomepageInquilinosPage)
   },
+  {
+    path: 'inquilino-profile/:id',
+    loadComponent: () => import('./pages/inquilino-profile/inquilino-profile.page').then( m => m.InquilinoProfilePage)
+  },
+
+
 ];
