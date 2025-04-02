@@ -1,13 +1,20 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>facturas_admin</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <!-- Sidebar Dinámica -->
+  <div class="sidebar">
+    <div class="logo">
+      <ion-icon name="logo-angular"></ion-icon>
+      <span>HomeCheck</span>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route" (click)="handleMenuClick(menu)">
+        <ion-icon [name]="menu.icon"></ion-icon>
+        <span>{{ menu.title }}</span>
+      </ion-item>
+    </ion-list>
+  </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">facturas_admin</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Contenido Principal -->
+  <div class="main-content">
+   
+  </div>
 </ion-content>

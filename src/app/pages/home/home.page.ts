@@ -60,11 +60,11 @@ export class HomePage implements OnInit, AfterViewInit {
   // Menú lateral dinámico
   sidebarMenu = [
     { title: 'Home', icon: 'home-outline', active: true, route: '/home' },
-    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '#' },
+    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas-admin' },
     { title: 'Inquilinos', icon: 'people-outline', active: false, route: '/inquilinos' },
     { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' },
-    { title: 'Ganancias', icon: 'cash-outline', active: false, route: '#' },
-    { title: 'Salir', icon: 'exit-outline', active: false, action: 'logout' } // Cambiamos route por action
+    { title: 'Ganancias', icon: 'cash-outline', active: false, route: '/ganancias' },
+    { title: 'Salir', icon: 'exit-outline', active: false, action: 'logout' }
   ];
 
   // Tarjetas dinámicas
