@@ -51,7 +51,15 @@ export const routes: Routes = [
   {
     path: 'inquilino-profile/:id',
     loadComponent: () => import('./pages/inquilino-profile/inquilino-profile.page').then( m => m.InquilinoProfilePage)
+  },  {
+    path: 'ganancias',
+    loadComponent: () => import('./pages/ganancias/ganancias.page').then( m => m.GananciasPage)
   },
+  {
+    path: 'facturas-admin',
+    loadComponent: () => import('./pages/facturas-admin/facturas-admin.page').then( m => m.FacturasAdminPage)
+  },
+
 
 
 ];
