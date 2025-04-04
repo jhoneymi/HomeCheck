@@ -1,146 +1,215 @@
-/* Paleta de colores */
-:root {
-  --verde-oscuro: #2e7c66;
-  --verde-medio: #3a8b74;
-  --verde-claro: #58a690;
-  --verde-suave: #86c4ad;
-  --verde-muy-claro: #a3d5c5;
-  --verde-pastel: #c0e6d6;
-  --verde-primario: #4caf50;
-  --verde-hover: #388e3c;
-  --verde-intenso: #2e7d32;
-  --verde-neutro: #66bb6a;
-  --verde-destacado: #81c784;
-  --verde-translucido: rgba(76, 175, 80, 0.5);
-  --gris-muy-claro: #f9f8fa;
-  --gris-claro: #f1f2f4;
-  --gris-suave: #f2f3f6;
-  --gris-oscuro: #444;
-  --texto-oscuro: #222;
-  --texto-claro: #666;
-  --blanco: #fff;
+/* Estilos generales */
+.register-content {
+  --background: #f8fafc;
 }
 
-body {
-  background-color: #fff;
+/* Contenedor principal */
+.register-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
 }
 
-/* Estilos para el área de registro */
-ion-content {
-  --background: #f9f8fa;
-  padding: 20px;
-}
-
-ion-header {
-  background-color: #f4f4f4;
-}
-
-ion-toolbar {
-  --background: #ffffff;
-  --color: #000000;
-  border-bottom: 2px solid #2d6348;
-}
-
-ion-list {
-  background: transparent;
-  border-radius: 8px;
-  padding: 10px;
-}
-
-ion-item {
-  --background: #333;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-ion-input, 
-ion-select {
-  color: var(--texto-oscuro);
-  font-size: 16px;
-
-  &:focus-within {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-}
-
-ion-button {
-  font-weight: bold;
-  border-radius: 5px;
-  
-  &.button-strong {
-    --background: var(--verde-oscuro);
-    --color: var(--blanco);
-  }
-  
-  &.button-light {
-    --background: var(--gris-suave);
-    --color: var(--texto-claro);
-  }
-  
-  &[color="light"] {
-    --color: #3b805c;
-    --background: #f9f9f9;
-    --background-hover: #e0e0e0;
-  }
-}
-
-/* Efecto hover en desktop */
-@media (hover: hover) {
-  ion-button:hover {
-    filter: brightness(1.1);
-  }
-}
-
-/* Sección de Formulario */
+/* Sección del formulario */
 .form-section {
-  margin: 2rem auto;
-  max-width: 500px;
-  padding: 2rem;
-  background-color: #3b805c;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
 }
 
-.form-title {
-  color: var(--blanco);
-  font-size: 1.5rem;
+.form-header {
+  margin-bottom: 32px;
   text-align: center;
-  margin-bottom: 1.5rem;
 }
 
-.register-form {
-  .input-item {
-    background-color: var(--blanco);
-    border-radius: 5px;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.form-main-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.form-subtitle {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+/* Grid del formulario */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Estilos para los grupos de formulario */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+}
+
+.input-container:focus-within {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+.custom-input {
+  --padding-start: 42px !important;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  --color: #111827;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+/* Estilos específicos para el select */
+.select-container {
+  padding-right: 8px;
+}
+
+.custom-select {
+  width: 100%;
+  --padding-start: 42px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+}
+
+/* Indicador de contraseña */
+.password-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.password-hint ion-icon {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Sección de imagen de propiedad */
+.property-image-container {
+  margin-top: 12px;
+}
+
+.image-wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: 180px;
+}
+
+.property-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Acciones del formulario */
+.form-actions {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.register-button {
+  --background: #2e7d32;
+  --background-activated: #1b5e20;
+  --background-hover: #1b5e20;
+  --border-radius: 8px;
+  height: 48px;
+  font-weight: 600;
+  --box-shadow: none;
+}
+
+.register-button:hover {
+  --box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+}
+
+.login-redirect {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.login-redirect a {
+  color: #2e7d32;
+  font-weight: 500;
+  text-decoration: none;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
   }
   
-  ion-icon {
-    color: #3b805c;
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
+  .form-section {
+    padding: 32px 24px;
+  }
+  
+  .property-image-container {
+    height: 150px;
   }
 }
 
-/* Cuadro con Imagen Alusiva */
-.image-section {
-  margin-top: 1.5rem;
-  text-align: center;
-}
-
-.domicilio-image {
-  max-width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Botones */
-.green-button {
-  --background: #3b805c;
-  --color: var(--blanco);
-  --border-radius: 5px;
-  --background-hover: #2d6348;
-  margin-top: 1rem;
+@media (max-width: 480px) {
+  .form-section {
+    padding: 24px 16px;
+  }
+  
+  .form-main-title {
+    font-size: 1.8rem;
+  }
 }
