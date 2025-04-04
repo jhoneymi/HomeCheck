@@ -129,10 +129,6 @@ router.post('/viviendas', authenticateToken, upload.single('img'), (req, res) =>
     return res.status(400).json({ error: 'Todos los campos obligatorios son requeridos (nombre, direccion, estado, img, id_adm, precio_alquiler)' });
   }
 
-  if (parseInt(id_adm) !== req.user.userId) {
-    return res.status(403).json({ error: 'No tienes permiso para usar este id_adm.' });
-  }
-
   const query = 'INSERT INTO viviendas (nombre, direccion, estado, img, id_adm, precio_alquiler, notas) VALUES (?, ?, ?, ?, ?, ?, ?)';
   const values = [nombre, direccion, estado, img, id_adm, precio_alquiler, notas || null];
 
