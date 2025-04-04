@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Enviar Mensaje</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancelar()">Cancelar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Tipo de Mensaje</ion-label>
+    <ion-select [(ngModel)]="mensaje.tipo">
+      <ion-select-option value="texto">Texto</ion-select-option>
+      <ion-select-option value="notificacion">Notificación</ion-select-option>
+      <ion-select-option value="alerta">Alerta</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Mensaje</ion-label>
+    <ion-textarea [(ngModel)]="mensaje.mensaje" placeholder="Escribe tu mensaje aquí..." rows="5"></ion-textarea>
+  </ion-item>
+
+  <ion-button expand="block" (click)="enviarMensaje()">Enviar</ion-button>
+</ion-content>

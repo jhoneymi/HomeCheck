@@ -79,6 +79,7 @@ export class LoginPage {
 
         if (res.token) {
           localStorage.setItem('authToken', res.token);
+          console.log(res.token)
           this.router.navigate(['/home']); // Redirigir sin alertas molestas
         } else {
           this.showAlert('⚠️ Error', 'El servidor no devolvió un token válido.');

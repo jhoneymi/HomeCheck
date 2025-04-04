@@ -42,13 +42,14 @@
       <div class="card success">
         <h3>Registrar Pago</h3>
         <p>Monto: RD$ {{ vivienda.precio_alquiler | number }}</p>
-        <ion-button expand="block" class="green-button" (click)="registerPayment('Efectivo')">
-          <ion-icon name="cash-outline" slot="start"></ion-icon>
-          Pago en Efectivo
+        <!-- Mostrar botón según el método de pago -->
+        <ion-button *ngIf="inquilino.metodo_pago === 'Efectivo'" expand="block" class="green-button" (click)="contactOwner()">
+          <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+          Contactar al Dueño
         </ion-button>
-        <ion-button expand="block" class="green-button" (click)="registerPayment('Tarjeta/Transferencia')">
+        <ion-button *ngIf="inquilino.metodo_pago === 'Tarjeta' || inquilino.metodo_pago === 'Otro'" expand="block" class="green-button" (click)="registerPayment()">
           <ion-icon name="card-outline" slot="start"></ion-icon>
-          Pago por Tarjeta/Transferencia
+          Pagar con Tarjeta/Transferencia
         </ion-button>
       </div>
     </div>
