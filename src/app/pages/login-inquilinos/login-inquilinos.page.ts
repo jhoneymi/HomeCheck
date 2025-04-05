@@ -64,12 +64,21 @@ export class LoginInquilinosPage {
 
     this.http.post<{ token: string, message?: string }>(`${environment.apiUrl}/inquilinos/login`, {
       nombre: this.credentials.nombre,
-      documento: this.credentials.documento // Enviar el documento tal como se ingresó (con guiones)
+      documento: this.credentials.documento
     }).subscribe({
       next: async (res) => {
         await loading.dismiss();
+        console.log('Respuesta del servidor en login:', res);
         if (res.token) {
           localStorage.setItem('inquilinoToken', res.token);
+          console.log('Token guardado en localStorage:', localStorage.getItem('inquilinoToken'));
+
+          // Limpiar todas las banderas de recarga para forzar una recarga en todas las páginas
+          sessionStorage.removeItem('hasReloadedFacturas');
+          sessionStorage.removeItem('hasReloadedHomepage');
+          sessionStorage.removeItem('hasReloadedContactarAdmin');
+
+          // Redirigir a la página deseada
           this.router.navigate(['/homepage-inquilinos']);
         } else {
           this.showAlert('⚠️ Error', res.message || 'El servidor no devolvió un token válido.');
@@ -77,7 +86,7 @@ export class LoginInquilinosPage {
       },
       error: async (err) => {
         await loading.dismiss();
-        console.error('❌ Error en el login de inquilino:', JSON.stringify(err));
+        console.error('❌ Error en el login de inquilino:', err);
         switch (err.status) {
           case 400:
             this.showAlert('❌ Credenciales incorrectas', 'El nombre o documento no son correctos.');

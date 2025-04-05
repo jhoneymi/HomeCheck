@@ -15,6 +15,115 @@
 
   <!-- Contenido Principal -->
   <div class="main-content">
-   
+    <!-- Ganancias Actuales -->
+    <div class="ganancias-actual" *ngIf="!isLoading">
+      <h2>Ganancias del Mes Actual ({{ gananciasActual.mes }}/{{ gananciasActual.anio }})</h2>
+      <p><strong>Ingresos:</strong> <span>RD$ {{ gananciasActual.ingresos | number }}</span></p>
+      <p><strong>Gastos:</strong> <span>RD$ {{ gananciasActual.gastos | number }}</span></p>
+      <p><strong>Ganancia Neta:</strong> <span [ngClass]="gananciasActual.ganancia_neta >= 0 ? 'positive' : 'negative'">RD$ {{ gananciasActual.ganancia_neta | number }}</span></p>
+    </div>
+
+    <!-- Resumen de Gastos por Categoría -->
+    <div class="gastos-categoria" *ngIf="!isLoading">
+      <h2>Resumen de Gastos por Categoría</h2>
+      <p><strong>Mantenimiento:</strong> <span>RD$ {{ gastosPorCategoria['Mantenimiento'] | number }}</span></p>
+      <p><strong>Servicios:</strong> <span>RD$ {{ gastosPorCategoria['Servicios'] | number }}</span></p>
+      <p><strong>Otros:</strong> <span>RD$ {{ gastosPorCategoria['Otros'] | number }}</span></p>
+    </div>
+
+    <!-- Lista de Gastos -->
+    <div class="gastos-list" *ngIf="!isLoading">
+      <h2>Lista de Gastos <ion-button color="primary" (click)="openModal()"><ion-icon name="add-circle-outline"></ion-icon> Agregar Gasto</ion-button></h2>
+      <div class="card-container">
+        <ion-item *ngFor="let gasto of gastos" class="gasto-item">
+          <ion-label>
+            <h2>{{ gasto.nombre }}</h2>
+            <p><strong>Monto:</strong> RD$ {{ gasto.monto | number }}</p>
+            <p><strong>Fecha:</strong> {{ gasto.fecha_gasto }}</p>
+            <p><strong>Tipo:</strong> {{ gasto.tipo }}</p>
+            <p *ngIf="gasto.descripcion"><strong>Descripción:</strong> {{ gasto.descripcion }}</p>
+          </ion-label>
+          <ion-button slot="end" color="danger" (click)="eliminarGasto(gasto.id)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <p *ngIf="gastos.length === 0">No se han registrado gastos.</p>
+      </div>
+    </div>
+
+    <!-- Historial de Ganancias -->
+    <div class="ganancias-historico" *ngIf="!isLoading">
+      <h2>Historial de Ganancias</h2>
+      <ion-item>
+        <ion-label>Filtrar por Mes/Año</ion-label>
+        <ion-input type="month" [(ngModel)]="selectedMesAnio" (ionChange)="filterGanancias()"></ion-input>
+      </ion-item>
+      <div class="card-container">
+        <ion-item *ngFor="let ganancia of filteredGanancias" class="ganancia-item">
+          <ion-label>
+            <h2>{{ ganancia.mes }}/{{ ganancia.anio }}</h2>
+            <p><strong>Ingresos:</strong> RD$ {{ ganancia.ingresos | number }}</p>
+            <p><strong>Gastos:</strong> RD$ {{ ganancia.gastos | number }}</p>
+            <p><strong>Ganancia Neta:</strong> <span [ngClass]="ganancia.ganancia_neta >= 0 ? 'positive' : 'negative'">RD$ {{ ganancia.ganancia_neta | number }}</span></p>
+          </ion-label>
+        </ion-item>
+        <p *ngIf="filteredGanancias.length === 0">No se encontraron ganancias para el período seleccionado.</p>
+      </div>
+    </div>
+
+    <!-- Modal para Agregar Gasto -->
+    <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
+      <ng-template>
+        <ion-content>
+          <div class="modal-content">
+            <h2>Agregar Gasto</h2>
+            <ion-item>
+              <ion-label position="stacked">Nombre</ion-label>
+              <ion-input [(ngModel)]="nuevoGasto.nombre" placeholder="Ej: Pago de agua"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Descripción</ion-label>
+              <ion-input [(ngModel)]="nuevoGasto.descripcion" placeholder="Descripción (opcional)"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Monto</ion-label>
+              <ion-input type="number" [(ngModel)]="nuevoGasto.monto" placeholder="Ej: 1500"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha del Gasto</ion-label>
+              <ion-datetime-button datetime="fechaGasto"></ion-datetime-button>
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime
+                    id="fechaGasto"
+                    presentation="date"
+                    [(ngModel)]="nuevoGasto.fecha_gasto"
+                    [max]="today"
+                  ></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Tipo</ion-label>
+              <ion-select [(ngModel)]="nuevoGasto.tipo">
+                <ion-select-option value="Mantenimiento">Mantenimiento</ion-select-option>
+                <ion-select-option value="Servicios">Servicios</ion-select-option>
+                <ion-select-option value="Otros">Otros</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <div class="modal-buttons">
+              <ion-button color="danger" (click)="closeModal()">Cancelar</ion-button>
+              <ion-button color="primary" (click)="agregarGasto()">Guardar</ion-button>
+            </div>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+    <!-- Loading -->
+    <div class="loading-container" *ngIf="isLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando datos...</p>
+    </div>
   </div>
 </ion-content>

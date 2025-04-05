@@ -193,3 +193,121 @@ ion-content {
     height: 50vh;
     color: #000000;
   }
+
+// Estilos para la pantalla de carga personalizada
+.custom-loading {
+  --background: rgba(0, 0, 0, 0.9); // Fondo oscuro semitransparente para que el contenido de fondo se vea ligeramente
+  --spinner-color: #ffffff; // Color del spinner blanco
+
+  .loading-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #2c3e50 0%, #3498db 100%); // Degradado azul oscuro a azul claro
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); // Sombra para efecto de profundidad
+    backdrop-filter: blur(5px); // Efecto de desenfoque para un look moderno
+    animation: fadeIn 0.7s ease-in-out; // Animación de entrada
+  }
+
+  // Estilo del logo (HomeCheck)
+  .custom-loading-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    animation: bounceIn 1s ease-in-out; // Animación de entrada con rebote
+
+    ion-icon {
+      font-size: 3rem;
+      color: #ffffff;
+      margin-right: 10px;
+    }
+
+    span {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+  }
+
+  // Estilo del mensaje
+  .custom-loading-message {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #ffffff;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInText 1s ease-in-out forwards;
+    animation-delay: 0.5s; // Retraso para que el texto aparezca después del logo
+  }
+
+  // Estilo del spinner
+  .loading-spinner {
+    margin-top: 20px;
+    width: 50px !important;
+    height: 50px !important;
+    animation: rotateAndPulse 2s infinite ease-in-out; // Animación combinada de rotación y pulsación
+  }
+}
+
+// Animación de entrada para el contenedor
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Animación de entrada con rebote para el logo
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Animación de desvanecimiento para el texto
+@keyframes fadeInText {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Animación combinada de rotación y pulsación para el spinner
+@keyframes rotateAndPulse {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}

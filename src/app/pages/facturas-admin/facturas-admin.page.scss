@@ -1,61 +1,423 @@
-/* Estilos generales */
+/* Estilos Generales */
 ion-content {
-    --background: #f4f4f4;
-    --color: #000000;
-    font-family: 'Arial', sans-serif;
-    font-size: 16px;
+  --background: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
+  --color: #333333;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(180deg, #1e8449 0%, #166d3b 100%);
+  color: white;
+  padding: 20px;
+  z-index: 2;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  ion-icon {
+    font-size: 28px;
+    color: #ffffff;
   }
-  
-  /* Sidebar */
-  .sidebar {
-    position: fixed;
-    width: 250px;
-    height: 100vh;
-    background: #1e8449;
-    color: white;
-    padding: 20px;
-    z-index: 2;
+}
+
+ion-list {
+  margin-top: 20px;
+}
+
+ion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  --color: white;
+  --background: transparent;
+  padding: 12px 10px;
+  border-radius: 12px;
+  transition: background 0.3s ease, transform 0.3s ease;
+  margin-bottom: 5px;
+}
+
+ion-item:hover,
+.active {
+  background: rgba(46, 204, 113, 0.3);
+  transform: translateX(5px);
+}
+
+ion-item ion-icon {
+  font-size: 20px;
+}
+
+ion-item span {
+  margin: 7px;
+  margin-bottom: -2px;
+  font-weight: 500;
+}
+
+/* Contenido Principal */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  margin-left: 250px;
+  background: #ffffff;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  min-height: 100vh;
+  border-radius: 0 20px 0 0;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    padding: 15px;
+    border-radius: 0;
   }
-  
-  .logo {
-    font-size: 20px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+}
+
+/* Barra Superior (Topbar) */
+.topbar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 25px;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+ion-searchbar {
+  --background: #f9f9f9;
+  --border-radius: 12px;
+  --box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  --placeholder-color: #888888;
+  --color: #333333;
+  --icon-color: #1e8449;
+  padding: 0 15px;
+  font-weight: 500;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.01);
   }
-  
-  ion-list {
-    margin-top: 20px;
-  }
-  
+}
+
+.filters {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+
   ion-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    --color: white;
-    --background: transparent;
-    padding: 10px 0;
-  }
-  
-  ion-item:hover,
-  .active {
-    background: rgba(46, 204, 113, 0.2);
-    border-radius: 10px;
-    transform: scale(1.02);
+    --background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    --border-radius: 12px;
+    --padding-start: 15px;
+    --inner-padding-end: 15px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-width: 220px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
   }
 
-  ion-item span {
-    margin: 7px;
-    margin-bottom: -2px;
+  ion-label {
+    color: #1e8449;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
-  
-  /* Contenido Principal */
+
+  ion-input,
+  ion-select {
+    --background: #ffffff;
+    --border-radius: 8px;
+    --padding-start: 12px;
+    --color: #333333;
+    border: 1px solid #e0e0e0;
+    font-weight: 500;
+  }
+}
+
+/* Tarjeta de Ganancias */
+.ganancias-card {
+  background: linear-gradient(145deg, #ffffff, #f7f7f7);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  margin-bottom: 25px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #1e8449, #2ecc71);
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: #1e8449;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #1e8449, #2ecc71);
+      border-radius: 2px;
+    }
+  }
+
+  p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #444444;
+    line-height: 1.6;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    strong {
+      color: #1e8449;
+      font-weight: 600;
+    }
+
+    span {
+      background: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #333333;
+      font-weight: 600;
+    }
+  }
+}
+
+/* Contenedor de Tarjetas de Facturas */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  justify-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tarjeta de Factura */
+.factura-item {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(145deg, #ffffff, #fafafa);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 6px solid #1e8449;
+  position: relative;
+  overflow: hidden;
+
+  &.pendiente,
+  &.atrasada {
+    border-left-color: #e74c3c;
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #1e8449, #2ecc71);
+    opacity: 0.8;
+  }
+
+  &.pendiente::before,
+  &.atrasada::before {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+  }
+
+  ion-label {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e8449;
+    margin: 0;
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: #444444;
+    line-height: 1.6;
+    font-weight: 500;
+
+    strong {
+      color: #1e8449;
+      font-weight: 600;
+    }
+  }
+
+  .success {
+    color: white;
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+    padding: 6px 18px;
+    border-radius: 25px;
+    display: inline-block;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+  }
+
+  .danger,
+  .warning {
+    color: white;
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    padding: 6px 18px;
+    border-radius: 25px;
+    display: inline-block;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+  }
+}
+
+/* Botón Ver Detalles */
+ion-button {
+  --background: linear-gradient(90deg, #1e8449, #2ecc71);
+  --border-radius: 12px;
+  --color: white;
+  margin: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    --background: linear-gradient(90deg, #2ecc71, #1e8449);
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+  }
+}
+
+/* Mensaje de No Datos */
+p {
+  text-align: center;
+  color: #666666;
+  font-style: italic;
+  margin: 25px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Loading Section */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50vh;
+  color: #333333;
+
+  ion-spinner {
+    --color: #1e8449;
+    width: 40px;
+    height: 40px;
+  }
+
+  p {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #666666;
+    font-weight: 500;
+  }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-250px);
+    transition: transform 0.3s ease;
+  }
+
   .main-content {
-    flex: 1;
-    padding: 20px;
-    margin-left: 250px;
-    background: #ffffff;
-    color: #000000;
+    margin-left: 0;
   }
+
+  .card-container {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    flex-direction: column;
+    ion-item {
+      width: 100%;
+    }
+  }
+
+  .topbar {
+    padding: 10px;
+  }
+
+  .ganancias-card {
+    padding: 15px;
+  }
+}

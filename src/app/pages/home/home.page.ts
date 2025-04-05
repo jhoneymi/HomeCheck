@@ -112,9 +112,9 @@ export class HomePage implements OnInit, AfterViewInit {
 
   logout(): void {
     console.log('Cerrando sesión...');
-    this.authService.logout(); // Limpia token y userId
+    this.authService.logout();
     console.log('Token y UserId eliminados del localStorage');
-    this.router.navigate(['/login']); // Redirige al login
+    this.router.navigate(['/login']);
     console.log('Redirigido a /login');
   }
 

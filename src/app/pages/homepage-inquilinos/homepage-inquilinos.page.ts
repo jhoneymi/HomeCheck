@@ -42,7 +42,7 @@ interface Pago {
 }
 
 interface Factura {
-  id: number;
+  id: string;
   inquilino_id: number;
   monto: number;
   fecha_emision: string;
@@ -81,7 +81,7 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
   isLoading = true;
   nextPaymentDate: string | null = null;
   paymentHistory: Pago[] = [];
-  charts: Chart[] = []; // Tipamos charts como un arreglo de instancias de Chart
+  charts: { payments?: Chart; pending?: Chart } = { payments: undefined, pending: undefined };
 
   sidebarMenu = [
     { title: 'Home', icon: 'home-outline', active: true, route: '/homepage-inquilinos' },
@@ -113,7 +113,8 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.loadInquilinoData();
+    this.reloadPage('Homepage'); // Forzar recarga si es necesario
+    this.loadInquilinoData(); // Cargar los datos después de la recarga
   }
 
   ngAfterViewInit() {
@@ -121,7 +122,21 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.charts.forEach(chart => chart.destroy());
+    if (this.charts.payments) {
+      this.charts.payments.destroy();
+    }
+    if (this.charts.pending) {
+      this.charts.pending.destroy();
+    }
+  }
+
+  // Función para recargar la página
+  reloadPage(pageKey: string) {
+    const hasReloaded = sessionStorage.getItem(`hasReloaded${pageKey}`);
+    if (!hasReloaded) {
+      sessionStorage.setItem(`hasReloaded${pageKey}`, 'true');
+      window.location.reload(); // Recargar la página sin pantalla de carga
+    }
   }
 
   async loadInquilinoData(event?: any) {
@@ -131,30 +146,31 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
       return;
     }
 
-    console.log (token)
-  
+    console.log(token);
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-  
+
     this.isLoading = true;
-    this.http.get<any>(`${environment.apiUrl}/inquilinos/me`, { headers }).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/inquilino/me`, { headers }).subscribe({
       next: (res) => {
         console.log('Datos recibidos del backend:', res);
         this.inquilino = res.inquilino || {};
         this.vivienda = res.vivienda || {};
+        console.log('Método de pago del inquilino:', this.inquilino.metodo_pago);
         this.notificationCount = this.calculatePendingNotifications();
-  
+
         this.calculateNextPayment();
-  
+
         this.cards = [
           { title: 'Precio de Alquiler', icon: 'cash-outline', value: `RD$ ${this.vivienda.precio_alquiler || 0}`, type: 'primary' },
           { title: 'Monto Pendiente', icon: 'wallet-outline', value: `RD$ ${this.calculatePendingAmount()}`, type: this.calculatePendingAmount() > 0 ? 'danger' : 'success' },
           { title: 'Próximo Pago', icon: 'calendar-outline', value: this.nextPaymentDate || 'No registrado', type: this.calculatePendingAmount() > 0 ? 'danger' : 'warning' }
         ];
-  
+
         this.loadPaymentHistory(headers);
-  
+
         this.isLoading = false;
         if (event) event.target.complete();
       },
@@ -273,7 +289,7 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
       inquilino_id: this.inquilino.id,
       vivienda_id: this.inquilino.vivienda_id,
       monto: this.vivienda.precio_alquiler,
-      metodo_pago: 'Tarjeta/Transferencia',
+      metodo_pago: 'Tarjeta',
       fecha_pago: today.toISOString().split('T')[0],
       estado: 'Pagado'
     }, { headers }).subscribe({
@@ -285,7 +301,9 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
       error: async (err) => {
         await loading.dismiss();
         console.error('❌ Error al registrar pago:', err);
-        this.showAlert('⚠️ Error', 'No se pudo registrar el pago. Intenta nuevamente.');
+        const errorMessage = err.error?.error || 'No se pudo registrar el pago. Intenta nuevamente.';
+        const errorDetails = err.error?.details || err.message || 'Detalles no disponibles';
+        await this.showAlert('⚠️ Error', `${errorMessage} Detalles: ${errorDetails}`);
       }
     });
   }
@@ -325,7 +343,6 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
               return false;
             }
 
-            // Validar que inquilino_id y admin_id estén definidos
             if (!this.inquilino.id || !this.inquilino.admin_id) {
               await this.showAlert('⚠️ Error', 'No se pudo enviar el mensaje: datos del inquilino incompletos.');
               return false;
@@ -349,15 +366,23 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
 
             try {
               const response = await lastValueFrom(
-                this.http.post<any>(`${environment.apiUrl}/mensajes`, mensajeData, { headers })
+                this.http.post<any>(`${environment.apiUrl}/mensajes/inquilino`, mensajeData, { headers })
               );
               await loading.dismiss();
               await this.showAlert('✅ Mensaje Enviado', 'Tu mensaje ha sido enviado al propietario.');
               return true;
-            } catch (err) {
+            } catch (err: any) {
               await loading.dismiss();
               console.error('❌ Error al enviar mensaje:', err);
-              await this.showAlert('⚠️ Error', 'No se pudo enviar el mensaje. Intenta nuevamente.');
+              if (err.status === 401 || err.status === 403) {
+                await this.showAlert('⚠️ Sesión Expirada', 'Tu sesión ha expirada. Por favor, inicia sesión nuevamente.');
+                localStorage.removeItem('inquilinoToken');
+                this.router.navigate(['/login-inquilinos']);
+                return false;
+              }
+              const errorMessage = err.error?.error || 'No se pudo enviar el mensaje. Intenta nuevamente.';
+              const errorDetails = err.error?.details || err.message || 'Detalles no disponibles';
+              await this.showAlert('⚠️ Error', `${errorMessage} Detalles: ${errorDetails}`);
               return false;
             }
           }
@@ -408,13 +433,27 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
           }
         }
       });
-      this.charts.push(chart);
+
+      if (label === 'Pagos Realizados') {
+        this.charts.payments = chart;
+      } else if (label === 'Monto Pendiente') {
+        this.charts.pending = chart;
+      }
     } catch (error) {
       console.error(`Error al crear el gráfico "${label}":`, error);
     }
   }
 
   updateCharts() {
+    if (this.charts.payments) {
+      this.charts.payments.destroy();
+      this.charts.payments = undefined;
+    }
+    if (this.charts.pending) {
+      this.charts.pending.destroy();
+      this.charts.pending = undefined;
+    }
+
     if (this.paymentsChart?.nativeElement) {
       this.createChart(this.paymentsChart.nativeElement, 'Pagos Realizados', '#2ECC71');
     } else {
@@ -445,6 +484,16 @@ export class HomepageInquilinosPage implements OnInit, AfterViewInit {
           this.logout();
           break;
       }
+    } else {
+      // Limpiar la bandera de recarga para la página a la que se navega
+      if (menu.route === '/homepage-inquilinos') {
+        sessionStorage.removeItem('hasReloadedHomepage');
+      } else if (menu.route === '/facturas') {
+        sessionStorage.removeItem('hasReloadedFacturas');
+      } else if (menu.route === '/contactar-admin') {
+        sessionStorage.removeItem('hasReloadedContactarAdmin');
+      }
+      this.router.navigate([menu.route]);
     }
   }
 

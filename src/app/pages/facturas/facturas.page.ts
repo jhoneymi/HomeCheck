@@ -23,7 +23,8 @@ import {
   LoadingController
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { FacturasService } from 'src/app/services/facturas.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-facturas',
@@ -44,11 +45,12 @@ import { FacturasService } from 'src/app/services/facturas.service';
   ]
 })
 export class FacturasPage implements OnInit {
-  facturas: any[] = [];
+  facturasPagadas: any[] = [];
+  facturasPendientes: any[] = [];
   notificationCount: number = 0;
   isLoading = true;
 
-  // Menú lateral dinámico (ajustado con rutas de HomepageInquilinosPage)
+  // Menú lateral dinámico
   sidebarMenu = [
     { title: 'Home', icon: 'home-outline', active: false, route: '/homepage-inquilinos' },
     { title: 'Facturas', icon: 'document-text-outline', active: true, route: '/facturas' },
@@ -58,7 +60,7 @@ export class FacturasPage implements OnInit {
 
   constructor(
     private router: Router,
-    private facturasService: FacturasService,
+    private http: HttpClient,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController
   ) { 
@@ -73,7 +75,17 @@ export class FacturasPage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadFacturas();
+    this.reloadPage('Facturas'); // Forzar recarga si es necesario
+    this.loadFacturas(); // Cargar los datos después de la recarga
+  }
+
+  // Función para recargar la página
+  reloadPage(pageKey: string) {
+    const hasReloaded = sessionStorage.getItem(`hasReloaded${pageKey}`);
+    if (!hasReloaded) {
+      sessionStorage.setItem(`hasReloaded${pageKey}`, 'true');
+      window.location.reload();
+    }
   }
 
   async loadFacturas(event?: any) {
@@ -83,32 +95,45 @@ export class FacturasPage implements OnInit {
       return;
     }
 
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
     this.isLoading = true;
-    this.facturasService.getFacturasInquilino().subscribe({
-      next: (res) => {
-        this.facturas = res.map((factura: any) => {
-          const pagos: any[] = factura.pagos || [];
-          const totalPagado = pagos.reduce((sum: number, pago: any) => sum + (pago.monto || 0), 0);
-          factura.estado = totalPagado >= (factura.monto || 0) ? 'Pagada' : 'Pendiente';
-          if (factura.estado === 'Pendiente' && new Date() > new Date(factura.fecha_vencimiento)) {
-            factura.estado = 'Atrasada';
-          }
-          return factura;
-        });
-        this.notificationCount = this.facturas.filter((f: any) => f.estado === 'Pendiente' || f.estado === 'Atrasada').length;
+    this.http.get<any[]>(`${environment.apiUrl}/facturas/inquilino`, { headers }).subscribe({
+      next: (facturas) => {
+        console.log('Facturas recibidas del backend:', facturas);
+        this.facturasPagadas = facturas.filter(factura => factura.estado === 'Pagada');
+        this.facturasPendientes = facturas.filter(factura => factura.estado === 'Pendiente' || factura.estado === 'Atrasada');
+        console.log('Facturas Pagadas:', this.facturasPagadas);
+        console.log('Facturas Pendientes:', this.facturasPendientes);
+        this.notificationCount = this.facturasPendientes.length;
         this.isLoading = false;
         if (event) event.target.complete();
       },
-      error: (err) => {
+      error: async (err) => {
         this.isLoading = false;
         console.error('❌ Error al cargar facturas:', err);
         if (err.status === 401 || err.status === 403) {
+          await this.showAlert('Sesión Expirada', 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
           localStorage.removeItem('inquilinoToken');
           this.router.navigate(['/login-inquilinos']);
+        } else {
+          await this.showAlert('Error', 'Ocurrió un error al cargar las facturas. Intenta nuevamente.');
         }
         if (event) event.target.complete();
       }
     });
+  }
+
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertCtrl.create({
+      header,
+      message,
+      buttons: ['OK'],
+      cssClass: 'custom-alert'
+    });
+    await alert.present();
   }
 
   handleMenuClick(menu: any): void {
@@ -119,6 +144,14 @@ export class FacturasPage implements OnInit {
           break;
       }
     } else {
+      // Limpiar la bandera de recarga para la página a la que se navega
+      if (menu.route === '/homepage-inquilinos') {
+        sessionStorage.removeItem('hasReloadedHomepage');
+      } else if (menu.route === '/facturas') {
+        sessionStorage.removeItem('hasReloadedFacturas');
+      } else if (menu.route === '/contactar-admin') {
+        sessionStorage.removeItem('hasReloadedContactarAdmin');
+      }
       this.router.navigate([menu.route]);
     }
   }

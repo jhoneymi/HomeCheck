@@ -62,7 +62,7 @@ ion-item span {
   background: #ffffff;
   color: #000000;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 20px;
   min-height: 100vh;
 
@@ -72,107 +72,130 @@ ion-item span {
   }
 }
 
-/* Barra Superior */
-.topbar {
-  width: 100%; /* Asegurar que el topbar ocupe todo el ancho */
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  background: #ffffff;
-  padding: 10px 20px;
-  border-radius: 10px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+/* Sección de Facturas */
+.facturas-section {
+  margin-bottom: 30px;
 }
 
-.icons {
+.section-header {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1e8449;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: #1e8449;
+  }
+}
+
+/* Cuadrícula de Facturas */
+.facturas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  justify-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas en pantallas grandes */
+  }
+}
+
+/* Tarjeta de Factura */
+.factura-card {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 5px solid #1e8449;
+
+  &.pendiente,
+  &.atrasada {
+    border-left-color: #e74c3c;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Información de la Factura */
+.factura-info {
+  padding: 20px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
 }
 
-.notification-badge {
-  background: #27ae60;
-  color: white;
-  font-size: 14px;
-  border-radius: 50%;
-  padding: 5px 10px;
-}
-
-/* Tarjeta de factura */
-.factura-card {
-  width: 350px;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  background: #f0f0f0;
-  text-align: center;
-  height: 350px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.factura-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Información de la factura */
-.factura-info {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex-grow: 1;
-}
-
-.factura-info h3 {
-  margin: 0;
-  font-size: 20px;
-  color: #070808;
-  font-weight: bold;
-}
-
 .factura-info p {
-  margin: 5px 0;
+  margin: 0;
   font-size: 16px;
-  color: #262b2b;
+  color: #333;
+  line-height: 1.5;
 }
 
-.factura-info .monto {
-  margin: 5px 0;
-  font-size: 16px;
+.factura-info p strong {
   color: #1e8449;
+}
+
+.factura-info .monto-pendiente {
+  color: #e74c3c;
   font-weight: bold;
 }
 
-.estado {
-  padding: 5px 10px;
-  border-radius: 5px;
+.factura-info .estado {
+  padding: 5px 15px;
+  border-radius: 20px;
   display: inline-block;
-  margin-top: 10px;
+  font-size: 14px;
   text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
 }
 
-.estado.pagada {
+.factura-info .estado.pagada {
   color: white;
   background: #27ae60;
 }
 
-.estado.pendiente {
+.factura-info .estado.pendiente,
+.factura-info .estado.atrasada {
   color: white;
   background: #e74c3c;
 }
 
-.estado.atrasada {
-  color: white;
-  background: #f39c12;
+.pagos-list {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
 }
 
-/* Loading section */
+.pagos-list p {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}
+
+/* Mensaje de No Datos */
+.no-data {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin: 20px 0;
+}
+
+/* Loading Section */
 .loading-section {
   display: flex;
   flex-direction: column;
@@ -194,9 +217,7 @@ ion-item span {
     margin-left: 0;
   }
 
-  .factura-card {
-    width: 100%;
-    max-width: 350px;
-    margin: 0 auto;
+  .facturas-grid {
+    grid-template-columns: 1fr; /* 1 columna en pantallas pequeñas */
   }
 }
