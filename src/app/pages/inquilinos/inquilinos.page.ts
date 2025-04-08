@@ -19,6 +19,7 @@ import {
 import { RouterModule, Router } from '@angular/router';
 import { InquilinosService } from 'src/app/services/inquilinos.service';
 import { ModalAgregarInquilinoComponent } from 'src/app/modal-agregar-inquilino/modal-agregar-inquilino.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-inquilinos',
@@ -36,11 +37,11 @@ import { ModalAgregarInquilinoComponent } from 'src/app/modal-agregar-inquilino/
 export class InquilinosPage implements OnInit {
   sidebarMenu = [
     { title: 'Home', icon: 'home-outline', active: false, route: '/home' },
-    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '#' },
+    { title: 'Facturas', icon: 'document-text-outline', active: false, route: '/facturas-admin' },
     { title: 'Inquilinos', icon: 'people-outline', active: true, route: '/inquilinos' },
     { title: 'Viviendas', icon: 'business-outline', active: false, route: '/viviendas' },
-    { title: 'Ganancias', icon: 'cash-outline', active: false, route: '#' },
-    { title: 'Salida', icon: 'exit-outline', active: false, route: '/login' },
+    { title: 'Ganancias', icon: 'cash-outline', active: false, route: '/ganancias' },
+    { title: 'Salir', icon: 'exit-outline', active: false, action: 'logout' }
   ];
 
   inquilinos: any[] = [];
@@ -49,6 +50,7 @@ export class InquilinosPage implements OnInit {
   constructor(
     private inquilinosService: InquilinosService,
     private modalController: ModalController,
+    private authService: AuthService,
     private http: HttpClient,
     private alertCtrl: AlertController,
     private router: Router,
@@ -191,6 +193,14 @@ export class InquilinosPage implements OnInit {
 
   viewProfile(inquilinoId: number) {
     this.router.navigate(['/inquilino-profile', inquilinoId]);
+  }
+
+  logout(): void {
+    console.log('Cerrando sesión...');
+    this.authService.logout(); // Limpia token y userId
+    console.log('Token y UserId eliminados del localStorage');
+    this.router.navigate(['/login']); // Redirige al login
+    console.log('Redirigido a /login');
   }
 
   async showAlert(header: string, message: string) {

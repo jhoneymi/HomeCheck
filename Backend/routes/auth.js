@@ -129,10 +129,6 @@ router.post('/viviendas', authenticateToken, upload.single('img'), (req, res) =>
     return res.status(400).json({ error: 'Todos los campos obligatorios son requeridos (nombre, direccion, estado, img, id_adm, precio_alquiler)' });
   }
 
-  if (parseInt(id_adm) !== req.user.userId) {
-    return res.status(403).json({ error: 'No tienes permiso para usar este id_adm.' });
-  }
-
   const query = 'INSERT INTO viviendas (nombre, direccion, estado, img, id_adm, precio_alquiler, notas) VALUES (?, ?, ?, ?, ?, ?, ?)';
   const values = [nombre, direccion, estado, img, id_adm, precio_alquiler, notas || null];
 
@@ -342,7 +338,7 @@ router.post('/inquilinos/login', (req, res) => {
 });
 
 // Obtener datos del inquilino autenticado
-router.get('/inquilinos/me', authenticateToken, (req, res) => {
+router.get('/inquilino/me', authenticateToken, (req, res) => {
   console.log('Solicitud recibida en GET /inquilinos/me');
   console.log('Token decodificado:', req.user);
 
@@ -447,7 +443,28 @@ router.post('/pagos/admin', authenticateToken, (req, res) => {
           console.error('Error al registrar el pago:', error);
           return res.status(500).json({ error: 'Error al registrar el pago', details: error.message });
         }
-        res.status(201).json({ message: 'Pago registrado correctamente' });
+
+        // Determinar el mes y año del pago
+        const fechaPago = new Date(fecha_pago);
+        const mesPago = fechaPago.getMonth() + 1;
+        const anioPago = fechaPago.getFullYear();
+
+        // Determinar el mes y año actuales
+        const today = new Date();
+        const mesActual = today.getMonth() + 1;
+        const anioActual = today.getFullYear();
+
+        // Actualizar ganancias_mensuales si el pago pertenece al mes actual
+        if (mesPago === mesActual && anioPago === anioActual) {
+          recalcularGananciasMensuales(userId, mesPago, anioPago, connection, (error) => {
+            if (error) {
+              console.error('Error al recalcular ganancias mensuales después de registrar pago (admin):', error);
+            }
+            res.status(201).json({ message: 'Pago registrado correctamente' });
+          });
+        } else {
+          res.status(201).json({ message: 'Pago registrado correctamente' });
+        }
       }
     );
   });
@@ -466,32 +483,86 @@ router.post('/pagos', authenticateToken, (req, res) => {
     return res.status(403).json({ error: 'No tienes permiso para registrar un pago para otro inquilino' });
   }
 
-  const checkInquilinoQuery = 'SELECT metodo_pago FROM inquilinos WHERE id = ?';
-  connection.query(checkInquilinoQuery, [inquilino_id], (error, results) => {
+  // Obtener el admin_id asociado al inquilino a través de la vivienda
+  const queryGetAdminId = `
+    SELECT v.id_adm
+    FROM viviendas v
+    JOIN inquilinos i ON i.vivienda_id = v.id
+    WHERE i.id = ?
+  `;
+  connection.query(queryGetAdminId, [inquilino_id], (error, adminResults) => {
     if (error) {
-      console.error('❌ Error al verificar inquilino:', error);
-      return res.status(500).json({ error: 'Error al verificar inquilino' });
+      console.error('❌ Error al obtener admin_id:', error);
+      return res.status(500).json({ error: 'Error al obtener datos del administrador' });
     }
-    if (results.length === 0) {
-      return res.status(404).json({ error: 'Inquilino no encontrado' });
-    }
-
-    const inquilinoMetodoPago = results[0].metodo_pago;
-    if (metodo_pago === 'Efectivo' && inquilinoMetodoPago === 'Efectivo') {
-      return res.status(403).json({ error: 'El pago en efectivo debe ser registrado por el administrador.' });
-    }
-    if (metodo_pago === 'Tarjeta/Transferencia' && inquilinoMetodoPago !== 'Tarjeta/Transferencia') {
-      return res.status(403).json({ error: 'Tu método de pago registrado no permite pagos por tarjeta o transferencia.' });
+    if (adminResults.length === 0) {
+      return res.status(404).json({ error: 'Inquilino no asociado a una vivienda' });
     }
 
-    const query = 'INSERT INTO pagos (inquilino_id, vivienda_id, monto, metodo_pago, fecha_pago, estado) VALUES (?, ?, ?, ?, ?, ?)';
-    connection.query(query, [inquilino_id, vivienda_id, monto, metodo_pago, fecha_pago, estado], (error, results) => {
+    const adminId = adminResults[0].id_adm;
+
+    const checkInquilinoQuery = 'SELECT metodo_pago FROM inquilinos WHERE id = ?';
+    connection.query(checkInquilinoQuery, [inquilino_id], (error, results) => {
       if (error) {
-        console.error('❌ Error al registrar pago:', error);
-        return res.status(500).json({ error: 'Error al registrar el pago' });
+        console.error('❌ Error al verificar inquilino:', error);
+        return res.status(500).json({ error: 'Error al verificar inquilino' });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'Inquilino no encontrado' });
       }
 
-      res.status(201).json({ message: 'Pago registrado exitosamente', id: results.insertId });
+      const inquilinoMetodoPago = results[0].metodo_pago;
+
+      // Validar el método de pago
+      if (metodo_pago === 'Efectivo' && inquilinoMetodoPago === 'Efectivo') {
+        return res.status(403).json({ error: 'El pago en efectivo debe ser registrado por el administrador.' });
+      }
+      if (metodo_pago === 'Tarjeta/Transferencia' && !['Tarjeta', 'Otro'].includes(inquilinoMetodoPago)) {
+        return res.status(403).json({ error: 'Tu método de pago registrado no permite pagos por tarjeta o transferencia.' });
+      }
+
+      const query = 'INSERT INTO pagos (inquilino_id, vivienda_id, monto, metodo_pago, fecha_pago, estado) VALUES (?, ?, ?, ?, ?, ?)';
+      connection.query(query, [inquilino_id, vivienda_id, monto, metodo_pago, fecha_pago, estado], (error, results) => {
+        if (error) {
+          console.error('❌ Error al registrar pago:', error);
+          return res.status(500).json({ error: 'Error al registrar el pago' });
+        }
+
+        // Actualizar el último pago del inquilino
+        const updateQuery = `
+          UPDATE inquilinos 
+          SET ultimo_pago_fecha = ?, ultimo_pago_estado = ?
+          WHERE id = ?
+        `;
+        connection.query(updateQuery, [fecha_pago, estado, inquilino_id], (error) => {
+          if (error) {
+            console.error('❌ Error al actualizar último pago:', error);
+            return res.status(500).json({ error: 'Error al actualizar el estado del inquilino' });
+          }
+
+          // Determinar el mes y año del pago
+          const fechaPago = new Date(fecha_pago);
+          const mesPago = fechaPago.getMonth() + 1;
+          const anioPago = fechaPago.getFullYear();
+
+          // Determinar el mes y año actuales
+          const today = new Date();
+          const mesActual = today.getMonth() + 1;
+          const anioActual = today.getFullYear();
+
+          // Actualizar ganancias_mensuales si el pago pertenece al mes actual
+          if (mesPago === mesActual && anioPago === anioActual) {
+            recalcularGananciasMensuales(adminId, mesPago, anioPago, connection, (error) => {
+              if (error) {
+                console.error('Error al recalcular ganancias mensuales después de registrar pago (inquilino):', error);
+              }
+              res.status(201).json({ message: 'Pago registrado exitosamente', id: results.insertId });
+            });
+          } else {
+            res.status(201).json({ message: 'Pago registrado exitosamente', id: results.insertId });
+          }
+        });
+      });
     });
   });
 });
@@ -522,111 +593,373 @@ router.get('/pagos/inquilino/:id', authenticateToken, (req, res) => {
   });
 });
 
+// Facturas
+
+// Obtener facturas simuladas y pagos del inquilino autenticado
+router.get('/facturas/inquilino', authenticateToken, (req, res) => {
+  const inquilinoId = req.user.inquilinoId;
+
+  if (!inquilinoId) {
+    return res.status(400).json({ error: 'ID del inquilino no encontrado en el token' });
+  }
+
+  // Obtener los datos del inquilino y su vivienda (incluyendo el nombre de la vivienda)
+  const viviendaQuery = `
+    SELECT v.precio_alquiler, v.nombre AS vivienda_nombre
+    FROM viviendas v
+    JOIN inquilinos i ON i.vivienda_id = v.id
+    WHERE i.id = ?
+  `;
+  connection.query(viviendaQuery, [inquilinoId], (error, viviendaResults) => {
+    if (error) {
+      console.error('❌ Error al obtener precio de alquiler:', error);
+      return res.status(500).json({ error: 'Error al obtener el precio de alquiler', details: error.message });
+    }
+    if (viviendaResults.length === 0) {
+      return res.status(404).json({ error: 'Vivienda no encontrada para este inquilino' });
+    }
+
+    const precioAlquiler = parseFloat(viviendaResults[0].precio_alquiler);
+    const viviendaNombre = viviendaResults[0].vivienda_nombre;
+
+    if (isNaN(precioAlquiler)) {
+      return res.status(500).json({ error: 'El precio de alquiler de la vivienda no es válido' });
+    }
+
+    // Obtener los pagos del inquilino
+    const query = 'SELECT * FROM pagos WHERE inquilino_id = ? ORDER BY fecha_pago DESC';
+    connection.query(query, [inquilinoId], (error, pagos) => {
+      if (error) {
+        console.error('❌ Error al obtener pagos:', error);
+        return res.status(500).json({ error: 'Error al obtener los pagos', details: error.message });
+      }
+
+      // Agrupar pagos por mes para simular facturas
+      const facturasMap = new Map();
+      pagos.forEach(pago => {
+        const fechaPago = new Date(pago.fecha_pago);
+        if (isNaN(fechaPago.getTime())) {
+          console.error('Fecha de pago inválida:', pago.fecha_pago);
+          return; // Saltar este pago si la fecha es inválida
+        }
+
+        const year = fechaPago.getFullYear();
+        const month = fechaPago.getMonth() + 1;
+        const facturaKey = `${year}-${String(month).padStart(2, '0')}`; // Ejemplo: "2025-05"
+
+        if (!facturasMap.has(facturaKey)) {
+          const fechaEmision = `${year}-${String(month).padStart(2, '0')}-01`;
+          const fechaVencimiento = new Date(year, month, 0).toISOString().split('T')[0];
+          facturasMap.set(facturaKey, {
+            mesAnio: facturaKey, // Cambiado de "id" a "mesAnio"
+            montoTotal: precioAlquiler, // Cambiado de "monto" a "montoTotal"
+            fechaEmision: fechaEmision, // Cambiado de "fecha_emision" a "fechaEmision"
+            fechaVencimiento: fechaVencimiento, // Cambiado de "fecha_vencimiento" a "fechaVencimiento"
+            viviendaNombre: viviendaNombre, // Agregado
+            estado: 'Pendiente', // Se calculará después
+            pagos: []
+          });
+        }
+
+        const factura = facturasMap.get(facturaKey);
+        factura.pagos.push({
+          id: pago.id, // Agregado
+          monto: parseFloat(pago.monto),
+          fecha_pago: new Date(pago.fecha_pago).toISOString().split('T')[0], // Formateado
+          metodo_pago: pago.metodo_pago,
+          estado: pago.estado // Agregado
+        });
+      });
+
+      // Calcular el estado de cada factura y agregar montoPendiente y montoDevuelto
+      const today = new Date();
+      const facturas = Array.from(facturasMap.values()).map(factura => {
+        const totalPagado = factura.pagos.reduce((sum, pago) => sum + pago.monto, 0);
+        const fechaVencimiento = new Date(factura.fechaVencimiento);
+
+        if (totalPagado >= factura.montoTotal) {
+          factura.estado = 'Pagada';
+          factura.montoPendiente = 0; // Agregado
+          factura.montoDevuelto = totalPagado > factura.montoTotal ? totalPagado - factura.montoTotal : 0; // Agregado
+        } else {
+          factura.estado = 'Pendiente';
+          factura.montoPendiente = factura.montoTotal - totalPagado; // Agregado
+          factura.montoDevuelto = 0; // Agregado
+          if (today > fechaVencimiento) {
+            factura.estado = 'Atrasada';
+          }
+        }
+
+        return factura;
+      });
+
+      res.status(200).json(facturas);
+    });
+  });
+});
+
+router.get('/facturas', authenticateToken, async (req, res) => {
+  const userId = req.user?.userId;
+  console.log('Payload del token (req.user):', req.user);
+  console.log('userId extraído:', userId);
+
+  if (!userId) {
+    return res.status(401).json({ error: 'ID del usuario no encontrado en el token' });
+  }
+
+  const { search, sort = 'desc', fechaInicio, fechaFin } = req.query;
+
+  try {
+    const inquilinosQuery = `
+      SELECT id, nombre, vivienda_id 
+      FROM inquilinos 
+      WHERE admin_id = ?
+    `;
+    const [inquilinos] = await new Promise((resolve, reject) => {
+      connection.query(inquilinosQuery, [userId], (error, results) => {
+        if (error) return reject(error);
+        resolve([results]);
+      });
+    });
+
+    if (inquilinos.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron inquilinos registrados por este administrador' });
+    }
+
+    const inquilinoIds = inquilinos.map(inquilino => inquilino.id);
+
+    const viviendaQuery = `
+      SELECT i.id AS inquilino_id, v.precio_alquiler, v.nombre AS vivienda_nombre
+      FROM viviendas v
+      JOIN inquilinos i ON i.vivienda_id = v.id
+      WHERE i.id IN (${inquilinoIds.map(() => '?').join(',')})
+    `;
+    const [viviendaResults] = await new Promise((resolve, reject) => {
+      connection.query(viviendaQuery, inquilinoIds, (error, results) => {
+        if (error) return reject(error);
+        resolve([results]);
+      });
+    });
+
+    if (viviendaResults.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron viviendas asociadas a los inquilinos' });
+    }
+
+    const preciosAlquiler = {};
+    const viviendas = {};
+    viviendaResults.forEach(row => {
+      preciosAlquiler[row.inquilino_id] = parseFloat(row.precio_alquiler) || 0;
+      viviendas[row.inquilino_id] = row.vivienda_nombre || 'Sin asignar';
+    });
+
+    const pagosQuery = `
+      SELECT p.*, i.nombre AS inquilino_nombre
+      FROM pagos p
+      JOIN inquilinos i ON p.inquilino_id = i.id
+      WHERE p.inquilino_id IN (${inquilinoIds.map(() => '?').join(',')})
+      ORDER BY p.fecha_pago DESC
+    `;
+    const [pagos] = await new Promise((resolve, reject) => {
+      connection.query(pagosQuery, inquilinoIds, (error, results) => {
+        if (error) return reject(error);
+        resolve([results]);
+      });
+    });
+
+    const facturasMap = new Map();
+    pagos.forEach(pago => {
+      const fechaPago = new Date(pago.fecha_pago);
+      if (isNaN(fechaPago.getTime())) {
+        console.error('Fecha de pago inválida:', pago.fecha_pago);
+        return;
+      }
+
+      const inquilinoId = pago.inquilino_id;
+      const year = fechaPago.getFullYear();
+      const month = fechaPago.getMonth() + 1;
+      const facturaKey = `${inquilinoId}-${year}-${String(month).padStart(2, '0')}`;
+
+      if (!facturasMap.has(facturaKey)) {
+        const fechaEmision = `${year}-${String(month).padStart(2, '0')}-01`;
+        const fechaVencimiento = new Date(year, month, 0).toISOString().split('T')[0];
+        facturasMap.set(facturaKey, {
+          id: facturaKey,
+          inquilino_id: inquilinoId,
+          inquilino_nombre: pago.inquilino_nombre,
+          vivienda: viviendas[inquilinoId] || 'Sin asignar',
+          montoTotal: preciosAlquiler[inquilinoId] || 0,
+          fechaEmision,
+          fechaVencimiento,
+          estado: 'Pendiente',
+          pagos: [],
+          montoPendiente: 0,
+          montoDevuelto: 0
+        });
+      }
+
+      const factura = facturasMap.get(facturaKey);
+      factura.pagos.push({
+        id: pago.id,
+        monto: parseFloat(pago.monto),
+        fecha_pago: new Date(pago.fecha_pago).toISOString().split('T')[0],
+        metodo_pago: pago.metodo_pago,
+        estado: pago.estado
+      });
+    });
+
+    const today = new Date();
+    const facturas = Array.from(facturasMap.values()).map(factura => {
+      const totalPagado = factura.pagos.reduce((sum, pago) => sum + pago.monto, 0);
+      const fechaVencimiento = new Date(factura.fechaVencimiento);
+
+      if (totalPagado >= factura.montoTotal) {
+        factura.estado = 'Pagada';
+        factura.montoPendiente = 0;
+        factura.montoDevuelto = totalPagado > factura.montoTotal ? totalPagado - factura.montoTotal : 0;
+      } else {
+        factura.estado = 'Pendiente';
+        factura.montoPendiente = factura.montoTotal - totalPagado;
+        factura.montoDevuelto = 0;
+        if (today > fechaVencimiento) {
+          factura.estado = 'Atrasada';
+        }
+      }
+
+      if (search) {
+        const query = search.toLowerCase();
+        if (!factura.inquilino_nombre.toLowerCase().includes(query) && !factura.vivienda.toLowerCase().includes(query)) {
+          return null;
+        }
+      }
+
+      if (fechaInicio || fechaFin) {
+        const fechaEmisionDate = new Date(factura.fechaEmision);
+
+        let startDate = null;
+        if (fechaInicio) {
+          const parsedStartDate = new Date(fechaInicio);
+          if (!isNaN(parsedStartDate.getTime())) {
+            startDate = parsedStartDate;
+          } else {
+            console.warn(`Fecha de inicio inválida: ${fechaInicio}`);
+          }
+        }
+
+        let endDate = null;
+        if (fechaFin) {
+          const parsedEndDate = new Date(fechaFin);
+          if (!isNaN(parsedEndDate.getTime())) {
+            endDate = parsedEndDate;
+          } else {
+            console.warn(`Fecha de fin inválida: ${fechaFin}`);
+          }
+        }
+
+        if (startDate && fechaEmisionDate < startDate) return null;
+        if (endDate && fechaEmisionDate > endDate) return null;
+      }
+
+      return factura;
+    }).filter(factura => factura !== null);
+
+    facturas.sort((a, b) => {
+      const dateA = new Date(a.fechaEmision).getTime();
+      const dateB = new Date(b.fechaEmision).getTime();
+      return sort === 'asc' ? dateA - dateB : dateB - dateA;
+    });
+
+    const gananciasPagadas = facturas
+      .filter(f => f.estado === 'Pagada')
+      .reduce((sum, f) => sum + f.montoTotal, 0);
+    const gananciasPendientes = facturas
+      .filter(f => f.estado === 'Pendiente' || f.estado === 'Atrasada')
+      .reduce((sum, f) => sum + f.montoPendiente, 0);
+
+    res.status(200).json({
+      success: true,
+      facturas,
+      ganancias: {
+        pagadas: gananciasPagadas,
+        pendientes: gananciasPendientes,
+        total: gananciasPagadas + gananciasPendientes
+      },
+      message: 'Facturas recuperadas exitosamente'
+    });
+  } catch (error) {
+    console.error('❌ Error al obtener facturas:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al recuperar las facturas',
+      error: error.message
+    });
+  }
+});
+
 // Mensajes
 
 // Enviar un mensaje
-router.post('/mensajes', authenticateToken, (req, res) => {
-  const { inquilino_id, contenido, tipo = 'texto' } = req.body; // Añadimos "tipo" con un valor por defecto
-  const userId = req.user.userId;
-  const userRole = req.user.role;
+router.post('/mensajes/inquilino', authenticateToken, (req, res) => {
+  const { inquilino_id, admin_id, mensaje, fecha, tipo = 'Solicitud de Pago' } = req.body;
+  const inquilinoId = req.user.inquilinoId;
 
-  console.log('Datos recibidos:', { inquilino_id, contenido, tipo, userId, userRole });
+  console.log('Datos recibidos:', { inquilino_id, admin_id, mensaje, fecha, tipo, inquilinoId });
 
   // Validación de datos
-  if (!inquilino_id || !contenido) {
-    console.log('❌ Datos inválidos:', { inquilino_id, contenido });
-    return res.status(400).json({ error: 'Faltan datos requeridos: inquilino_id y contenido son obligatorios' });
+  if (!inquilino_id || !admin_id || !mensaje || !fecha) {
+    console.log('❌ Datos inválidos:', { inquilino_id, admin_id, mensaje, fecha });
+    return res.status(400).json({ error: 'Faltan datos requeridos: inquilino_id, admin_id, mensaje y fecha son obligatorios' });
   }
 
-  const inquilinoId = parseInt(inquilino_id, 10);
-  if (isNaN(inquilinoId)) {
-    console.log('❌ inquilino_id no es un número válido:', inquilino_id);
-    return res.status(400).json({ error: 'inquilino_id debe ser un número válido' });
+  const inquilinoIdParsed = parseInt(inquilino_id, 10);
+  const adminIdParsed = parseInt(admin_id, 10);
+  if (isNaN(inquilinoIdParsed) || isNaN(adminIdParsed)) {
+    console.log('❌ inquilino_id o admin_id no son números válidos:', { inquilino_id, admin_id });
+    return res.status(400).json({ error: 'inquilino_id y admin_id deben ser números válidos' });
   }
 
-  if (typeof contenido !== 'string' || !contenido.trim()) {
-    console.log('❌ contenido no es una cadena válida:', contenido);
-    return res.status(400).json({ error: 'contenido debe ser una cadena no vacía' });
-  }
-
-  if (typeof tipo !== 'string' || !tipo.trim()) {
-    console.log('❌ tipo no es una cadena válida:', tipo);
-    return res.status(400).json({ error: 'tipo debe ser una cadena no vacía' });
+  // Verificar permisos: el inquilino autenticado solo puede enviar mensajes sobre sí mismo
+  if (inquilinoIdParsed !== inquilinoId) {
+    console.log(`❌ Inquilino ${inquilinoId} no tiene permiso para enviar mensaje como inquilino ${inquilinoIdParsed}`);
+    return res.status(403).json({ error: 'No tienes permiso para enviar un mensaje en nombre de otro inquilino' });
   }
 
   // Verificar si el inquilino existe
   const checkInquilinoQuery = 'SELECT id FROM inquilinos WHERE id = ?';
-  connection.query(checkInquilinoQuery, [inquilinoId], (error, inquilinoResults) => {
+  connection.query(checkInquilinoQuery, [inquilinoIdParsed], (error, inquilinoResults) => {
     if (error) {
       console.error('❌ Error al verificar inquilino:', error);
       return res.status(500).json({ error: 'Error al verificar inquilino', details: error.message || error.sqlMessage || 'Error desconocido' });
     }
     if (inquilinoResults.length === 0) {
-      console.log(`❌ Inquilino ${inquilinoId} no encontrado`);
+      console.log(`❌ Inquilino ${inquilinoIdParsed} no encontrado`);
       return res.status(404).json({ error: 'Inquilino no encontrado' });
     }
 
     // Verificar si el admin existe
     const checkAdminQuery = 'SELECT id FROM usuarios WHERE id = ?';
-    connection.query(checkAdminQuery, [userId], (error, adminResults) => {
+    connection.query(checkAdminQuery, [adminIdParsed], (error, adminResults) => {
       if (error) {
         console.error('❌ Error al verificar admin:', error);
         return res.status(500).json({ error: 'Error al verificar admin', details: error.message || error.sqlMessage || 'Error desconocido' });
       }
       if (adminResults.length === 0) {
-        console.log(`❌ Admin ${userId} no encontrado`);
+        console.log(`❌ Admin ${adminIdParsed} no encontrado`);
         return res.status(404).json({ error: 'Admin no encontrado' });
       }
 
-      // Si el usuario es admin (rol 1), puede enviar mensajes directamente
-      if (userRole === 1) {
-        const sqlInsert = `
-          INSERT INTO mensajes (inquilino_id, admin_id, mensaje, fecha, tipo, leido)
-          VALUES (?, ?, ?, CURDATE(), ?, 0)
-        `;
-        connection.query(sqlInsert, [inquilinoId, userId, contenido, tipo], (error, result) => {
-          if (error) {
-            console.error('❌ Error al enviar mensaje:', error);
-            console.log('Detalles completos del error:', JSON.stringify(error, null, 2));
-            return res.status(500).json({ error: 'Error al enviar el mensaje', details: error.message || error.sqlMessage || 'Error desconocido' });
-          }
-          console.log(`✅ Mensaje enviado por admin ${userId} al inquilino ${inquilinoId}`);
-          res.status(201).json({ message: 'Mensaje enviado correctamente' });
-        });
-      } else {
-        // Si no es admin, verificar permisos
-        const sqlCheckPermission = `
-          SELECT v.id
-          FROM viviendas v
-          JOIN inquilinos i ON i.vivienda_id = v.id
-          WHERE i.id = ? AND v.id_adm = ?
-        `;
-        connection.query(sqlCheckPermission, [inquilinoId, userId], (error, results) => {
-          if (error) {
-            console.error('❌ Error al verificar permisos:', error);
-            return res.status(500).json({ error: 'Error al verificar permisos', details: error.message || error.sqlMessage || 'Error desconocido' });
-          }
-          if (results.length === 0) {
-            console.log(`❌ Usuario ${userId} no tiene permiso para enviar mensaje al inquilino ${inquilinoId}`);
-            return res.status(403).json({ error: 'No tienes permiso para enviar un mensaje a este inquilino' });
-          }
-
-          // Insertar el mensaje
-          const sqlInsert = `
-            INSERT INTO mensajes (inquilino_id, admin_id, mensaje, fecha, tipo, leido)
-            VALUES (?, ?, ?, CURDATE(), ?, 0)
-          `;
-          connection.query(sqlInsert, [inquilinoId, userId, contenido, tipo], (error, result) => {
-            if (error) {
-              console.error('❌ Error al enviar mensaje:', error);
-              console.log('Detalles completos del error:', JSON.stringify(error, null, 2));
-              return res.status(500).json({ error: 'Error al enviar el mensaje', details: error.message || error.sqlMessage || 'Error desconocido' });
-            }
-            console.log(`✅ Mensaje enviado por usuario ${userId} al inquilino ${inquilinoId}`);
-            res.status(201).json({ message: 'Mensaje enviado correctamente' });
-          });
-        });
-      }
+      // Insertar el mensaje
+      const sqlInsert = `
+        INSERT INTO mensajes (inquilino_id, admin_id, mensaje, fecha, tipo, leido)
+        VALUES (?, ?, ?, ?, ?, 0)
+      `;
+      connection.query(sqlInsert, [inquilinoIdParsed, adminIdParsed, mensaje, fecha, tipo], (error, result) => {
+        if (error) {
+          console.error('❌ Error al enviar mensaje:', error);
+          return res.status(500).json({ error: 'Error al enviar el mensaje', details: error.message || error.sqlMessage || 'Error desconocido' });
+        }
+        console.log(`✅ Mensaje enviado por inquilino ${inquilinoIdParsed} al admin ${adminIdParsed}`);
+        res.status(201).json({ message: 'Mensaje enviado correctamente' });
+      });
     });
   });
 });
@@ -876,6 +1209,396 @@ router.delete('/viviendas/:id', authenticateToken, (req, res) => {
       }
       res.json({ message: 'Vivienda eliminada' });
     });
+  });
+});
+
+// Gastos
+
+// Obtener todos los gastos del administrador
+router.get('/gastos', authenticateToken, (req, res) => {
+  const userId = req.user.userId;
+  const query = 'SELECT * FROM gastos WHERE admin_id = ? ORDER BY fecha_gasto DESC';
+  connection.query(query, [userId], (error, results) => {
+    if (error) {
+      console.error('❌ Error al obtener gastos:', error);
+      return res.status(500).json({ error: 'Error al obtener los gastos', details: error.message });
+    }
+    res.status(200).json(results);
+  });
+});
+
+// Crear un nuevo gasto
+router.post('/gastos', authenticateToken, (req, res) => {
+  const { nombre, descripcion, monto, fecha_gasto, tipo } = req.body;
+  const admin_id = req.user.userId;
+
+  if (!nombre || !monto || !fecha_gasto || !tipo) {
+    return res.status(400).json({ error: 'Faltan campos requeridos: nombre, monto, fecha_gasto y tipo son obligatorios' });
+  }
+
+  const query = 'INSERT INTO gastos (nombre, descripcion, monto, fecha_gasto, tipo, admin_id) VALUES (?, ?, ?, ?, ?, ?)';
+  const values = [nombre, descripcion || null, monto, fecha_gasto, tipo, admin_id];
+
+  connection.query(query, values, (error, result) => {
+    if (error) {
+      console.error('❌ Error al crear gasto:', error);
+      return res.status(500).json({ error: 'Error al crear el gasto', details: error.message });
+    }
+
+    // Determinar el mes y año del gasto
+    const fechaGasto = new Date(fecha_gasto);
+    const mesGasto = fechaGasto.getMonth() + 1;
+    const anioGasto = fechaGasto.getFullYear();
+
+    // Determinar el mes y año actuales
+    const today = new Date();
+    const mesActual = today.getMonth() + 1;
+    const anioActual = today.getFullYear();
+
+    // Actualizar ganancias_mensuales si el gasto pertenece al mes actual
+    if (mesGasto === mesActual && anioGasto === anioActual) {
+      recalcularGananciasMensuales(admin_id, mesGasto, anioGasto, connection, (error) => {
+        if (error) {
+          console.error('Error al recalcular ganancias mensuales después de registrar gasto:', error);
+        }
+        res.status(201).json({ message: 'Gasto creado exitosamente', id: result.insertId });
+      });
+    } else {
+      res.status(201).json({ message: 'Gasto creado exitosamente', id: result.insertId });
+    }
+  });
+});
+
+// Eliminar un gasto
+router.delete('/gastos/:id', authenticateToken, (req, res) => {
+  const gastoId = req.params.id;
+  const admin_id = req.user.userId;
+
+  const query = 'DELETE FROM gastos WHERE id = ? AND admin_id = ?';
+  connection.query(query, [gastoId, admin_id], (error, result) => {
+    if (error) {
+      console.error('❌ Error al eliminar gasto:', error);
+      return res.status(500).json({ error: 'Error al eliminar el gasto', details: error.message });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Gasto no encontrado o no tienes permiso' });
+    }
+    res.status(200).json({ message: 'Gasto eliminado exitosamente' });
+  });
+});
+
+// Ganancias Historial
+
+// Obtener ganancias mensuales históricas
+router.get('/ganancias/historico', authenticateToken, (req, res) => {
+  const userId = req.user.userId;
+  const query = 'SELECT * FROM ganancias_mensuales WHERE admin_id = ? ORDER BY anio DESC, mes DESC';
+  connection.query(query, [userId], (error, results) => {
+    if (error) {
+      console.error('❌ Error al obtener ganancias históricas:', error);
+      return res.status(500).json({ error: 'Error al obtener ganancias históricas', details: error.message });
+    }
+    res.status(200).json(results);
+  });
+});
+
+// Función auxiliar para recalcular y actualizar las ganancias mensuales
+const recalcularGananciasMensuales = (adminId, mes, anio, connection, callback) => {
+  // Asegurarse de que adminId, mes y anio sean enteros
+  adminId = parseInt(adminId);
+  mes = parseInt(mes);
+  anio = parseInt(anio);
+
+  console.log(`Recalculando ganancias para adminId=${adminId}, mes=${mes}, anio=${anio}`);
+
+  // Obtener los inquilinos asociados al administrador
+  const queryInquilinos = `
+    SELECT i.id, i.vivienda_id
+    FROM inquilinos i
+    JOIN viviendas v ON i.vivienda_id = v.id
+    WHERE v.id_adm = ?
+  `;
+  connection.query(queryInquilinos, [adminId], (error, inquilinos) => {
+    if (error) {
+      console.error('Error al obtener inquilinos:', error);
+      callback(error);
+      return;
+    }
+
+    if (inquilinos.length === 0) {
+      console.log('No se encontraron inquilinos para el administrador:', adminId);
+      const queryUpsertGanancias = `
+        INSERT INTO ganancias_mensuales (admin_id, mes, anio, ingresos, gastos, ganancia_neta)
+        VALUES (?, ?, ?, 0, 0, 0)
+        ON DUPLICATE KEY UPDATE
+          ingresos = 0,
+          gastos = 0,
+          ganancia_neta = 0
+      `;
+      connection.query(queryUpsertGanancias, [adminId, mes, anio], (error, result) => {
+        if (error) {
+          console.error('Error al actualizar ganancias_mensuales (sin inquilinos):', error);
+        } else {
+          console.log(`Resultado de la consulta (sin inquilinos): affectedRows=${result.affectedRows}, changedRows=${result.changedRows}`);
+        }
+        callback(error);
+      });
+      return;
+    }
+
+    const inquilinoIds = inquilinos.map(inquilino => inquilino.id);
+
+    // Obtener el precio_alquiler de las viviendas asociadas a los inquilinos
+    const queryViviendas = `
+      SELECT i.id AS inquilino_id, v.precio_alquiler
+      FROM viviendas v
+      JOIN inquilinos i ON i.vivienda_id = v.id
+      WHERE i.id IN (${inquilinoIds.map(() => '?').join(',')})
+    `;
+    connection.query(queryViviendas, inquilinoIds, (error, viviendaResults) => {
+      if (error) {
+        console.error('Error al obtener precios de alquiler:', error);
+        callback(error);
+        return;
+      }
+
+      const preciosAlquiler = {};
+      viviendaResults.forEach(row => {
+        preciosAlquiler[row.inquilino_id] = parseFloat(row.precio_alquiler) || 0;
+      });
+
+      // Calcular la suma de los pagos por inquilino en el mes
+      const queryPagos = `
+        SELECT p.inquilino_id, SUM(p.monto) as total_pagado
+        FROM pagos p
+        WHERE p.inquilino_id IN (${inquilinoIds.map(() => '?').join(',')})
+          AND MONTH(p.fecha_pago) = ?
+          AND YEAR(p.fecha_pago) = ?
+          AND p.estado = 'Pagado'
+        GROUP BY p.inquilino_id
+      `;
+      connection.query(queryPagos, [...inquilinoIds, mes, anio], (error, pagosResults) => {
+        if (error) {
+          console.error('Error al calcular pagos por inquilino:', error);
+          callback(error);
+          return;
+        }
+
+        // Calcular los ingresos
+        let ingresos = 0;
+        pagosResults.forEach(pago => {
+          const inquilinoId = pago.inquilino_id;
+          const totalPagado = parseFloat(pago.total_pagado);
+          const precioAlquiler = preciosAlquiler[inquilinoId] || 0;
+
+          if (totalPagado >= precioAlquiler) {
+            ingresos += precioAlquiler;
+          }
+        });
+
+        // Calcular los gastos
+        const queryGastos = `
+          SELECT SUM(monto) as total_gastos
+          FROM gastos
+          WHERE MONTH(fecha_gasto) = ? 
+            AND YEAR(fecha_gasto) = ?
+            AND admin_id = ?
+        `;
+        connection.query(queryGastos, [mes, anio, adminId], (error, results) => {
+          if (error) {
+            console.error('Error al calcular gastos:', error);
+            callback(error);
+            return;
+          }
+
+          const gastos = results[0].total_gastos || 0;
+          const gananciaNeta = ingresos - gastos;
+
+          console.log(`Valores calculados: ingresos=${ingresos}, gastos=${gastos}, ganancia_neta=${gananciaNeta}`);
+
+          // Actualizar o insertar en la tabla ganancias_mensuales
+          const queryUpsertGanancias = `
+            INSERT INTO ganancias_mensuales (admin_id, mes, anio, ingresos, gastos, ganancia_neta)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+              ingresos = VALUES(ingresos),
+              gastos = VALUES(gastos),
+              ganancia_neta = VALUES(ganancia_neta)
+          `;
+          connection.query(queryUpsertGanancias, [adminId, mes, anio, ingresos, gastos, gananciaNeta], (error, result) => {
+            if (error) {
+              console.error('Error al actualizar ganancias_mensuales:', error);
+            } else {
+              console.log(`Resultado de la consulta: affectedRows=${result.affectedRows}, changedRows=${result.changedRows}`);
+            }
+            callback(error);
+          });
+        });
+      });
+    });
+  });
+};
+
+// Endpoint /ganancias/actual (actualizado para usar la función auxiliar)
+router.get('/ganancias/actual', authenticateToken, (req, res) => {
+  const today = new Date();
+  const mes = today.getMonth() + 1; // Mes actual (1-12)
+  const anio = today.getFullYear(); // Año actual
+  const adminId = req.user.userId; // Obtenido del token JWT
+
+  // Obtener los inquilinos asociados al administrador
+  const queryInquilinos = `
+    SELECT i.id, i.vivienda_id
+    FROM inquilinos i
+    JOIN viviendas v ON i.vivienda_id = v.id
+    WHERE v.id_adm = ?
+  `;
+  connection.query(queryInquilinos, [adminId], (error, inquilinos) => {
+    if (error) {
+      console.error('Error al obtener inquilinos:', error);
+      return res.status(500).json({ error: 'Error al obtener inquilinos' });
+    }
+
+    if (inquilinos.length === 0) {
+      console.log('No se encontraron inquilinos para el administrador:', adminId);
+      recalcularGananciasMensuales(adminId, mes, anio, connection, (error) => {
+        if (error) {
+          return res.status(500).json({ error: 'Error al actualizar ganancias mensuales' });
+        }
+        return res.status(200).json({
+          mes,
+          anio,
+          ingresos: 0,
+          gastos: 0,
+          ganancia_neta: 0,
+          todos_pagaron: true
+        });
+      });
+      return;
+    }
+
+    const inquilinoIds = inquilinos.map(inquilino => inquilino.id);
+
+    // Obtener el precio_alquiler de las viviendas asociadas a los inquilinos
+    const queryViviendas = `
+      SELECT i.id AS inquilino_id, v.precio_alquiler
+      FROM viviendas v
+      JOIN inquilinos i ON i.vivienda_id = v.id
+      WHERE i.id IN (${inquilinoIds.map(() => '?').join(',')})
+    `;
+    connection.query(queryViviendas, inquilinoIds, (error, viviendaResults) => {
+      if (error) {
+        console.error('Error al obtener precios de alquiler:', error);
+        return res.status(500).json({ error: 'Error al obtener precios de alquiler' });
+      }
+
+      const preciosAlquiler = {};
+      viviendaResults.forEach(row => {
+        preciosAlquiler[row.inquilino_id] = parseFloat(row.precio_alquiler) || 0;
+      });
+
+      // Calcular la suma de los pagos por inquilino en el mes actual
+      const queryPagos = `
+        SELECT p.inquilino_id, SUM(p.monto) as total_pagado
+        FROM pagos p
+        WHERE p.inquilino_id IN (${inquilinoIds.map(() => '?').join(',')})
+          AND MONTH(p.fecha_pago) = ?
+          AND YEAR(p.fecha_pago) = ?
+          AND p.estado = 'Pagado'
+        GROUP BY p.inquilino_id
+      `;
+      connection.query(queryPagos, [...inquilinoIds, mes, anio], (error, pagosResults) => {
+        if (error) {
+          console.error('Error al calcular pagos por inquilino:', error);
+          return res.status(500).json({ error: 'Error al calcular pagos por inquilino' });
+        }
+
+        // Calcular los ingresos
+        let ingresos = 0;
+        const inquilinosPagaronSet = new Set();
+        pagosResults.forEach(pago => {
+          const inquilinoId = pago.inquilino_id;
+          const totalPagado = parseFloat(pago.total_pagado);
+          const precioAlquiler = preciosAlquiler[inquilinoId] || 0;
+
+          console.log(`Inquilino ${inquilinoId}: Total pagado = ${totalPagado}, Precio alquiler = ${precioAlquiler}`);
+
+          if (totalPagado >= precioAlquiler) {
+            ingresos += precioAlquiler;
+            inquilinosPagaronSet.add(inquilinoId);
+          }
+        });
+
+        console.log('Ingresos calculados (basados en precio_alquiler de facturas pagadas):', ingresos);
+
+        // Calcular gastos
+        const queryGastos = `
+          SELECT SUM(monto) as total_gastos
+          FROM gastos
+          WHERE MONTH(fecha_gasto) = ? 
+            AND YEAR(fecha_gasto) = ?
+            AND admin_id = ?
+        `;
+        connection.query(queryGastos, [mes, anio, adminId], (error, results) => {
+          if (error) {
+            console.error('Error al calcular gastos:', error);
+            return res.status(500).json({ error: 'Error al calcular gastos' });
+          }
+
+          const gastos = results[0].total_gastos || 0;
+          console.log('Gastos calculados:', gastos);
+
+          const gananciaNeta = ingresos - gastos;
+
+          // Verificar si todos los inquilinos han pagado
+          const totalInquilinos = inquilinos.length;
+          const inquilinosPagaron = inquilinosPagaronSet.size;
+          const todosPagaron = totalInquilinos > 0 && inquilinosPagaron === totalInquilinos;
+          console.log('Todos pagaron:', todosPagaron, 'Inquilinos totales:', totalInquilinos, 'Inquilinos que pagaron:', inquilinosPagaron);
+
+          // Actualizar ganancias_mensuales usando la función auxiliar
+          recalcularGananciasMensuales(adminId, mes, anio, connection, (error) => {
+            if (error) {
+              return res.status(500).json({ error: 'Error al actualizar ganancias mensuales' });
+            }
+
+            res.status(200).json({
+              mes,
+              anio,
+              ingresos,
+              gastos,
+              ganancia_neta: gananciaNeta,
+              todos_pagaron: todosPagaron
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
+// Guardar ganancias del mes actual (se llama al final del mes o cuando todos han pagado)
+router.post('/ganancias/guardar', authenticateToken, (req, res) => {
+  const userId = req.user.userId;
+  const { mes, anio, ingresos, gastos, ganancia_neta } = req.body;
+
+  if (!mes || !anio || ingresos === undefined || gastos === undefined || ganancia_neta === undefined) {
+    return res.status(400).json({ error: 'Faltan campos requeridos' });
+  }
+
+  const query = `
+    INSERT INTO ganancias_mensuales (mes, anio, ingresos, gastos, ganancia_neta, admin_id)
+    VALUES (?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE ingresos = ?, gastos = ?, ganancia_neta = ?
+  `;
+  const values = [mes, anio, ingresos, gastos, ganancia_neta, userId, ingresos, gastos, ganancia_neta];
+
+  connection.query(query, values, (error, result) => {
+    if (error) {
+      console.error('❌ Error al guardar ganancias:', error);
+      return res.status(500).json({ error: 'Error al guardar ganancias', details: error.message });
+    }
+    res.status(200).json({ message: 'Ganancias guardadas exitosamente' });
   });
 });
 

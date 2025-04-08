@@ -1,70 +1,168 @@
-<ion-header>
-  <ion-toolbar>
-    <div class="logo">
-      <img src="assets/icon/casaa.jpeg" alt="Homecheck Logo" style="width: 30px; height: auto;">
+<ion-content class="register-content">
+  <!-- Header consistente -->
+  <div class="app-header">
+    <div class="header-content">
+      <div class="logo-container">
+        <img src="assets/icon/casaa.jpeg" alt="HomeCheck Logo" class="logo">
+        <span class="app-name">HomeCheck</span>
+      </div>
+      <div class="nav-buttons">
+        <ion-button fill="clear" class="nav-button">Próximamente</ion-button>
+        <ion-button fill="clear" class="nav-button">Contáctanos</ion-button>
+        <ion-button fill="solid" class="primary-button" routerLink="/sobre-nosotros">Nosotros</ion-button>
+      </div>
     </div>
-  </ion-toolbar>
-</ion-header>
+  </div>
 
-<ion-content>
-  <!-- Formulario de Registro -->
-  <div class="form-section">
-    <h2 class="form-title">Regístrate en HomeCheck</h2>
-    <div class="register-form">
-      <!-- Nombre Completo -->
-      <ion-item class="input-item">
-        <ion-icon name="person-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="userData.nombre_completo" placeholder="Nombre Completo"></ion-input>
-      </ion-item>
+  <!-- Contenido principal -->
+  <div class="register-container">
+    <div class="form-section">
+      <div class="form-header">
+        <h1 class="form-main-title">Crea tu cuenta</h1>
+        <p class="form-subtitle">Comienza a gestionar tus propiedades de manera profesional</p>
+      </div>
 
-      <!-- Dirección -->
-      <ion-item class="input-item">
-        <ion-icon name="home-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="userData.direccion" placeholder="Dirección"></ion-input>
-      </ion-item>
+      <div class="form-grid">
+        <!-- Columna izquierda -->
+        <div class="form-column">
+          <!-- Nombre Completo -->
+          <div class="form-group">
+            <label class="input-label">Nombre Completo</label>
+            <div class="input-container">
+              <ion-icon name="person-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                [(ngModel)]="userData.nombre_completo" 
+                name="nombre"
+                placeholder="Ej: Juan Pérez"
+                class="custom-input"
+              ></ion-input>
+            </div>
+          </div>
 
-      <!-- Email -->
-      <ion-item class="input-item">
-        <ion-icon name="mail-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="userData.email" type="email" placeholder="Email"></ion-input>
-      </ion-item>
+          <!-- Dirección -->
+          <div class="form-group">
+            <label class="input-label">Dirección</label>
+            <div class="input-container">
+              <ion-icon name="home-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                [(ngModel)]="userData.direccion" 
+                name="direccion"
+                placeholder="Ej: Av. Principal 123"
+                class="custom-input"
+              ></ion-input>
+            </div>
+          </div>
 
-      <!-- Número de Cédula -->
-      <ion-item class="input-item">
-        <ion-icon name="card-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="userData.numero_cedula" placeholder="Número de Cédula"></ion-input>
-      </ion-item>
+          <!-- Email -->
+          <div class="form-group">
+            <label class="input-label">Correo Electrónico</label>
+            <div class="input-container">
+              <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                [(ngModel)]="userData.email" 
+                name="email"
+                type="email"
+                placeholder="tucorreo@ejemplo.com"
+                class="custom-input"
+              ></ion-input>
+            </div>
+          </div>
 
-      <!-- Tipo de Domicilio -->
-      <ion-item class="input-item">
-        <ion-icon name="business-outline" slot="start"></ion-icon>
-        <ion-select [(ngModel)]="userData.tipo_domicilio" (ionChange)="mostrarImagenDomicilio($event)">
-          <ion-select-option value="Casa">Casa</ion-select-option>
-          <ion-select-option value="Departamento">Departamento</ion-select-option>
-          <ion-select-option value="Residencia">Residencia</ion-select-option>
-        </ion-select>
-      </ion-item>
+          <!-- Contraseña -->
+          <div class="form-group">
+            <label class="input-label">Contraseña</label>
+            <div class="input-container">
+              <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                [(ngModel)]="userData.password" 
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                class="custom-input"
+              ></ion-input>
+            </div>
+            <div class="password-hint">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>Mínimo 8 caracteres</span>
+            </div>
+          </div>
+        </div>
 
-      <!-- Contraseña -->
-      <ion-item class="input-item">
-        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="userData.password" type="password" placeholder="Contraseña"></ion-input>
-      </ion-item>
+        <!-- Columna derecha -->
+        <div class="form-column">
+          <!-- Número de Cédula -->
+          <div class="form-group">
+            <label class="input-label">Número de Cédula</label>
+            <div class="input-container">
+              <ion-icon name="card-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                [(ngModel)]="userData.numero_cedula" 
+                name="cedula"
+                placeholder="Ej: 1234567890"
+                class="custom-input"
+              ></ion-input>
+            </div>
+          </div>
 
-      <!-- Teléfono -->
-      <ion-item class="input-item">
-        <ion-icon name="call-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="userData.telefono" placeholder="Teléfono"></ion-input>
-      </ion-item>
+          <!-- Tipo de Domicilio -->
+          <div class="form-group">
+            <label class="input-label">Tipo de Domicilio</label>
+            <div class="input-container select-container">
+              <ion-icon name="business-outline" class="input-icon"></ion-icon>
+              <ion-select 
+                [(ngModel)]="userData.tipo_domicilio" 
+                name="tipo_domicilio"
+                interface="popover"
+                (ionChange)="mostrarImagenDomicilio($event)"
+                class="custom-select"
+              >
+                <ion-select-option value="Casa">Casa</ion-select-option>
+                <ion-select-option value="Departamento">Departamento</ion-select-option>
+                <ion-select-option value="Residencia">Residencia</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-group">
+            <label class="input-label">Teléfono</label>
+            <div class="input-container">
+              <ion-icon name="call-outline" class="input-icon"></ion-icon>
+              <ion-input 
+                [(ngModel)]="userData.telefono" 
+                name="telefono"
+                type="tel"
+                placeholder="Ej: 0991234567"
+                class="custom-input"
+              ></ion-input>
+            </div>
+          </div>
+
+          <!-- Imagen del tipo de domicilio -->
+          <div *ngIf="mostrarImagen" class="property-image-container">
+            <div class="image-wrapper">
+              <img [src]="imagenDomicilio" alt="Imagen de domicilio" class="property-image">
+              <div class="image-label">{{userData.tipo_domicilio}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <ion-button 
+          expand="block" 
+          class="register-button" 
+          (click)="register()"
+        >
+          Crear cuenta
+        </ion-button>
+        
+        <div class="login-redirect">
+          <span>¿Ya tienes una cuenta?</span>
+          <a (click)="goToLogin()">Inicia sesión</a>
+        </div>
+      </div>
     </div>
-
-    <!-- Cuadro con Imagen Alusiva -->
-    <div *ngIf="mostrarImagen" class="image-section">
-      <img [src]="imagenDomicilio" alt="Imagen de domicilio" class="domicilio-image">
-    </div>
-
-    <!-- Botones -->
-    <ion-button expand="block" class="green-button" (click)="register()">Registrarse</ion-button>
-    <ion-button expand="block" color="light" (click)="goToLogin()">¿Ya tienes cuenta? Inicia sesión</ion-button>
   </div>
 </ion-content>

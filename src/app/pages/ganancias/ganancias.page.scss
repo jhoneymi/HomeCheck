@@ -1,0 +1,630 @@
+/* Estilos Generales */
+ion-content {
+  --background: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
+  --color: #333333;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(180deg, #1e8449 0%, #166d3b 100%);
+  color: white;
+  padding: 20px;
+  z-index: 2;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  ion-icon {
+    font-size: 28px;
+    color: #ffffff;
+  }
+}
+
+ion-list {
+  margin-top: 20px;
+}
+
+ion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  --color: white;
+  --background: transparent;
+  padding: 12px 10px;
+  border-radius: 12px;
+  transition: background 0.3s ease, transform 0.3s ease;
+  margin-bottom: 5px;
+}
+
+ion-item:hover,
+.active {
+  background: rgba(46, 204, 113, 0.3);
+  transform: translateX(5px);
+}
+
+ion-item ion-icon {
+  font-size: 20px;
+}
+
+ion-item span {
+  margin: 7px;
+  margin-bottom: -2px;
+  font-weight: 500;
+}
+
+/* Contenido Principal */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  margin-left: 250px;
+  background: #ffffff;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  min-height: 100vh;
+  border-radius: 0 20px 0 0;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    padding: 15px;
+    border-radius: 0;
+  }
+}
+
+/* Ganancias Actuales */
+.ganancias-actual {
+  background: linear-gradient(145deg, #ffffff, #f7f7f7);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #1e8449, #2ecc71);
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: #1e8449;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #1e8449, #2ecc71);
+      border-radius: 2px;
+    }
+  }
+
+  p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #444444;
+    line-height: 1.6;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    strong {
+      color: #1e8449;
+      font-weight: 600;
+    }
+
+    span {
+      background: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #333333;
+      font-weight: 600;
+    }
+
+    .positive {
+      background: linear-gradient(90deg, #27ae60, #2ecc71);
+      color: white;
+    }
+
+    .negative {
+      background: linear-gradient(90deg, #e74c3c, #c0392b);
+      color: white;
+    }
+  }
+}
+
+/* Resumen de Gastos por Categoría */
+.gastos-categoria {
+  background: linear-gradient(145deg, #ffffff, #f7f7f7);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: #e74c3c;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #e74c3c, #c0392b);
+      border-radius: 2px;
+    }
+  }
+
+  p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #444444;
+    line-height: 1.6;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    strong {
+      color: #e74c3c;
+      font-weight: 600;
+    }
+
+    span {
+      background: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #333333;
+      font-weight: 600;
+    }
+  }
+}
+
+/* Lista de Gastos */
+.gastos-list {
+  h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #1e8449, #2ecc71);
+      border-radius: 2px;
+    }
+  }
+
+  ion-button {
+    --background: linear-gradient(90deg, #1e8449, #2ecc71);
+    --border-radius: 12px;
+    --color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      --background: linear-gradient(90deg, #2ecc71, #1e8449);
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+    }
+  }
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  justify-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gasto-item {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(145deg, #ffffff, #fafafa);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 6px solid #e74c3c;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    opacity: 0.8;
+  }
+
+  ion-label {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #e74c3c;
+    margin: 0;
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: #444444;
+    line-height: 1.6;
+    font-weight: 500;
+
+    strong {
+      color: #e74c3c;
+      font-weight: 600;
+    }
+  }
+
+  ion-button {
+    --background: linear-gradient(90deg, #e74c3c, #c0392b);
+    --border-radius: 12px;
+    --color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      --background: linear-gradient(90deg, #c0392b, #e74c3c);
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    }
+  }
+}
+
+/* Historial de Ganancias */
+.ganancias-historico {
+  h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #1e8449, #2ecc71);
+      border-radius: 2px;
+    }
+  }
+
+  ion-item {
+    --background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    --border-radius: 12px;
+    --padding-start: 15px;
+    --inner-padding-end: 15px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
+
+    ion-label {
+      color: #1e8449;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    ion-input {
+      --background: #ffffff;
+      --border-radius: 8px;
+      --padding-start: 12px;
+      --color: #333333;
+      border: 1px solid #e0e0e0;
+      font-weight: 500;
+    }
+  }
+}
+
+.ganancia-item {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(145deg, #ffffff, #fafafa);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 6px solid #1e8449;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #1e8449, #2ecc71);
+    opacity: 0.8;
+  }
+
+  ion-label {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e8449;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: #444444;
+    line-height: 1.6;
+    font-weight: 500;
+
+    strong {
+      color: #1e8449;
+      font-weight: 600;
+    }
+
+    .positive {
+      background: linear-gradient(90deg, #27ae60, #2ecc71);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .negative {
+      background: linear-gradient(90deg, #e74c3c, #c0392b);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+}
+
+/* Modal para Agregar Gasto */
+.modal-content {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 15px;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 20px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1e8449;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  ion-item {
+    --background: #f9f9f9;
+    --border-radius: 10px;
+    --padding-start: 15px;
+    --inner-padding-end: 15px;
+    margin-bottom: 15px;
+
+    ion-label {
+      color: #333333;
+      font-weight: 500;
+    }
+
+    ion-input,
+    ion-select {
+      --background: #ffffff;
+      --border-radius: 8px;
+      --padding-start: 12px;
+      --color: #333333;
+      border: 1px solid #e0e0e0;
+    }
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+
+    ion-button {
+      --border-radius: 12px;
+      --color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &[color="primary"] {
+        --background: linear-gradient(90deg, #1e8449, #2ecc71);
+        &:hover {
+          --background: linear-gradient(90deg, #2ecc71, #1e8449);
+          transform: scale(1.05);
+          box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+        }
+      }
+
+      &[color="danger"] {
+        --background: linear-gradient(90deg, #e74c3c, #c0392b);
+        &:hover {
+          --background: linear-gradient(90deg, #c0392b, #e74c3c);
+          transform: scale(1.05);
+          box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+      }
+    }
+  }
+}
+
+/* Loading Section */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50vh;
+  color: #333333;
+
+  ion-spinner {
+    --color: #1e8449;
+    width: 40px;
+    height: 40px;
+  }
+
+  p {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #666666;
+    font-weight: 500;
+  }
+}
+
+/* Mensaje de No Datos */
+p {
+  text-align: center;
+  color: #666666;
+  font-style: italic;
+  margin: 25px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-250px);
+    transition: transform 0.3s ease;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .card-container {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    max-width: 90%;
+  }
+}

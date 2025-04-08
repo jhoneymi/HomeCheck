@@ -26,8 +26,7 @@
 
     <!-- Pull-to-Refresh -->
     <ion-refresher slot="fixed" (ionRefresh)="refreshContent($event)">
-      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles">
-      </ion-refresher-content>
+      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles" />
     </ion-refresher>
 
     <!-- Tarjetas Dinámicas -->
@@ -42,14 +41,15 @@
       <div class="card success">
         <h3>Registrar Pago</h3>
         <p>Monto: RD$ {{ vivienda.precio_alquiler | number }}</p>
-        <!-- Mostrar botón según el método de pago -->
+        <!-- Botón para pagar con tarjeta/transferencia (solo si metodo_pago no es 'Efectivo') -->
+        <ion-button *ngIf="inquilino.metodo_pago !== 'Efectivo'" expand="block" class="green-button" (click)="registerPayment()">
+          <ion-icon name="card-outline" slot="start"></ion-icon>
+          Pagar con Tarjeta/Transferencia
+        </ion-button>
+        <!-- Botón para contactar al dueño (solo si metodo_pago es 'Efectivo') -->
         <ion-button *ngIf="inquilino.metodo_pago === 'Efectivo'" expand="block" class="green-button" (click)="contactOwner()">
           <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
           Contactar al Dueño
-        </ion-button>
-        <ion-button *ngIf="inquilino.metodo_pago === 'Tarjeta' || inquilino.metodo_pago === 'Otro'" expand="block" class="green-button" (click)="registerPayment()">
-          <ion-icon name="card-outline" slot="start"></ion-icon>
-          Pagar con Tarjeta/Transferencia
         </ion-button>
       </div>
     </div>

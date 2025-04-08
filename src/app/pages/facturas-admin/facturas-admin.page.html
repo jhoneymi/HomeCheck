@@ -1,0 +1,71 @@
+<ion-content>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <div class="sidebar">
+    <div class="logo">
+      <ion-icon name="logo-angular"></ion-icon>
+      <span>HomeCheck</span>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route" (click)="handleMenuClick(menu)">
+        <ion-icon [name]="menu.icon"></ion-icon>
+        <span>{{ menu.title }}</span>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="main-content">
+    <div class="topbar">
+      <ion-searchbar #searchBar placeholder="Buscar por nombre o vivienda..." (ionInput)="onSearch($event)"></ion-searchbar>
+      <div class="filters">
+        <ion-item>
+          <ion-label position="stacked">Fecha Inicio</ion-label>
+          <ion-input type="date" [(ngModel)]="fechaInicio" (ionChange)="onFechaInicioChange($event)" name="fechaInicio"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Fecha Fin</ion-label>
+          <ion-input type="date" [(ngModel)]="fechaFin" (ionChange)="onFechaFinChange($event)" name="fechaFin"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Ordenar por fecha</ion-label>
+          <ion-select interface="popover" [(ngModel)]="sortOrder" (ionChange)="onSortChange($event)" name="sortOrder">
+            <ion-select-option value="desc">De mayor a menor</ion-select-option>
+            <ion-select-option value="asc">De menor a mayor</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+    </div>
+
+    <ion-refresher slot="fixed" (ionRefresh)="refreshContent($event)">
+      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles" />
+    </ion-refresher>
+
+    <div class="ganancias-card" *ngIf="!isLoading">
+      <h2>Ganancias</h2>
+      <p><strong>Pagadas:</strong> RD$ {{ ganancias.pagadas | number }}</p>
+      <p><strong>Pendientes:</strong> RD$ {{ ganancias.pendientes | number }}</p>
+      <p><strong>Total:</strong> RD$ {{ ganancias.total | number }}</p>
+    </div>
+
+    <div class="card-container" *ngIf="!isLoading; else loading">
+      <ion-item *ngFor="let factura of filteredFacturas" class="factura-item">
+        <ion-label>
+          <h2>{{ factura.inquilino_nombre }} - {{ factura.vivienda }}</h2>
+          <p><strong>Monto Total:</strong> RD$ {{ factura.montoTotal | number }}</p>
+          <p><strong>Fecha Emisión:</strong> {{ factura.fechaEmision }}</p>
+          <p><strong>Fecha Vencimiento:</strong> {{ factura.fechaVencimiento }}</p>
+          <p><strong>Estado:</strong> <span [class]="factura.estado === 'Pagada' ? 'success' : factura.estado === 'Atrasada' ? 'danger' : 'warning'">{{ factura.estado }}</span></p>
+          <p><strong>Pendiente:</strong> RD$ {{ factura.montoPendiente | number }}</p>
+          <p><strong>Devuelto:</strong> RD$ {{ factura.montoDevuelto | number }}</p>
+        </ion-label>
+      </ion-item>
+      <p *ngIf="filteredFacturas.length === 0">No se encontraron facturas.</p>
+    </div>
+
+    <ng-template #loading>
+      <div class="loading-container">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando facturas...</p>
+      </div>
+    </ng-template>
+  </div>
+</ion-content>

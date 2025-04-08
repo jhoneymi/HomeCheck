@@ -17,28 +17,59 @@
   <div class="main-content">
     <!-- Pull-to-Refresh -->
     <ion-refresher slot="fixed" (ionRefresh)="refreshContent($event)">
-      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles">
-      </ion-refresher-content>
+      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles" />
     </ion-refresher>
 
-    <!-- Cards dinámicos para las facturas -->
-    <div class="factura-card" *ngFor="let factura of facturas">
-      <div class="factura-info">
-        <h3>Factura #{{ factura.id }}</h3>
-        <p class="monto">Monto: RD$ {{ factura.monto | number }}</p>
-        <p>Emisión: {{ factura.fecha_emision }}</p>
-        <p>Vencimiento: {{ factura.fecha_vencimiento }}</p>
-        <p class="estado {{ factura.estado.toLowerCase() }}">{{ factura.estado }}</p>
-        <p *ngIf="factura.estado === 'Pagada' && factura.pagos.length > 0">
-          Pagado el: {{ factura.pagos[0].fecha_pago }} ({{ factura.pagos[0].metodo_pago }})
-        </p>
+    <!-- Sección de Facturas Pagadas -->
+    <div class="facturas-section">
+      <h2 class="section-header">Facturas Pagadas</h2>
+      <div class="facturas-grid">
+        <div class="factura-card" *ngFor="let factura of facturasPagadas">
+          <div class="factura-info">
+            <p><strong>VIVIENDA:</strong> {{ factura.viviendaNombre }}</p>
+            <p><strong>MONTO TOTAL:</strong> RD$ {{ factura.montoTotal | number }}</p>
+            <p><strong>EMISIÓN:</strong> {{ factura.fechaEmision }}</p>
+            <p><strong>VENCIMIENTO:</strong> {{ factura.fechaVencimiento }}</p>
+            <p class="estado {{ factura.estado.toLowerCase() }}">{{ factura.estado }}</p>
+            <p *ngIf="factura.montoDevuelto > 0" class="monto-devuelto"><strong>DEVUELTO:</strong> RD$ {{ factura.montoDevuelto | number }}</p>
+            <div class="pagos-list">
+              <p *ngFor="let pago of factura.pagos">
+                Pagado el: {{ pago.fecha_pago }} - RD$ {{ pago.monto | number }} ({{ pago.metodo_pago }})
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+      <p *ngIf="!facturasPagadas.length && !isLoading" class="no-data">No hay facturas pagadas.</p>
     </div>
 
-    <!-- Loading section -->
-    <div *ngIf="isLoading" class="loading-section">
+    <!-- Sección de Facturas Pendientes -->
+    <div class="facturas-section">
+      <h2 class="section-header">Facturas Pendientes</h2>
+      <div class="facturas-grid">
+        <div class="factura-card" *ngFor="let factura of facturasPendientes">
+          <div class="factura-info">
+            <p><strong>VIVIENDA:</strong> {{ factura.viviendaNombre }}</p>
+            <p><strong>MONTO TOTAL:</strong> RD$ {{ factura.montoTotal | number }}</p>
+            <p><strong>EMISIÓN:</strong> {{ factura.fechaEmision }}</p>
+            <p><strong>VENCIMIENTO:</strong> {{ factura.fechaVencimiento }}</p>
+            <p class="estado {{ factura.estado.toLowerCase() }}">{{ factura.estado }}</p>
+            <p class="monto-pendiente" *ngIf="factura.estado !== 'Pagada'"><strong>FALTA POR PAGAR:</strong> RD$ {{ factura.montoPendiente | number }}</p>
+            <div class="pagos-list">
+              <p *ngIf="factura.pagos.length === 0">No hay pagos registrados.</p>
+              <p *ngFor="let pago of factura.pagos">
+                Pagado el: {{ pago.fecha_pago }} - RD$ {{ pago.monto | number }} ({{ pago.metodo_pago }})
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p *ngIf="!facturasPendientes.length && !isLoading" class="no-data">No hay facturas pendientes.</p>
+    </div>
+
+    <!-- Spinner de carga -->
+    <div class="loading-spinner" *ngIf="isLoading">
       <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando facturas...</p>
     </div>
   </div>
 </ion-content>

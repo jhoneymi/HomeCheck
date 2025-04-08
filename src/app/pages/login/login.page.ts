@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { mailOutline, lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { IonContent, IonButton, IonInput, IonItem, IonSpinner, IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonInput, IonSpinner, IonIcon, LoadingController, AlertController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonInput, IonItem, IonButton, IonSpinner, IonIcon,
+    IonContent, IonInput, IonButton, IonSpinner, IonIcon,
     CommonModule, FormsModule
   ]
 })

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-03-2025 a las 05:09:02
+-- Tiempo de generación: 02-04-2025 a las 14:18:52
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -94,7 +94,33 @@ CREATE TABLE `inquilinos` (
 --
 
 INSERT INTO `inquilinos` (`id`, `nombre`, `telefono`, `email`, `vivienda_id`, `fecha_ingreso`, `fecha_salida`, `estado`, `metodo_pago`, `documento`, `notas`, `ultimo_pago_fecha`, `ultimo_pago_estado`, `monto_pendiente`, `admin_id`, `referencias`) VALUES
-(1, 'natanael', '8092826465', 'natanael@gmail.com', 10, '2025-03-10', NULL, 'Activo', 'Efectivo', '402-1231123-0', 'nose', NULL, NULL, NULL, 1, 'Rijo');
+(1, 'natanael', '8092826465', 'natanael@gmail.com', 12, '2025-03-10', NULL, 'Activo', 'Efectivo', '402-1231123-0', 'nose', NULL, NULL, NULL, 1, 'Rijo'),
+(3, 'yordany', '8092131313', 'yordany@gmail.com', 9, '2025-03-26', NULL, 'Activo', 'Tarjeta', '402-1231123-1', NULL, NULL, NULL, NULL, 1, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mensajes`
+--
+
+CREATE TABLE `mensajes` (
+  `id` int(11) NOT NULL,
+  `inquilino_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `mensaje` text NOT NULL,
+  `fecha` date NOT NULL,
+  `tipo` varchar(50) NOT NULL,
+  `leido` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `mensajes`
+--
+
+INSERT INTO `mensajes` (`id`, `inquilino_id`, `admin_id`, `mensaje`, `fecha`, `tipo`, `leido`) VALUES
+(1, 1, 1, 'hola bb', '2025-03-26', 'Solicitud de Pago', 0),
+(2, 1, 1, 'hola', '2025-04-01', 'texto', 0),
+(3, 1, 1, 'hola', '2025-04-01', 'notificacion', 0);
 
 -- --------------------------------------------------------
 
@@ -105,10 +131,23 @@ INSERT INTO `inquilinos` (`id`, `nombre`, `telefono`, `email`, `vivienda_id`, `f
 CREATE TABLE `pagos` (
   `id` int(11) NOT NULL,
   `inquilino_id` int(11) DEFAULT NULL,
+  `vivienda_id` int(11) NOT NULL,
   `monto` decimal(10,2) NOT NULL,
+  `metodo_pago` enum('Efectivo','Tarjeta') NOT NULL,
   `fecha_pago` date NOT NULL,
-  `metodo_pago` enum('Efectivo','Tarjeta') NOT NULL
+  `estado` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pagos`
+--
+
+INSERT INTO `pagos` (`id`, `inquilino_id`, `vivienda_id`, `monto`, `metodo_pago`, `fecha_pago`, `estado`) VALUES
+(1, 1, 10, 20000.00, 'Efectivo', '2025-03-17', 'Pagado'),
+(2, 1, 10, 20000.00, 'Efectivo', '2025-03-26', 'Pagado'),
+(3, 1, 10, 20000.00, 'Efectivo', '2025-03-26', 'Pagado'),
+(4, 1, 10, 20000.00, 'Efectivo', '2025-04-03', 'Pagado'),
+(5, 1, 10, 40000.00, 'Efectivo', '2025-05-30', 'Pendiente');
 
 -- --------------------------------------------------------
 
@@ -149,7 +188,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `nombre_completo`, `direccion`, `email`, `numero_cedula`, `tipo_domicilio`, `password`, `telefono`, `fecha_registro`, `role_id`) VALUES
 (1, 'Jhoneymi Batista Mena', 'Villa Maria C.4 Sur', 'jhoneymimena@gmail.com', '4024676964', 'Departamento', '$2a$10$ktpMvvFAmrGtnKI//FF7ceSFiBTpZAQf.12coH3lJxbn.eMEIMbsW', '8293361234', '2025-01-31 04:45:34', 1),
-(2, 'Rigoberto Peres', 'Calle 4 Sur', 'slimerbatista27@gmail.com', '12345678910', 'Departamento', '$2a$10$EdQbBuzieI0znnIJdb/Yr.yAxEgtDvOqM8xVkUYQvXtfq62bplz86', '8095362206', '2025-03-08 17:00:45', 2);
+(2, 'Rigoberto Peres', 'Calle 4 Sur', 'slimerbatista27@gmail.com', '12345678910', 'Departamento', '$2y$10$juyUgDzxCQk7mMovIzC8puVQcGV2UszQjnvirPhemFxQ86Qu50j4a', '8095362206', '2025-03-08 17:00:45', 2),
+(3, 'Ariany Rosario', 'nose', 'Ariany@gmail.com', '4092134123123', 'Residencia', '$2a$10$P7f42UKsfUTgAStuxUTIf.0OIvFLVccH6LNcG0q8mpD0KKlhBOt5q', '8092341234', '2025-03-26 12:44:57', 2);
 
 -- --------------------------------------------------------
 
@@ -175,9 +215,10 @@ CREATE TABLE `viviendas` (
 
 INSERT INTO `viviendas` (`id`, `nombre`, `direccion`, `estado`, `img`, `precio_alquiler`, `notas`, `fecha_registro`, `id_adm`) VALUES
 (3, 'Casa blanca', 'Barrio 27 de febrero', 'No Alquilada', 'uploads\\1741453307781-images (1).jpeg', 0.00, '', '2025-03-08 17:01:47', 2),
-(9, 'Casita en la playa', 'Calle 4 sur', 'No Alquilada', 'uploads\\1741541278412-images (1).jpeg', 2000.00, 'hola', '2025-03-09 17:27:58', 1),
-(10, 'Invivienda Almirante', 'Mazana 4694 Ed.7', 'Alquilada', 'uploads\\1741608914766-images (1).jpeg', 20000.00, 'Es un departamento, con sala cocinas 3 habitaciones y un baño', '2025-03-10 12:15:14', 1),
-(11, 'Pedriot', '113231123', 'No Alquilada', 'uploads\\1741658496753-tipos-de-cocina_opt-1280x720.jpg', 800000.00, NULL, '2025-03-11 02:01:36', 1);
+(9, 'Casita en la playa', 'Calle 4 sur', 'Alquilada', 'uploads\\1741541278412-images (1).jpeg', 2000.00, 'hola', '2025-03-09 17:27:58', 1),
+(10, 'Invivienda Almirante', 'Mazana 4694 Ed.7', 'No Alquilada', 'uploads\\1741608914766-images (1).jpeg', 20000.00, 'Es un departamento, con sala cocinas 3 habitaciones y un baño', '2025-03-10 12:15:14', 1),
+(11, 'Pedriot', '113231123', 'No Alquilada', 'uploads\\1741658496753-tipos-de-cocina_opt-1280x720.jpg', 800000.00, 'hola', '2025-03-11 02:01:36', 1),
+(12, 'irving', '24 de abril', 'Alquilada', 'uploads\\1741784655758-tipos-de-cocina_opt-1280x720.jpg', 500.00, NULL, '2025-03-12 13:04:15', 1);
 
 --
 -- Índices para tablas volcadas
@@ -212,11 +253,20 @@ ALTER TABLE `inquilinos`
   ADD KEY `admin_id` (`admin_id`);
 
 --
+-- Indices de la tabla `mensajes`
+--
+ALTER TABLE `mensajes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `inquilino_id` (`inquilino_id`),
+  ADD KEY `admin_id` (`admin_id`);
+
+--
 -- Indices de la tabla `pagos`
 --
 ALTER TABLE `pagos`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `inquilino_id` (`inquilino_id`);
+  ADD KEY `inquilino_id` (`inquilino_id`),
+  ADD KEY `vivienda_id` (`vivienda_id`);
 
 --
 -- Indices de la tabla `transacciones`
@@ -265,13 +315,19 @@ ALTER TABLE `gastos`
 -- AUTO_INCREMENT de la tabla `inquilinos`
 --
 ALTER TABLE `inquilinos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `mensajes`
+--
+ALTER TABLE `mensajes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `transacciones`
@@ -283,13 +339,13 @@ ALTER TABLE `transacciones`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `viviendas`
 --
 ALTER TABLE `viviendas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Restricciones para tablas volcadas
@@ -315,10 +371,18 @@ ALTER TABLE `inquilinos`
   ADD CONSTRAINT `inquilinos_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `usuarios` (`id`);
 
 --
+-- Filtros para la tabla `mensajes`
+--
+ALTER TABLE `mensajes`
+  ADD CONSTRAINT `mensajes_ibfk_1` FOREIGN KEY (`inquilino_id`) REFERENCES `inquilinos` (`id`),
+  ADD CONSTRAINT `mensajes_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `usuarios` (`id`);
+
+--
 -- Filtros para la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  ADD CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`inquilino_id`) REFERENCES `inquilinos` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`inquilino_id`) REFERENCES `inquilinos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pagos_ibfk_2` FOREIGN KEY (`vivienda_id`) REFERENCES `viviendas` (`id`);
 
 --
 -- Filtros para la tabla `viviendas`
