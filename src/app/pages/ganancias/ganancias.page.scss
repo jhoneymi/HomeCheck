@@ -503,73 +503,81 @@ ion-item span {
 }
 
 /* Modal para Agregar Gasto */
+/* Modal para Agregar Gasto */
+.modal-background {
+  --background: rgba(249, 249, 249, 0.95);
+}
+
 .modal-content {
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 15px;
+  padding: 20px 25px;
   max-width: 500px;
-  margin: 0 auto;
-  margin-top: 20px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
   h2 {
+    color: #1e8449; /* Verde del título */
     font-size: 24px;
     font-weight: 600;
-    color: #1e8449;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-align: center;
+    letter-spacing: 0.5px;
   }
 
-  ion-item {
-    --background: #f9f9f9;
-    --border-radius: 10px;
+  .custom-input {
+    --background: #f8f8f8;
+    --border-radius: 12px;
     --padding-start: 15px;
-    --inner-padding-end: 15px;
-    margin-bottom: 15px;
+    --padding-end: 15px;
+    margin-bottom: 18px;
+    transition: all 0.3s ease;
 
-    ion-label {
-      color: #333333;
-      font-weight: 500;
+    &:hover {
+      --background: #f0f0f0;
     }
 
-    ion-input,
-    ion-select {
-      --background: #ffffff;
-      --border-radius: 8px;
-      --padding-start: 12px;
-      --color: #333333;
-      border: 1px solid #e0e0e0;
+    .input-label {
+      color: #555;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .input-field {
+      --color: #000000; /* Texto negro para lo que se escribe */
+      --placeholder-color: #999; /* Placeholder en gris */
+      --padding-top: 12px;
+      --padding-bottom: 12px;
+
+      /* Asegura que el texto ingresado sea negro */
+      &[ng-reflect-model] {
+        color: #000000 !important;
+      }
     }
   }
 
   .modal-buttons {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
 
     ion-button {
       --border-radius: 12px;
-      --color: white;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-      &[color="primary"] {
-        --background: linear-gradient(90deg, #1e8449, #2ecc71);
-        &:hover {
-          --background: linear-gradient(90deg, #2ecc71, #1e8449);
-          transform: scale(1.05);
-          box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
-        }
-      }
+    .save-button {
+      --background: #1e8449; /* Mismo verde que el título */
+      --color: white;
 
-      &[color="danger"] {
-        --background: linear-gradient(90deg, #e74c3c, #c0392b);
-        &:hover {
-          --background: linear-gradient(90deg, #c0392b, #e74c3c);
-          transform: scale(1.05);
-          box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
-        }
+      &:hover {
+        --background: #2ecc71; /* Verde más claro al hover */
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
       }
     }
   }
