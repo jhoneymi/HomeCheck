@@ -1,93 +1,230 @@
-ion-content {
+/* Estilos Generales */
+ion-content.modal-background {
+  --background: rgba(249, 249, 249, 0.95);
+  background: rgba(249, 249, 249, 0.95) !important;
+  display: block !important;
+  height: 100%;
+  overflow-y: auto !important;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Contenido del Modal */
+.modal-content {
+  padding: 20px 25px;
+  max-width: 400px;
+  margin: 20px auto;
+  background: #ffffff !important;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-sizing: border-box;
+
+  h2 {
+    color: #1e8449;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 25px 0;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .custom-input {
     --background: #ffffff;
-    --padding: 20px;
-  }
-  
-  ion-header {
-    ion-toolbar {
-      --background: #1e8449;
-      --color: #ffffff;
-  
-      ion-title {
-        font-size: 20px;
-        font-weight: 600;
-        padding: 10px;
-      }
+    --border-radius: 12px;
+    --padding-start: 15px;
+    --padding-end: 15px;
+    margin-bottom: 18px !important; /* Márgenes como modal de gastos */
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    display: block !important;
+
+    &.file-input-container {
+      padding: 15px !important;
     }
-  }
-  
-  .modal-content {
-    padding: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  
-    ion-item {
-      --background: #ffffff;
-      --border-radius: 8px;
-      --padding-start: 10px;
-      --padding-end: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #e9ecef;
-  
-      ion-label {
-        font-size: 14px;
-        font-weight: 500;
-        color: #555;
+
+    .input-label {
+      color: #555 !important;
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .input-field {
+      --color: #000000 !important;
+      --placeholder-color: #999 !important;
+      color: #000000 !important;
+      font-size: 14px !important;
+      padding-top: 12px !important;
+      padding-bottom: 12px !important;
+      border-radius: 8px;
+      background: #ffffff !important;
+      height: 38px;
+      width: 100% !important;
+      box-sizing: border-box;
+      display: block !important;
+
+      &::placeholder {
+        color: #999 !important;
+        font-size: 14px !important;
       }
-  
-      ion-input,
-      ion-select,
+
+      &[ng-reflect-model] {
+        color: #000000 !important;
+      }
+
       ion-textarea {
+        min-height: 70px !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+        border-radius: 8px;
+        color: #000000 !important;
+        font-size: 14px !important;
+        background: #ffffff !important;
+      }
+
+      ion-select {
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+        border-radius: 8px;
+        color: #000000 !important;
+        font-size: 14px !important;
+        background: #ffffff !important;
+        height: 38px;
+        width: 100% !important;
+      }
+
+      &.custom-file-input {
+        padding: 12px 16px;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 16px;
         font-size: 16px;
         color: #333;
-  
-        &::placeholder {
-          color: #999;
-          font-style: italic;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+
+        &::file-selector-button {
+          background: #1e8449 !important;
+          color: #000000 !important;
+          border: none;
+          padding: 6px 14px;
+          border-radius: 6px;
+          font-weight: 600;
+          font-size: 13px;
         }
       }
-  
-      ion-textarea {
-        height: 100px; // Altura ajustada para el textarea
-      }
     }
   }
-  
+
   .modal-buttons {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+    padding-bottom: 10px;
+
     ion-button {
-      --border-radius: 8px;
-      --padding-start: 20px;
-      --padding-end: 20px;
-      text-transform: uppercase;
+      --border-radius: 12px;
       font-weight: 600;
-      width: 48%;
-      height: 45px;
-  
-      &[color="success"] {
-        --background: #28a745;
-        --background-activated: #218838;
-      }
-  
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      height: 40px;
+      font-size: 14px;
+      flex: 1;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+
       &[color="danger"] {
-        --background: #dc3545;
-        --background-activated: #c82333;
+        --background: #dc3545 !important;
+        --color: #ffffff !important;
+
+        &:hover {
+          --background: #c0392b !important;
+          transform: scale(1.05);
+          box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+      }
+    }
+
+    .save-button {
+      --background: #1e8449 !important;
+      --color: #ffffff !important;
+
+      &:hover {
+        --background: #2ecc71 !important;
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+      }
+
+      &[disabled] {
+        --background: #cccccc !important;
+        --color: #333333 !important;
+        cursor: not-allowed;
       }
     }
   }
-  
+
   @media (max-width: 576px) {
+    .modal-content {
+      max-width: 90%;
+      padding: 15px 20px;
+    }
+
+    .custom-input {
+      --padding-start: 12px;
+      --padding-end: 12px;
+      margin-bottom: 15px !important; /* Margen más pequeño en móvil */
+
+      .input-label {
+        font-size: 13px;
+      }
+
+      .input-field {
+        font-size: 13px !important;
+        height: 34px;
+
+        &::placeholder {
+          font-size: 13px !important;
+        }
+
+        ion-textarea {
+          min-height: 60px !important;
+          font-size: 13px !important;
+        }
+
+        ion-select {
+          font-size: 13px !important;
+          height: 34px;
+        }
+
+        &.custom-file-input {
+          font-size: 13px !important;
+          height: 34px;
+
+          &::file-selector-button {
+            font-size: 12px;
+            padding: 5px 12px;
+          }
+        }
+      }
+    }
+
     .modal-buttons {
       flex-direction: column;
       gap: 10px;
-  
-      ion-button {
+      margin-top: 20px;
+
+      ion-button,
+      .save-button {
         width: 100%;
+        height: 36px;
+        font-size: 13px;
       }
     }
   }
+}
