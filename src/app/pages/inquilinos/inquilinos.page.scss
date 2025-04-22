@@ -1,11 +1,10 @@
-
-
 // 🌟 Estilos Generales
 ion-content {
   --background: #f4f4f4;
   --color: #000000;
   font-family: 'Roboto', 'Arial', sans-serif;
   font-size: 16px;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
 // Modal
@@ -17,6 +16,7 @@ ion-modal {
   --border-radius: 12px;
   --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   --background: #ffffff;
+  animation: fadeIn 0.6s ease-in-out;
 
   ion-content {
     --background: #ffffff;
@@ -44,14 +44,15 @@ ion-modal {
   --color: white !important;
   --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   margin: 16px;
+  transition: transform 0.3s ease;
 }
 
 .custom-fab:hover {
   --background: #136636 !important;
-  --color: white !important;
+  transform: scale(1.1);
 }
 
-/* Sidebar (sin cambios) */
+/* Sidebar */
 .sidebar {
   position: fixed;
   width: 250px;
@@ -68,6 +69,7 @@ ion-modal {
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
+    animation: glow 2.5s infinite alternate;
   }
 
   ion-list {
@@ -81,6 +83,7 @@ ion-modal {
     --color: white;
     --background: transparent;
     padding: 10px 0;
+    transition: all 0.3s ease;
   }
 
   ion-item:hover,
@@ -96,7 +99,7 @@ ion-modal {
   }
 }
 
-/* Contenido Principal - Estilo Profesional y Moderno */
+/* Contenido Principal */
 .main-content {
   flex: 1;
   padding: 30px;
@@ -105,6 +108,7 @@ ion-modal {
   color: #333;
   min-height: 100vh;
   position: relative;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
 /* Encabezado */
@@ -133,7 +137,7 @@ ion-modal {
   }
 }
 
-/* Estilos de la tabla */
+/* Tabla de Inquilinos */
 .tabla-inquilinos {
   width: 100%;
   border-collapse: collapse;
@@ -141,6 +145,7 @@ ion-modal {
   overflow: hidden;
   background: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.6s ease-in-out;
 
   .header {
     background: #1e8449;
@@ -166,7 +171,7 @@ ion-modal {
     }
 
     &:hover {
-      background: #f0f7f0;
+      background: linear-gradient(90deg, #e0ffe4, #f0fff5);
       transform: translateY(-2px);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
@@ -182,8 +187,12 @@ ion-modal {
       color: #1e8449;
       text-decoration: none;
       cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
       &:hover {
         text-decoration: underline;
+        color: #136636;
       }
     }
 
@@ -194,10 +203,10 @@ ion-modal {
       --border-radius: 8px;
       --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s ease;
+    }
 
-      &:hover {
-        transform: scale(1.05);
-      }
+    ion-button:hover {
+      transform: scale(1.05) rotate(-1deg);
     }
   }
 }
@@ -206,8 +215,10 @@ ion-modal {
   text-align: center;
   padding: 20px;
   color: #888888;
+  font-size: 16px;
 }
 
+/* Tabla adicional */
 .tabla {
   width: 100%;
   border-radius: 16px;
@@ -216,11 +227,6 @@ ion-modal {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
   animation: fadeIn 0.8s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .encabezado-tabla {
@@ -252,7 +258,7 @@ ion-modal {
 }
 
 .fila-tabla:hover {
-  background-color: #f9f9f9;
+  background: linear-gradient(90deg, #f0fff5, #e0ffe4);
   transform: scale(1.005);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
@@ -280,6 +286,12 @@ ion-button {
   margin: 0 4px;
   font-size: 14px;
   --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+ion-button:hover {
+  background-color: #15703b;
+  transform: scale(1.08) rotate(-1deg);
 }
 
 .mensaje-vacio {
@@ -289,4 +301,19 @@ ion-button {
   color: #888;
   font-weight: 500;
   animation: fadeIn 1s ease-in;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #fff, 0 0 10px #1e8449;
+  }
+  to {
+    text-shadow: 0 0 10px #2ecc71, 0 0 20px #1e8449;
+  }
 }
