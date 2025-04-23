@@ -72,53 +72,53 @@
     </div>
 
     <!-- Modal para Agregar Gasto -->
-    <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
-      <ng-template>
-        <ion-content>
-          <div class="modal-content">
-            <h2>Agregar Gasto</h2>
-            <ion-item>
-              <ion-label position="stacked">Nombre</ion-label>
-              <ion-input [(ngModel)]="nuevoGasto.nombre" placeholder="Ej: Pago de agua"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Descripción</ion-label>
-              <ion-input [(ngModel)]="nuevoGasto.descripcion" placeholder="Descripción (opcional)"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Monto</ion-label>
-              <ion-input type="number" [(ngModel)]="nuevoGasto.monto" placeholder="Ej: 1500"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Fecha del Gasto</ion-label>
-              <ion-datetime-button datetime="fechaGasto"></ion-datetime-button>
-              <ion-modal [keepContentsMounted]="true">
-                <ng-template>
-                  <ion-datetime
-                    id="fechaGasto"
-                    presentation="date"
-                    [(ngModel)]="nuevoGasto.fecha_gasto"
-                    [max]="today"
-                  ></ion-datetime>
-                </ng-template>
-              </ion-modal>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Tipo</ion-label>
-              <ion-select [(ngModel)]="nuevoGasto.tipo">
-                <ion-select-option value="Mantenimiento">Mantenimiento</ion-select-option>
-                <ion-select-option value="Servicios">Servicios</ion-select-option>
-                <ion-select-option value="Otros">Otros</ion-select-option>
-              </ion-select>
-            </ion-item>
-            <div class="modal-buttons">
-              <ion-button color="danger" (click)="closeModal()">Cancelar</ion-button>
-              <ion-button color="primary" (click)="agregarGasto()">Guardar</ion-button>
-            </div>
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
+    <ng-template>
+      <ion-content class="modal-background">
+        <div class="modal-content">
+          <h2>Agregar Gasto</h2>
+          <ion-item class="custom-input">
+            <ion-label position="stacked" class="input-label">Nombre</ion-label>
+            <ion-input class="input-field" [(ngModel)]="nuevoGasto.nombre" placeholder="Ej: Pago de agua"></ion-input>
+          </ion-item>
+          <ion-item class="custom-input">
+            <ion-label position="stacked" class="input-label">Descripción</ion-label>
+            <ion-input class="input-field" [(ngModel)]="nuevoGasto.descripcion" placeholder="Descripción (opcional)"></ion-input>
+          </ion-item>
+          <ion-item class="custom-input">
+            <ion-label position="stacked" class="input-label">Monto</ion-label>
+            <ion-input class="input-field" type="number" min="0" [(ngModel)]="nuevoGasto.monto" placeholder="Ej: 1500"></ion-input>
+          </ion-item>
+          <ion-item class="custom-input">
+            <ion-label position="stacked" class="input-label">Fecha del Gasto</ion-label>
+            <ion-datetime-button datetime="fechaGasto"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime
+                  id="fechaGasto"
+                  presentation="date"
+                  [(ngModel)]="nuevoGasto.fecha_gasto"
+                  [max]="today"
+                ></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+          <ion-item class="custom-input">
+            <ion-label position="stacked" class="input-label">Tipo</ion-label>
+            <ion-select class="input-field" [(ngModel)]="nuevoGasto.tipo">
+              <ion-select-option value="Mantenimiento">Mantenimiento</ion-select-option>
+              <ion-select-option value="Servicios">Servicios</ion-select-option>
+              <ion-select-option value="Otros">Otros</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <div class="modal-buttons">
+            <ion-button color="danger" (click)="closeModal()">Cancelar</ion-button>
+            <ion-button class="save-button" (click)="agregarGasto()">Guardar</ion-button>
           </div>
-        </ion-content>
-      </ng-template>
-    </ion-modal>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 
     <!-- Loading -->
     <div class="loading-container" *ngIf="isLoading">
