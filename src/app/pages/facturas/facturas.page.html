@@ -2,8 +2,8 @@
   <!-- Sidebar Dinámica -->
   <div class="sidebar">
     <div class="logo">
-      <img src="assets/icon/casaa.jpeg" alt="HomeCheck Logo" class="logo-img">
-      <span class="logo-text">HomeCheck</span>
+      <ion-icon name="logo-angular"></ion-icon>
+      <span>HomeCheck</span>
     </div>
     <ion-list class="menu-list">
       <ion-item *ngFor="let menu of sidebarMenu" button [class.active]="menu.active" [routerLink]="menu.route" (click)="handleMenuClick(menu)">
