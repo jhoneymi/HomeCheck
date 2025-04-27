@@ -1,0 +1,268 @@
+/* Professional White/Green Theme */
+ion-content {
+  --background: #f8f9fa;
+}
+
+ion-toolbar {
+  --background: #28a745; /* Professional green */
+  --color: white;
+}
+
+ion-card {
+  --background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  --background: white;
+  border-left: 4px solid #28a745;
+}
+
+.stat-icon {
+  color: #28a745;
+  font-size: 24px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #28a745;
+}
+
+ion-button {
+  --border-radius: 6px;
+}
+
+ion-button[color="primary"] {
+  --background: #28a745;
+  --background-activated: #218838;
+}
+
+ion-button[color="danger"] {
+  --background: #dc3545;
+  --background-activated: #c82333;
+}
+
+/* User CRUD Section Styles */
+ion-item {
+  --border-color: #e9ecef;
+}
+
+ion-input, ion-select {
+  --background: #f8f9fa;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  margin-top: 8px;
+}
+
+/* Chart Card */
+.chart-card {
+  canvas {
+    max-height: 300px;
+  }
+}
+
+ion-menu {
+  --width: 260px;
+  --background: #ffffff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.08);
+
+  ion-list {
+    padding-top: 16px;
+
+    ion-item {
+      --background: transparent;
+      --color: #1f2937;
+      font-weight: 500;
+      font-size: 1rem;
+      margin-bottom: 6px;
+      --border-radius: 8px;
+      --padding-start: 16px;
+      --inner-padding-end: 16px;
+
+      &.selected {
+        --background: #10b98115;
+        --color: #10b981;
+        font-weight: 600;
+      }
+
+      ion-icon {
+        margin-right: 12px;
+        color: #10b981;
+      }
+    }
+  }
+}
+
+ion-toolbar {
+  --background: #10b981;
+  --color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+ion-title {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.overview {
+  padding: 20px;
+
+  ion-col {
+    padding: 12px;
+  }
+
+  .stat-card {
+    height: 100%;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
+
+    ion-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .stat-icon {
+      font-size: 28px;
+      color: #10b981;
+    }
+
+    ion-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+      color: #111827;
+      padding: 12px;
+    }
+  }
+}
+
+.chart-card, .alert-card {
+  margin: 20px;
+  border-radius: 16px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+
+  ion-card-header {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px;
+  }
+
+  ion-card-title {
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  ion-card-content {
+    padding: 20px;
+  }
+
+  canvas {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+
+.alert-card {
+  ion-card-title {
+    color: #dc2626;
+  }
+
+  ion-item {
+    --background: transparent;
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+
+    ion-icon {
+      color: #dc2626;
+      font-size: 22px;
+    }
+
+    ion-label {
+      color: #1f2937;
+      font-weight: 500;
+    }
+  }
+}
+
+.navigation {
+  padding: 20px;
+
+  ion-col {
+    padding: 10px;
+  }
+
+  ion-button {
+    --border-radius: 10px;
+    font-weight: 600;
+    text-transform: none;
+    height: 50px;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+
+    &.primary {
+      --background: #10b981;
+      --color: #fff;
+    }
+
+    &.danger {
+      --background: #ef4444;
+      --background-hover: #dc2626;
+      --color: #fff;
+    }
+  }
+}
+
+
+/* User Management Specific Styles */
+.user-management {
+  ion-card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .form-section {
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .table-section {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .user-item {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 60px;
+    border-bottom: 1px solid #e9ecef;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
