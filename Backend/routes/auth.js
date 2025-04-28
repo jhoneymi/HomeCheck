@@ -33,11 +33,17 @@ const upload = multer({
 });
 
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  // Verificar múltiples ubicaciones posibles del token
+  const token = req.headers['authorization']?.split(' ')[1] || 
+                req.query.token || 
+                req.cookies?.token;
 
   if (!token) {
-    return res.status(401).json({ error: 'Acceso denegado. Token no proporcionado.' });
+    console.log('❌ Token no proporcionado - Headers:', req.headers);
+    return res.status(401).json({ 
+      error: 'Token no proporcionado',
+      details: 'Por favor incluye el token en el header Authorization o como parámetro'
+    });
   }
 
   try {
@@ -45,7 +51,11 @@ const authenticateToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(403).json({ error: 'Token inválido.' });
+    console.error('❌ Error al verificar token:', error.message);
+    res.status(403).json({ 
+      error: 'Token inválido o expirado',
+      details: error.message 
+    });
   }
 };
 
@@ -99,12 +109,17 @@ router.post('/login', (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role_id },
+      { userId: user.id, email: user.email, role_id: user.role_id },
       JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    res.status(200).json({ message: 'Login exitoso', token, userId: user.id, role: user.role_id });
+    res.status(200).json({
+      message: 'Login exitoso',
+      token,
+      userId: user.id,
+      role_id: user.role_id,
+    });
   });
 });
 
@@ -1599,6 +1614,85 @@ router.post('/ganancias/guardar', authenticateToken, (req, res) => {
       return res.status(500).json({ error: 'Error al guardar ganancias', details: error.message });
     }
     res.status(200).json({ message: 'Ganancias guardadas exitosamente' });
+  });
+});
+
+// Admin Zone
+
+router.get('/admin/usuarios', authenticateToken, (req, res) => {
+  console.log("🧾 Usuario autenticado:", req.user); // para ver el payload
+
+  if (!req.user || req.user.role_id !== 1) {
+    return res.status(403).json({ error: 'Acceso denegado: se requiere rol de administrador' });
+  }
+
+  const query = `
+    SELECT id, nombre_completo, email, direccion, telefono, role_id
+    FROM usuarios 
+    WHERE role_id = 2
+  `;
+
+  console.log("📥 Ejecutando query para obtener usuarios...");
+
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('❌ Error al obtener usuarios:', error.code, error.sqlMessage);
+      return res.status(500).json({ error: 'Error al obtener los usuarios' });
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener todas las viviendas
+router.get('/admin/viviendas', authenticateToken, (req, res) => {
+  if (!req.user || req.user.role_id !== 1) {
+    return res.status(403).json({ error: 'Acceso denegado: se requiere rol de administrador' });
+  }
+
+  const query = `
+    SELECT v.*, u.nombre_completo as propietario_nombre
+    FROM viviendas v
+    LEFT JOIN usuarios u ON v.id_adm = u.id
+  `;
+  
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('❌ Error al obtener viviendas:', error);
+      return res.status(500).json({ error: 'Error al obtener las viviendas' });
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener todos los inquilinos
+router.get('/admin/inquilinos', authenticateToken, (req, res) => {
+  if (req.user.role_id !== 1) {
+    return res.status(403).json({ error: 'Acceso denegado: se requiere rol de administrador' });
+  }
+
+  const query = 'SELECT * FROM inquilinos';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('❌ Error al obtener inquilinos:', error);
+      return res.status(500).json({ error: 'Error al obtener los inquilinos' });
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener todos los pagos
+router.get('/admin/pagos', authenticateToken, (req, res) => {
+  if (req.user.role_id !== 1) {
+    return res.status(403).json({ error: 'Acceso denegado: se requiere rol de administrador' });
+  }
+
+  const query = 'SELECT * FROM pagos';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('❌ Error al obtener pagos:', error);
+      return res.status(500).json({ error: 'Error al obtener los pagos' });
+    }
+    res.json(results);
   });
 });
 

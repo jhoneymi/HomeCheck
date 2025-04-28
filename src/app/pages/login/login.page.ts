@@ -34,7 +34,6 @@ export class LoginPage {
     this.router.navigate(['/register']);
   }
 
-  // Método para mostrar una alerta estilizada con recarga al cerrar
   async showAlert(header: string, message: string) {
     const alert = await this.alertCtrl.create({
       header,
@@ -44,7 +43,6 @@ export class LoginPage {
     });
 
     alert.onDidDismiss().then(() => {
-      // Recargar la página después de cerrar la alerta
       location.reload();
     });
 
@@ -57,14 +55,12 @@ export class LoginPage {
       return;
     }
 
-    // Validación del formato de email
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(this.credentials.email)) {
       this.showAlert('⚠️ Email inválido', 'Por favor, ingrese un email válido.');
       return;
     }
 
-    // Mostrar el indicador de carga
     this.isLoading = true;
     const loading = await this.loadingCtrl.create({
       message: 'Iniciando sesión...',
@@ -72,21 +68,35 @@ export class LoginPage {
     });
     await loading.present();
 
-    // Enviar los datos al backend
-    this.http.post<{ token: string }>('http://localhost:3000/api/auth/login', this.credentials).subscribe({
-      next: async (res) => {
-        await loading.dismiss(); // Ocultar el spinner de carga
+    this.http.post('http://localhost:3000/api/auth/login', this.credentials).subscribe({
+      next: async (res: any) => {
+        await loading.dismiss();
 
         if (res.token) {
           localStorage.setItem('authToken', res.token);
-          console.log(res.token)
-          this.router.navigate(['/home']); // Redirigir sin alertas molestas
+          localStorage.setItem('userId', res.userId);
+
+          // Verificar si role_id existe antes de usarlo
+          if (res.role_id !== undefined) {
+            localStorage.setItem('role_id', res.role_id.toString());
+
+            // Redirigir según el role_id
+            if (res.role_id === 1) {
+              this.router.navigate(['/admin-home']);
+            } else if (res.role_id === 2) {
+              this.router.navigate(['/home']);
+            } else {
+              this.showAlert('⚠️ Error', 'Rol de usuario no reconocido.');
+            }
+          } else {
+            this.showAlert('⚠️ Error', 'El servidor no devolvió un role_id válido.');
+          }
         } else {
           this.showAlert('⚠️ Error', 'El servidor no devolvió un token válido.');
         }
       },
       error: async (err) => {
-        await loading.dismiss(); // Ocultar el spinner de carga
+        await loading.dismiss();
         console.error('❌ Error en el login:', err);
 
         switch (err.status) {

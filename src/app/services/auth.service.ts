@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators'; // Importar tap para manejar la respuesta
 import { environment } from 'src/environments/environment';
 import { jwtDecode } from 'jwt-decode';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -67,5 +68,18 @@ export class AuthService {
   logout() {
     this.userId = null;
     localStorage.removeItem('authToken');
+  }
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.getToken(); // Use the existing getToken() method
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  getUsers() {
+    return this.http.get(`${this.apiUrl}/admin/usuarios`, {
+      headers: this.getAuthHeaders()
+    });
   }
 }
