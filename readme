@@ -1,0 +1,80 @@
+✅ Guía para Implementar y Ejecutar un Proyecto Ionic con Angular
+
+	🧱 Requisitos Previos
+	
+		Node.js y npm
+
+		Verifica si ya los tienes:
+
+		bash
+			node -v
+			npm -v
+			Si no los tienes, descárgalos desde: https://nodejs.org/
+
+		Ionic CLI:
+
+		Instálalo globalmente:
+
+			bash
+			npm install -g @ionic/cli
+			Verifica la instalación:
+
+			bash
+			ionic -v
+	
+	🚀 Paso 1: Clonar el proyecto
+
+		bash
+		git clone https://github.com/jhoneymi/HomeCheck
+		cd HomeCheck
+		
+	📦 Paso 2: Instalar dependencias
+		Ejecuta el siguiente comando dentro del directorio del proyecto:
+
+		bash
+		npm install
+		Esto instala todo lo que está listado en package.json.
+
+	▶️ Paso 3: Ejecutar el servidor de desarrollo
+		bash
+		ionic serve
+		Esto abrirá tu app en el navegador (http://localhost:8100) y recargará automáticamente los cambios.
+
+	🛠️ Paso 4: Compilar para producción
+		Para generar una versión lista para desplegar:
+
+		bash
+		ionic build --prod
+
+
+	📁 Estructura del proyecto (resumen)
+
+		src/
+		 ├── app/               → Componentes, servicios, módulos
+		 ├── assets/            → Imágenes, JSON, fuentes
+		 ├── environments/      → Configuración por entorno
+		 └── index.html         → Entrada principal de la app
+
+	❓ ¿Errores comunes?
+		Si ves errores de dependencias, puedes intentar:
+
+			bash
+			rm -rf node_modules package-lock.json
+			npm install
+		
+		Si no estas usando el /Backend te dara error de connecion: 
+			
+			Diriguirse a la carpeta /Backend:
+				bash
+				cd Backend
+
+      Instalar dependensias:
+        bash
+        cd npm install
+        // esto dentro del directorio /Backend
+			
+			Ejecutar el Server.js:
+				bash
+				node server.js
+			
+			Nota: Encender el xampp antes de ejecutar ese comando.
