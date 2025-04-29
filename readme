@@ -67,6 +67,11 @@
 			Diriguirse a la carpeta /Backend:
 				bash
 				cd Backend
+
+      Instalar dependensias:
+        bash
+        cd npm install
+        // esto dentro del directorio /Backend
 			
 			Ejecutar el Server.js:
 				bash
