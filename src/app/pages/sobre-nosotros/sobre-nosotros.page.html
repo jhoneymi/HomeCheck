@@ -1,6 +1,9 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="success">
-    <ion-title>Sobre Nosotros</ion-title>
+  <ion-toolbar>
+    <div class="logo" slot="start" aria-label="HomeCheck Logo">
+      <img src="assets/icon/casaa.jpeg" alt="HomeCheck Logo" class="logo-img">
+      <span class="logo-text">HomeCheck</span>
+    </div>
   </ion-toolbar>
 </ion-header>
 
@@ -15,7 +18,11 @@
 
   <!-- Encabezado secundario que se muestra al hacer scroll (colapsa) -->
   <ion-header collapse="condense">
-    <ion-toolbar color="success">
+    <ion-toolbar>
+      <div class="logo" slot="start" aria-label="HomeCheck Logo">
+        <img src="assets/icon/casaa.jpeg" alt="HomeCheck Logo" class="logo-img">
+        <span class="logo-text">HomeCheck</span>
+      </div>
       <ion-title size="large">Sobre Nosotros</ion-title>
     </ion-toolbar>
   </ion-header>

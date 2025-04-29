@@ -1,40 +1,180 @@
 :host {
+  /* Import Poppins for consistency with sidebar */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
   ion-content {
-    --background: #f0fdf4; // Fondo suave verde claro para la página
+    --background: linear-gradient(135deg, #f8fff8 0%, #e0ffe0 100%); /* Fondo más fresco y luminoso */
+    --color: #333333;
+    font-family: 'Poppins', sans-serif;
   }
-}
 
-.about-container {
-  padding: 1.2rem; // Espaciado un poco mayor para dar más aire
+  ion-header {
+    ion-toolbar {
+      --background: linear-gradient(180deg, #00c853 0%, #00a148 100%); /* Verde más vibrante */
+      --color: #ffffff;
+      padding: 0 10px;
+      box-shadow: 0 4px 20px rgba(0, 200, 83, 0.3); /* Sombra con color */
 
-  ion-card {
-    margin-bottom: 1.5rem; // Más espacio entre las tarjetas
-    border-radius: 12px; // Bordes más redondeados para mayor suavidad
-    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2); // Sombra con tono verde más oscuro
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; // Animación suave para la interacción
+      .logo {
+        font-size: 22px;
+        font-weight: 700; /* Más grueso */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px; /* Más espaciado */
+        padding-left: 10px;
+      }
 
-    &:hover {
-      transform: scale(1.02); // Efecto de crecimiento al pasar el ratón
-      box-shadow: 0 6px 12px rgba(39, 174, 96, 0.3); // Sombra más intensa al pasar el ratón
+      .logo-img {
+        width: 32px; /* Un poco más grande */
+        height: 32px;
+        border-radius: 6px; /* Bordes más redondeados */
+        object-fit: cover;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); /* Sombra para destacar */
+      }
+
+      .logo-text {
+        font-size: 22px;
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Sombra de texto */
+      }
+
+      ion-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700; /* Más grueso */
+        font-size: 1.3rem;
+        text-transform: uppercase;
+        letter-spacing: 1px; /* Más espaciado */
+
+        &[size="large"] {
+          font-size: 2rem; /* Más grande */
+        }
+      }
+    }
+  }
+
+  .about-container {
+    padding: 1.5rem;
+
+    ion-card {
+      margin-bottom: 1.5rem;
+      border-radius: 18px; /* Más redondeado */
+      box-shadow: 0 10px 35px rgba(0, 200, 83, 0.15); /* Sombra con color */
+      background: linear-gradient(145deg, #ffffff, #f5fff5); /* Fondo con tono verde claro */
+      border-left: 8px solid #00e676; /* Borde más grueso y color neón */
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animación más dinámica */
+
+      &:hover {
+        transform: translateY(-10px) scale(1.02); /* Efecto más pronunciado */
+        box-shadow: 0 15px 45px rgba(0, 200, 83, 0.25);
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px; /* Más grueso */
+        background: linear-gradient(90deg, #00e676, #69f0ae); /* Degradado más vibrante */
+      }
+
+      ion-card-header {
+        background: linear-gradient(90deg, #00c853, #00e676); /* Degradado más vivo */
+        color: #ffffff;
+        padding: 1.4rem; /* Más espacio */
+        font-family: 'Poppins', sans-serif;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Sombra de texto */
+
+        ion-card-title {
+          font-size: 1.4rem; /* Más grande */
+          font-weight: 700; /* Más grueso */
+          text-transform: uppercase;
+          letter-spacing: 1px; /* Más espaciado */
+        }
+      }
+
+      ion-card-content {
+        padding: 1.4rem;
+        font-size: 1.05rem; /* Un poco más grande */
+        line-height: 1.7; /* Más espacio entre líneas */
+        color: #444444;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        background-color: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
+
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  ion-refresher {
+    --color: #00e676; /* Color más vibrante */
+  }
+
+  /* Animación para las tarjetas */
+  .animate-card {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsividad */
+  @media (max-width: 768px) {
+    .about-container {
+      padding: 1.2rem;
     }
 
-    ion-card-header {
-      background-color: #27AE60; // Verde más oscuro para el encabezado
-      color: #ffffff; // Texto blanco para buen contraste
-      padding: 1.2rem;
-      font-weight: bold; // Texto más destacado
-      text-transform: uppercase; // Estilo para resaltar los títulos
-      letter-spacing: 1px; // Espaciado entre letras
+    ion-header {
+      ion-toolbar {
+        .logo {
+          font-size: 20px;
+        }
+
+        .logo-img {
+          width: 28px;
+          height: 28px;
+        }
+
+        .logo-text {
+          font-size: 20px;
+        }
+
+        ion-title {
+          font-size: 1.1rem;
+
+          &[size="large"] {
+            font-size: 1.7rem;
+          }
+        }
+      }
     }
 
-    ion-card-content {
-      padding: 1.2rem;
-      font-size: 1rem; // Tamaño de fuente un poco mayor para mejor legibilidad
-      line-height: 1.6;
-      color: #1c1c1c; // Texto en tono gris oscuro
-      background: linear-gradient(135deg, #d4efdf, #a9dfbf); // Fondo degradado suave en tonos verdes
-      border-left: 4px solid #27AE60; // Borde con la misma tonalidad verde oscura
+    ion-card {
+      margin-bottom: 1.2rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .about-container {
+      padding: 1rem;
+    }
+
+    ion-card {
+      border-radius: 16px;
+      border-left-width: 6px;
     }
   }
 }
