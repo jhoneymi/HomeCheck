@@ -212,3 +212,4 @@ export class InquilinosPage implements OnInit {
     await alert.present();
   }
 }
+

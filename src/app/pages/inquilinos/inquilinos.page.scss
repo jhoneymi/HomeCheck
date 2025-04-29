@@ -1,207 +1,600 @@
-// 🌟 Estilos Generales
+// 🌟 Estilos Generales - Versión Premium
 ion-content {
-  --background: #f4f4f4;
-  --color: #000000;
-  font-family: 'Roboto', 'Arial', sans-serif;
+  --background: #f8f9fa;
+  --color: #212529;
+  font-family: 'Montserrat', 'Roboto', sans-serif;
   font-size: 16px;
+  animation: fadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-// Modal
+// Modal de Alta Calidad
 ion-modal {
-  --width: 90%;
-  --max-width: 500px;
+  --width: 85%;
+  --max-width: 520px;
   --height: auto;
-  --max-height: 90vh;
-  --border-radius: 12px;
-  --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  --background: #ffffff;
+  --max-height: 85vh;
+  --border-radius: 16px;
+  --box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  --background: linear-gradient(145deg, #ffffff, #f8f9fa);
+  animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
   ion-content {
-    --background: #ffffff;
+    --background: transparent;
     --padding: 0;
   }
 
   ion-header {
     ion-toolbar {
-      --background: #1e8449;
+      --background: linear-gradient(135deg, #1e8449, #27ae60);
       --color: #ffffff;
       --border-width: 0;
+      --min-height: 60px;
+      box-shadow: 0 2px 12px rgba(30, 132, 73, 0.3);
 
       ion-title {
-        font-size: 20px;
-        font-weight: 600;
-        text-align: center;
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      ion-buttons ion-button {
+        --color: white;
+        --background-hover: rgba(255, 255, 255, 0.15);
       }
     }
   }
 }
 
-/* Botón Flotante */
+/* Botón Flotante Premium */
 .custom-fab {
-  --background: #1e8449 !important;
+  --background: linear-gradient(135deg, #1e8449, #2ecc71) !important;
   --color: white !important;
-  --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  margin: 16px;
+  --box-shadow: 0 6px 16px rgba(30, 132, 73, 0.35);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  margin: 20px;
+  width: 56px;
+  height: 56px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.custom-fab::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #27ae60, #1e8449);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
 .custom-fab:hover {
-  --background: #136636 !important;
-  --color: white !important;
+  transform: scale(1.1) translateY(-3px);
+  --box-shadow: 0 8px 20px rgba(30, 132, 73, 0.45);
 }
 
-/* Sidebar (sin cambios) */
+.custom-fab:hover::after {
+  opacity: 1;
+}
+
+/* Sidebar Elegante */
 .sidebar {
   position: fixed;
-  width: 250px;
+  width: 280px;
   height: 100vh;
-  background: #1e8449;
+  background: linear-gradient(180deg, #1e8449 0%, #15603a 100%);
   color: white;
-  padding: 20px;
-  z-index: 2;
+  padding: 25px 20px;
+  z-index: 100;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 
   .logo {
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    animation: glow 2s infinite alternate;
+
+    ion-icon {
+      font-size: 1.8rem;
+    }
   }
 
   ion-list {
-    margin-top: 20px;
+    margin-top: 25px;
+    background: transparent;
   }
 
   ion-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    --color: white;
+    --color: rgba(255, 255, 255, 0.9);
     --background: transparent;
-    padding: 10px 0;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --min-height: 48px;
+    --border-radius: 10px;
+    --detail-icon-color: white;
+    --detail-icon-opacity: 0.7;
+    margin-bottom: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   ion-item:hover,
   .active {
-    background: rgba(46, 204, 113, 0.2);
-    border-radius: 10px;
-    transform: scale(1.02);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+    --color: white;
   }
 
-  ion-item span {
-    margin: 7px;
-    margin-bottom: -2px;
+  ion-item::part(native) {
+    backdrop-filter: blur(5px);
+  }
+
+  ion-icon {
+    font-size: 1.2rem;
+    margin-right: 12px;
   }
 }
 
-/* Contenido Principal - Estilo Profesional y Moderno */
+/* Contenido Principal Elegante */
 .main-content {
   flex: 1;
-  padding: 30px;
-  margin-left: 250px;
+  padding: 35px 40px;
+  margin-left: 280px;
   background: #ffffff;
-  color: #333;
+  color: #343a40;
   min-height: 100vh;
   position: relative;
+  animation: fadeInUp 0.6s ease-out;
+  box-shadow: inset 8px 0 15px -10px rgba(0, 0, 0, 0.05);
 }
 
-/* Encabezado */
+/* Encabezado Sofisticado */
 .header-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e9ecef;
 
   h2 {
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: 2.2rem;
+    font-weight: 700;
     color: #1e8449;
     margin: 0;
+    position: relative;
+    display: inline-block;
+  }
+
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #1e8449, #2ecc71);
+    border-radius: 3px;
   }
 
   .custom-searchbar {
-    width: 300px;
-    --background: #f4f4f4;
-    --border-radius: 20px;
-    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --color: #333;
-    --placeholder-color: #999;
-    --padding-start: 15px;
-    --padding-end: 15px;
+    width: 320px;
+    --background: #ffffff;
+    --border-radius: 25px;
+    --box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    --color: #495057;
+    --placeholder-color: #adb5bd;
+    --padding-start: 20px;
+    --padding-end: 20px;
+    --icon-color: #1e8449;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+
+    &:hover {
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-color: #ced4da;
+    }
   }
 }
 
-/* Estilos de la tabla */
+/* Tabla Premium de Inquilinos */
 .tabla-inquilinos {
   width: 100%;
-  border-collapse: collapse;
-  border-radius: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 14px;
   overflow: hidden;
   background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.7s ease-out;
+  position: relative;
+  z-index: 1;
 
   .header {
-    background: #1e8449;
+    background: linear-gradient(135deg, #1e8449, #27ae60);
     color: white;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    height: 60px;
 
     ion-col {
-      padding: 15px;
+      padding: 18px;
       text-align: center;
-      font-size: 14px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.85rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      transition: all 0.3s ease;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
     }
   }
 
   .row {
     background: #ffffff;
-    transition: all 0.3s ease;
-    border-bottom: 1px solid #e0e0e0;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-bottom: 1px solid #f1f3f5;
 
     &:nth-child(even) {
-      background: #f9f9f9;
+      background: #f8f9fa;
     }
 
     &:hover {
-      background: #f0f7f0;
+      background: linear-gradient(90deg, rgba(224, 255, 228, 0.4), rgba(240, 255, 245, 0.4));
       transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(30, 132, 73, 0.15);
     }
 
     ion-col {
-      padding: 15px;
+      padding: 16px;
       text-align: center;
-      font-size: 14px;
-      color: #333;
+      font-size: 0.9rem;
+      color: #495057;
+      border-right: 1px solid #f1f3f5;
+      vertical-align: middle;
+
+      &:last-child {
+        border-right: none;
+      }
     }
 
     .inquilino-link {
       color: #1e8449;
       text-decoration: none;
       cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      display: inline-block;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #1e8449;
+        transition: width 0.3s ease;
+      }
+
       &:hover {
-        text-decoration: underline;
+        color: #136636;
+        
+        &::after {
+          width: 100%;
+        }
       }
     }
 
     ion-button {
-      margin: 0 5px;
-      --padding-start: 8px;
-      --padding-end: 8px;
       --border-radius: 8px;
-      --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
+      --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      height: 36px;
+      margin: 0 4px;
+      font-weight: 500;
+    }
 
-      &:hover {
-        transform: scale(1.05);
-      }
+    .edit-btn {
+      --background: #3498db;
+      --background-hover: #2980b9;
+    }
+
+    .delete-btn {
+      --background: #e74c3c;
+      --background-hover: #c0392b;
+    }
+
+    ion-button:hover {
+      transform: scale(1.08);
+      --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
   }
 }
 
+/* Mensaje de Sin Datos Estilizado */
 .no-data {
   text-align: center;
-  padding: 20px;
-  color: #888888;
+  padding: 40px 20px;
+  color: #6c757d;
+  font-size: 1.1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 1px dashed #dee2e6;
+  
+  ion-icon {
+    font-size: 3rem;
+    color: #adb5bd;
+    margin-bottom: 15px;
+  }
+  
+  p {
+    margin: 10px 0 0;
+    font-weight: 500;
+  }
+}
+
+/* Tabla Alternativa Premium */
+.tabla {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  margin-top: 35px;
+  animation: fadeInUp 0.8s ease-out;
+  position: relative;
+  z-index: 1;
+}
+
+.encabezado-tabla {
+  background: linear-gradient(135deg, #1e8449, #27ae60);
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 25px;
+  box-shadow: 0 2px 10px rgba(30, 132, 73, 0.3);
+}
+
+.encabezado-tabla ion-col {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.fila-tabla {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 25px;
+  border-bottom: 1px solid #f1f3f5;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: #fff;
+  
+  &:nth-child(even) {
+    background: #f8f9fa;
+  }
+  
+  &:hover {
+    background: linear-gradient(90deg, rgba(224, 255, 228, 0.3), rgba(240, 255, 245, 0.3));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 132, 73, 0.1);
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.fila-tabla ion-col {
+  flex: 1;
+  text-align: center;
+  color: #495057;
+  font-size: 0.95rem;
+  padding: 8px 0;
+}
+
+.nombre-link {
+  color: #1e8449;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #1e8449;
+    transition: width 0.3s ease;
+  }
+  
+  &:hover {
+    color: #136636;
+    
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+/* Botones Premium */
+ion-button {
+  --border-radius: 10px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --padding-start: 18px;
+  --padding-end: 18px;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  height: 40px;
+  margin: 0 5px;
+  
+  &.primary-btn {
+    --background: linear-gradient(135deg, #1e8449, #2ecc71);
+    --background-hover: linear-gradient(135deg, #27ae60, #1e8449);
+    --color: white;
+  }
+  
+  &.secondary-btn {
+    --background: #6c757d;
+    --background-hover: #5a6268;
+    --color: white;
+  }
+  
+  &.danger-btn {
+    --background: #e74c3c;
+    --background-hover: #c0392b;
+    --color: white;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    --box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Mensaje Vacío Elegante */
+.mensaje-vacio {
+  margin: 50px auto;
+  text-align: center;
+  max-width: 500px;
+  padding: 30px;
+  background: #f8f9fa;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 1s ease-out;
+  
+  ion-icon {
+    font-size: 3.5rem;
+    color: #adb5bd;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #868e96;
+    margin-bottom: 20px;
+  }
+}
+
+/* Animaciones Premium */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(50px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(46, 204, 113, 0.8), 0 0 20px rgba(255, 255, 255, 0.8);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Efecto de borde sutil para las tablas */
+.tabla-inquilinos::after,
+.tabla::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid rgba(30, 132, 73, 0.1);
+  border-radius: 14px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Efecto de hover para elementos interactivos */
+.interactive-element {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
 }
